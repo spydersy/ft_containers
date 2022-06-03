@@ -1,9 +1,9 @@
 
-NTYT : iterators_traits
-DONE : enable_if
-DONE : is_integral
-DONE : equal_compare
-NTYT : lexicographical_compare
-NTYT : std::pair
-NTYT : std::make_pair
-NTYT : reverse_iterator
+DONE ; enable_if\
+NTYT ; iterators_traits\
+DONE ; is_integral\
+DONE ; equal_compare\
+DONE ; lexicographical_compare\
+NTYT ; std_pair\
+NTYT ; std_make_pair\
+NTYT ; reverse_iterator\

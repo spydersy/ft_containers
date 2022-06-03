@@ -26,25 +26,25 @@ MAP:
 
 RUN_VECTOR:
 		@mkdir -p LOG
-		./ft_vector.out &> LOG/ft_vector
-		./std_vector.out &> LOG/std_vector
-		@echo "diff LOG/ft_vector LOG/std_vector: ==========================="
+		./ft_vector.out &> LOG/ft_vector.log
+		./std_vector.out &> LOG/std_vector.log
+		@echo "diff LOG/ft_vector.log LOG/std_vector.log: ==================="
+		@diff LOG/std_vector.log LOG/ft_vector.log
 		@echo "=============================================================="
-		@diff LOG/std_vector LOG/ft_vector
 RUN_STACK:
 		@mkdir -p LOG
-		./ft_stack.out &> LOG/ft_stack
-		./std_stack.out &> LOG/std_stack
-		@echo "diff LOG/ft_stack LOG/std_stack: ==========================="
+		./ft_stack.out &> LOG/ft_stack.log
+		./std_stack.out &> LOG/std_stack.log
+		@echo "diff LOG/ft_stack.log LOG/std_stack.log: ====================="
+		@diff LOG/std_stack.log LOG/ft_stack.log
 		@echo "=============================================================="
-		@diff LOG/std_stack LOG/ft_stack
 RUN_MAP:
 		@mkdir -p LOG
-		./ft_map.out &> LOG/ft_map
-		./std_map.out &> LOG/std_map
-		@echo "diff LOG/ft_map LOG/std_map: ==========================="
+		./ft_map.out &> LOG/ft_map.log
+		./std_map.out &> LOG/std_map.log
+		@echo "diff LOG/ft_map.log LOG/std_map.log: ========================="
+		@diff LOG/std_map.log LOG/ft_map.log
 		@echo "=============================================================="
-		@diff LOG/std_map LOG/ft_map
 
 clean:
 		rm -f LOG/*
