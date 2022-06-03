@@ -3,7 +3,7 @@
 # define __VECTOR_HPP__ 
 
 # include <iostream>
-# include "iterators_traits.hpp"
+# include "utils/iterators_traits.hpp"
 
 namespace ft
 {
