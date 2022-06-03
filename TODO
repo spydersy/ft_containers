@@ -1,6 +1,6 @@
 
 DONE ; enable_if\
-NTYT ; iterators_traits\
+PROG ; iterators_traits\
 DONE ; is_integral\
 DONE ; equal_compare\
 DONE ; lexicographical_compare\
