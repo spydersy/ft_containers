@@ -7,4 +7,3 @@ NTYT : lexicographical_compare
 NTYT : std::pair
 NTYT : std::make_pair
 NTYT : reverse_iterator
-
