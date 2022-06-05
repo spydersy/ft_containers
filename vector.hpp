@@ -4,6 +4,7 @@
 
 # include <iostream>
 # include "utils/iterators_traits.hpp"
+# include "utils/random_access_iterator.hpp"
 
 namespace ft
 {
@@ -12,24 +13,22 @@ namespace ft
     {
         public:
         // Member Types :
-        typedef T                               value_type;
-        typedef std::allocator<value_type>      allocator_type;
-        typedef value_type&                     reference;
-        typedef const value_type&               const_reference;
-        typedef value_type*                     pointer;
-        typedef const value_type*               const_pointer;
-
-        // typedef iterator	a random access iterator to value_type	convertible to const_iterator
-        // typedef const_iterator	a random access iterator to const value_type	
-        // typedef reverse_iterator	reverse_iterator<iterator>	
+        typedef T                                                       value_type;         // The first template parameter (T)	
+        typedef std::allocator<value_type>                              allocator_type;     // The second template parameter (Alloc)	
+        typedef value_type&                                             reference;          // Reference to value_type
+        typedef const value_type&                                       const_reference;    // Const reference to value_type
+        typedef value_type*                                             pointer;            // Pointer to value_type
+        typedef const value_type*                                       const_pointer;      // Const pointer to value_type
+        typedef typename ft::random_access_iterator<value_type>         iterator;           // A random access iterator to value_type
+        typedef typename ft::random_access_iterator<const value_type>   const_iterator;     // A random access iterator to const value_type	
         // typedef const_reverse_iterator	reverse_iterator<const_iterator>	
         // typedef difference_type iterator_traits<iterator>::difference_type	usually the same as ptrdiff_t
-        // typedef size_type	an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
+        typedef std::size_t                                             size_type;          // An unsigned integral type that can represent any non-negative value of difference_type
 
         private:
-            T*              __array;
-            size_t          __size;
-            size_t          __capacity;
+            pointer         __array;
+            size_type       __size;
+            size_type       __capacity;
             allocator_type  __allocator;
 
         public:
