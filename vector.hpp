@@ -32,6 +32,9 @@ namespace ft
             allocator_type  __allocator;
 
         public:
+        /*
+         * Member Types =======================================================================
+        */
             // Default Constructor :
             explicit vector (const allocator_type& alloc = allocator_type())
             {
@@ -52,26 +55,24 @@ namespace ft
                 for (size_t i = 0; i != n; i++)
                     this->__allocator.construct(this->__array + i, val);
             }
-
             // Range Constructor : 
-            template <class InputIterator>
-                    vector (InputIterator first, InputIterator last,
-                            const allocator_type& alloc = allocator_type())
-            {
-                this->__size = 0;
-                this->__capacity = last - first;
-                this->__allocator = alloc;
-                this->__array = nullptr;
-                if (this->__capacity)
-                    this->__array = this->__allocator.allocate(this->__capacity);
-                while (first != last)
-                {
-                    this->__allocator.construct(this->__array + __size, first);
-                    first++;
-                }
-                this->__size = this->__capacity;
-            }
-
+            // template <class InputIterator>
+            //         vector (InputIterator first, InputIterator last,
+            //                 const allocator_type& alloc = allocator_type())
+            // {
+            //     this->__size = 0;
+            //     this->__capacity = last - first;
+            //     this->__allocator = alloc;
+            //     this->__array = nullptr;
+            //     if (this->__capacity)
+            //         this->__array = this->__allocator.allocate(this->__capacity);
+            //     while (first != last)
+            //     {
+            //         this->__allocator.construct(this->__array + __size, first);
+            //         first++;
+            //     }
+            //     this->__size = this->__capacity;
+            // }
             // Copy Constructor :
             vector (const vector& x)
             {
@@ -88,7 +89,6 @@ namespace ft
                         this->__allocator.construct(this->__array + i, x[i]);
                 }
             }
-
             // Destructor : 
             ~vector()
             {
@@ -100,7 +100,6 @@ namespace ft
                 this->__capacity = 0;
                 this->__array = nullptr;
             }
-
             // Operator= :
             // vector& operator= (const vector& x)
             // {
@@ -110,17 +109,21 @@ namespace ft
             //     }
             // }
 
-            // // Begin :
-            // iterator begin()
-            // {
-
-            // }
-
-            // // Const Begin :
-            // const_iterator begin() const
-            // {
-
-            // }
+        /*
+         * Iterators ==============================================================================
+        */
+            // Begin :
+            iterator begin()
+            {
+                iterator it;
+                return it;
+            }
+            // Const Begin :
+            const_iterator begin() const
+            {
+                const_iterator cit;
+                return cit;
+            }
 
     };
 };

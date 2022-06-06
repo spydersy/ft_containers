@@ -1,9 +1,20 @@
 
-DONE ; enable_if\
-PROG ; iterators_traits\
-DONE ; is_integral\
-DONE ; equal_compare\
-DONE ; lexicographical_compare\
+PROG ; random_access_iterator\
+
+=== CONTAINERS ==================================
+PROG ; ft_vector\
+NTYT ; ft_stack\
+NTYT ; ft_map\
+=================================================
+
+=== UTILS =======================================
 NTYT ; std_pair\
 NTYT ; std_make_pair\
 NTYT ; reverse_iterator\
+=================================================
+
+DONE ; enable_if\
+DONE ; iterators_traits\
+DONE ; is_integral\
+DONE ; equal_compare\
+DONE ; lexicographical_compare\
