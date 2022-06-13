@@ -49,16 +49,23 @@ namespace ft
                     return ( *this );
                 }
 
-                ~random_access_iterator() { return ; }
-
-                bool    operator==( random_access_iterator const & src ) const
+                value_type *base() const
                 {
-                    return (this->_ptr == src._ptr);
+                    return this->_ptr;
                 }
 
-                bool    operator!=( random_access_iterator const & src ) const
+                ~random_access_iterator() { return ; }
+
+                template <typename U>
+                bool    operator==( random_access_iterator<U> const & src ) const
                 {
-                    return (this->_ptr != src._ptr);
+                    return (this->base() == src.base());
+                }
+
+                template <typename U>
+                bool    operator!=( random_access_iterator<U> const & src )
+                {
+                    return (this->base() != src.base());
                 }
 
             /*
@@ -119,10 +126,6 @@ namespace ft
 
                 difference_type   operator-(random_access_iterator const & src)
                 {
-                    random_access_iterator   ret;
-
-                    // ret._ptr = this->_ptr - src._ptr;
-                    // return (ret);
                     return (this->_ptr - src._ptr);
                 }
 
@@ -178,12 +181,12 @@ namespace ft
                 {
                     return (this->_ptr[index]);
                 }
-                // operator    value_type() { return _ptr; }
+
+                // User Defined Conversion Function
                 operator random_access_iterator<const Type>()
                 {
                     return (random_access_iterator< const Type>(*_ptr));
                 }
-
         private:
             value_type    *_ptr;
     };

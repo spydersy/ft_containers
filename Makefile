@@ -12,8 +12,8 @@ all:  VECTOR STACK MAP
 
 VECTOR:
 		@mkdir -p LOG
-		clang++ $(VECTOR_SRCS) $(CPPFLAGS) $(DEFINE_FLAG)ft  -o  ft_vector.out
 		clang++ $(VECTOR_SRCS) $(CPPFLAGS) $(DEFINE_FLAG)std -o std_vector.out
+		clang++ $(VECTOR_SRCS) $(CPPFLAGS) $(DEFINE_FLAG)ft  -o  ft_vector.out
 
 STACK:
 		@mkdir -p LOG
@@ -59,5 +59,6 @@ clean:
 fclean:	clean
 		rm -rf $(BINS)
 		rm -rf LOG
+		rm -rf *.out
 
 re : fclean all
