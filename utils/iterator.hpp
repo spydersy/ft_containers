@@ -3,7 +3,6 @@
 # define __ITERATOR_HPP__
 
 # include <iostream>
-# include "iterators_traits.hpp"
 
 namespace ft
 {
