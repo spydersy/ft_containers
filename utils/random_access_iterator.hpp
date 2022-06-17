@@ -124,9 +124,15 @@ namespace ft
                     return (this->_ptr);
                 }
 
-                difference_type   operator-(random_access_iterator const & src)
+                // difference_type   operator-(random_access_iterator const & src)
+                // {
+                    // return (this->_ptr - src._ptr);
+                // }
+
+                template <typename U>
+                difference_type    operator-( random_access_iterator<U> const & src ) const
                 {
-                    return (this->_ptr - src._ptr);
+                    return this->base() - src.base();
                 }
 
                 random_access_iterator   operator-(size_type value)
@@ -145,24 +151,28 @@ namespace ft
                     return (ret);
                 }
 
-                bool    operator<( random_access_iterator const & src ) const
+                template <typename U>
+                bool    operator<( random_access_iterator<U> const & src ) const
                 {
-                    return (this->_ptr < src._ptr);
+                    return (this->base() < src.base());
                 }
 
-                bool    operator<=( random_access_iterator const & src ) const
+                template <typename U>
+                bool    operator<=( random_access_iterator<U> const & src ) const
                 {
-                    return (this->_ptr <= src._ptr);
+                    return this->base() <= src.base();
                 }
 
-                bool    operator>( random_access_iterator const & src ) const
+                template <typename U>
+                bool    operator>( random_access_iterator<U> const & src ) const
                 {
-                    return (this->_ptr > src._ptr);
+                    return this->base() > src.base();
                 }
 
-                bool    operator>=( random_access_iterator const & src ) const
+                template <typename U>
+                bool    operator>=( random_access_iterator<U> const & src ) const
                 {
-                    return (this->_ptr >= src._ptr);
+                    return this->base() >= src.base();
                 }
 
                 random_access_iterator operator+=( size_type const value)
@@ -198,6 +208,14 @@ namespace ft
 
         ret += value;
         return (ret);
+    }
+
+    template< typename Iterator1, typename Iterator2 >
+    typename random_access_iterator<Iterator1>::difference_type
+        operator-( const random_access_iterator<Iterator1>& lhs,
+                    const random_access_iterator<Iterator2>& rhs )
+    {
+        return rhs.base() - lhs.base();
     }
 }
 

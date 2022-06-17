@@ -28,7 +28,7 @@ void	printSize(TESTED_NAMESPACE::vector<T> const &vct, bool print_content = true
 		for (; it != ite; ++it)
 			std::cout << "- " << *it << std::endl;
 	}
-	std::cout << "###############################################" << std::endl;
+	std::cout << "XO###############################################" << std::endl;
 }
 
 class foo {

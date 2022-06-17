@@ -8,6 +8,7 @@
 # include "utils/random_access_iterator.hpp"
 # include "utils/enable_if.hpp"
 # include "utils/is_integral.hpp"
+# include "utils/lexicographical_compare.hpp"
 
 namespace ft
 {
@@ -434,10 +435,11 @@ namespace ft
                     }
                     else if (this->__size + 1 <= this->__capacity)
                     {
-                        iterator    it = this->end() - 1;
+                        iterator    it = this->end();
                         for (; it >= position + 1; it--)
                         {
-                            this->__allocator.construct(this->__array + (it - this->begin() + 1), *it);
+                            if (it != this->end())
+                                this->__allocator.construct(this->__array + (it - this->begin() + 1), *it);
                             if ((size_type)(it - this->begin()) < this->__size)
                                 this->__allocator.destroy(this->__array + (it - this->begin()));
                         }
@@ -643,7 +645,6 @@ namespace ft
                 {
                     size_type   n = last - first;
                     iterator    ret;
-                    this->__size -= n;
                     if (n)
                     {
                         iterator    begin = this->begin();
@@ -662,9 +663,10 @@ namespace ft
                             index++;
                             begin++;
                         }
+                        this->__size -= n;
                     }
                     else
-                        return (this->erase(first));
+                        return this->erase(first);
                     return ret;
                 }
             /*
@@ -733,15 +735,16 @@ namespace ft
     template <class T, class Alloc>
     bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
     {
-        size_t  minSize = lhs.size() < rhs.size() ? lhs.size() : rhs.size();
-        size_t  i = 0;
+        return ft::lexicographical_compare< ft::vector<T>::const_iterator, ft::vector<T>::const_iterator > compare(lhs.begin(), lhs.end(), rhs.begin(). rhs.end());
+        // size_t  minSize = lhs.size() < rhs.size() ? lhs.size() : rhs.size();
+        // size_t  i = 0;
 
-        for (; i < minSize; i++)
-            if (lhs[i] < rhs[i])
-                return (true);
-        if (lhs.end() == lhs.begin() + i && rhs.begin() + i != rhs.end())
-            return (true);
-        return (false);
+        // for (; i < minSize; i++)
+        //     if (lhs[i] < rhs[i])
+        //         return (true);
+        // if (lhs.end() == lhs.begin() + i && rhs.begin() + i != rhs.end())
+        //     return (true);
+        // return (false);
     }
 
     template <class T, class Alloc>

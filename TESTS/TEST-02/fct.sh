@@ -129,9 +129,8 @@ cmp_one () {
 	same_bin=$(isEq $ft_ret $std_ret)
 
 	diff_file="$deepdir/$testname.$container.diff"
-	diff $std_log $ft_log >> /Volumes/SPYDERSY/42Cursus/42Cursus-ft_containers/dbbbbbbg;
-	echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" >>  /Volumes/SPYDERSY/42Cursus/42Cursus-ft_containers/dbbbbbbg;
-	# diff $std_log $ft_log 2>/dev/null 1>"$diff_file"; /Volumes/SPYDERSY/42Cursus/42Cursus-ft_containers/dbbbbbbg
+	# diff $std_log $ft_log >> /Volumes/SPYDERSY/42Cursus/42Cursus-ft_containers/dbbbbbbg;
+	diff $std_log $ft_log 2>/dev/null 1>"$diff_file";
 	compare_output $diff_file
 	same_output=$?
 

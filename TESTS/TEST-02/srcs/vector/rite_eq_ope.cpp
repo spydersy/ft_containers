@@ -22,8 +22,8 @@ int		main(void)
 	TESTED_NAMESPACE::vector<TESTED_TYPE>::reverse_iterator it_mid;
 
 	TESTED_NAMESPACE::vector<TESTED_TYPE>::const_reverse_iterator cit_0 = vct.rbegin();
-	TESTED_NAMESPACE::vector<TESTED_TYPE>::const_reverse_iterator cit_1;
-	TESTED_NAMESPACE::vector<TESTED_TYPE>::const_reverse_iterator cit_mid;
+	TESTED_NAMESPACE::vector<TESTED_TYPE>::const_reverse_iterator cit_1 = rbegin();
+	TESTED_NAMESPACE::vector<TESTED_TYPE>::const_reverse_iterator cit_mid = rbegin();
 
 	for (int i = size; it_0 != it_1; --i)
 		*it_0++ = i;
