@@ -9,6 +9,7 @@
 # include "utils/enable_if.hpp"
 # include "utils/is_integral.hpp"
 # include "utils/lexicographical_compare.hpp"
+# include "utils/equal.hpp"
 
 namespace ft
 {
@@ -713,71 +714,46 @@ namespace ft
     template <class T, class Alloc>
     bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
     {
-        typedef typename ft::vector<T>::const_iterator   const_iterator;
-
         if (lhs.size() != rhs.size())
             return (false);
-        const_iterator     lit = lhs.begin();
-        const_iterator     rit = rhs.begin();
-
-        for (; lit < lhs.end(); lit++, rit++)
-            if (*lit != *rit)
-                return (false);
-        return (true);
+        return ft::equal(lhs.begin(), lhs.end(), rhs.begin());
     }
 
     template <class T, class Alloc>
     bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
     {
-        return (!(operator==(lhs, rhs)));
+        return !(operator==(lhs, rhs));
     }
 
     template <class T, class Alloc>
-    bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
     {
-        return ft::lexicographical_compare< ft::vector<T>::const_iterator, ft::vector<T>::const_iterator > compare(lhs.begin(), lhs.end(), rhs.begin(). rhs.end());
-        // size_t  minSize = lhs.size() < rhs.size() ? lhs.size() : rhs.size();
-        // size_t  i = 0;
-
-        // for (; i < minSize; i++)
-        //     if (lhs[i] < rhs[i])
-        //         return (true);
-        // if (lhs.end() == lhs.begin() + i && rhs.begin() + i != rhs.end())
-        //     return (true);
-        // return (false);
+        return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
     }
 
     template <class T, class Alloc>
-    bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
     {
-        size_t  minSize = lhs.size() < rhs.size() ? lhs.size() : rhs.size();
-        size_t  i = 0;
-
-        for (; i < minSize; i++)
-            if (lhs[i] > rhs[i])
-                return (true);
-        if (rhs.end() == rhs.begin() + i && lhs.begin() + i != lhs.end())
-            return (true);
-        return (false);
+        return !(operator<(rhs, lhs));
     }
 
     template <class T, class Alloc>
-    bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
     {
-        return (!(operator>(lhs, rhs)));
+        return operator<(rhs, lhs);
     }
 
     template <class T, class Alloc>
-    bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
     {
-        return (!(operator<(lhs, rhs)));
+        return !(operator<(lhs, rhs));
     }
 
     template <class T, class Alloc>
-    void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+    void swap(vector<T,Alloc>& x, vector<T,Alloc>& y)
     {
         x.swap(y);
     }
-};  // NAMEDPACE FT;
+};  // NAMESPACE FT;
 
 #endif
