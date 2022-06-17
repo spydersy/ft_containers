@@ -48,11 +48,13 @@ RUN_MAP:
 		@echo "==============================END=============================="
 
 TEST00:
-	clang++ $(CPPFLAGS) ./TESTS/TEST-00/Vector_tests.cpp -o vector.out
+		clang++ $(CPPFLAGS) ./TESTS/TEST-00/Vector_tests.cpp -o vector.out && clear && ./vector.out
 
 TEST01:
-		cd TESTS/TEST-01/ && ./start.sh -v
+		cd TESTS/TEST-01/ && clear && ./start.sh -v
 
+TEST02:
+		cd TESTS/TEST-02/ && clear && ./do.sh
 
 clean:
 		rm -f LOG/*
