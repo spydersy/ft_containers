@@ -4,29 +4,9 @@
 
 int main()
 {
-    {
-        int sum(0);
-        std::stack<int> mystack;
+    ft::pair<int, std::string> p;
 
-        for (int i=0; i<5; ++i) mystack.push(i);
-
-        while (!mystack.empty())
-        {
-            sum += mystack.top();
-            mystack.pop();
-        }
-    }
-    std::cerr << "======================================" << std::endl;
-    {
-        int sum(0);
-        ft::stack<int> mystack;
-
-        for (int i=0; i<5; ++i) mystack.push(i);
-
-        while (!mystack.empty())
-        {
-            sum += mystack.top();
-            mystack.pop();
-        }
-    }
+    p = ft::make_pair(12, "hello");
+    std::cout << p.first << " | " << p.second << std::endl;
+    return 0;
 }
