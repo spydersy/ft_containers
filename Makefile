@@ -49,7 +49,7 @@ RUN_MAP:
 
 TEST00:
 		clang++ $(CPPFLAGS) ./TESTS/TEST-00/Vector_tests.cpp -o vector.out && clear && ./vector.out
-		clear && clang++ $(CPPFLAGS) ./TESTS/TEST-00/Stack_tests.cpp  -ferror-limit=0 -o stack.out  && clear && ./stack.out
+		clang++ $(CPPFLAGS) ./TESTS/TEST-00/Stack_tests.cpp  -ferror-limit=0 -o stack.out  && clear && ./stack.out
 
 TEST01:
 		cd TESTS/TEST-01/ && clear && ./start.sh -v

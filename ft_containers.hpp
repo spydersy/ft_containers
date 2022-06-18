@@ -4,7 +4,7 @@
 
 // FT_CONTAINERS {vector, stack, map}
 # include "vector.hpp"
-// # include "stack.hpp"
+# include "stack.hpp"
 // # include "map.hpp"
 
 // FT_CONTAINERS_UTILS  { enable_if.hpp, equal.hpp, is_integral.hpp,

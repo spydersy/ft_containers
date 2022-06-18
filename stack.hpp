@@ -41,13 +41,13 @@ namespace ft
         // Top :
         reference top()
         {
-            return this->__container.front();
+            return *this->__container.rbegin();
         }
 
         // Const Top :
         const_reference top() const
         {
-            return this->__container.front();
+            return *this->__container.rbegin();
         }
 
         // Empty :
@@ -74,23 +74,23 @@ namespace ft
             this->__container.pop_back();
         }
 
-    template <class FT, class FContainer>
-        friend bool operator==( const stack<T,Container>& lhs, const stack<T,Container>& rhs ); /* { return lhs.__container == rhs.__container; } */
+    template <class FT, class FTContainer>
+        friend bool operator==( const stack<FT,FTContainer>& lhs, const stack<FT,FTContainer>& rhs ); /* { return lhs.__container == rhs.__container; } */
 
-    template <class FT, class FContainer>
-        friend bool operator!=( const stack<T,Container>& lhs, const stack<T,Container>& rhs ); /* { return lhs.__container != rhs.__container; } */
+    template <class FT, class FTContainer>
+        friend bool operator!=( const stack<FT,FTContainer>& lhs, const stack<FT,FTContainer>& rhs ); /* { return lhs.__container != rhs.__container; } */
 
-    template <class FT, class FContainer>
-        friend bool operator<( const stack<T,Container>& lhs, const stack<T,Container>& rhs ); /* { return lhs.__container < rhs.__container; } */
+    template <class FT, class FTContainer>
+        friend bool operator<( const stack<FT,FTContainer>& lhs, const stack<FT,FTContainer>& rhs ); /* { return lhs.__container < rhs.__container; } */
 
-    template <class FT, class FContainer>
-        friend bool operator<=( const stack<T,Container>& lhs, const stack<T,Container>& rhs ); /* { return lhs.__container <= rhs.__container; } */
+    template <class FT, class FTContainer>
+        friend bool operator<=( const stack<FT,FTContainer>& lhs, const stack<FT,FTContainer>& rhs ); /* { return lhs.__container <= rhs.__container; } */
 
-    template <class FT, class FContainer>
-        friend bool operator>( const stack<T,Container>& lhs, const stack<T,Container>& rhs ); /* { return lhs.__container > rhs.__container; } */
+    template <class FT, class FTContainer>
+        friend bool operator>( const stack<FT,FTContainer>& lhs, const stack<FT,FTContainer>& rhs ); /* { return lhs.__container > rhs.__container; } */
 
-    template <class FT, class FContainer>
-        friend bool operator>=( const stack<T,Container>& lhs, const stack<T,Container>& rhs ); /* { return lhs.__container >= rhs.__container; } */
+    template <class FT, class FTContainer>
+        friend bool operator>=( const stack<FT,FTContainer>& lhs, const stack<FT,FTContainer>& rhs ); /* { return lhs.__container >= rhs.__container; } */
 
     protected:
         container_type  __container;
