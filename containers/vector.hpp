@@ -4,12 +4,12 @@
 
 # include <iostream>
 
-# include "utils/reverse_iterator.hpp"
-# include "utils/random_access_iterator.hpp"
-# include "utils/enable_if.hpp"
-# include "utils/is_integral.hpp"
-# include "utils/lexicographical_compare.hpp"
-# include "utils/equal.hpp"
+# include "../utils/reverse_iterator.hpp"
+# include "../utils/random_access_iterator.hpp"
+# include "../utils/enable_if.hpp"
+# include "../utils/is_integral.hpp"
+# include "../utils/lexicographical_compare.hpp"
+# include "../utils/equal.hpp"
 
 namespace ft
 {
@@ -721,39 +721,27 @@ namespace ft
 
     template <class T, class Alloc>
     bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-    {
-        return !(operator==(lhs, rhs));
-    }
+    { return !operator==(lhs, rhs); }
 
     template <class T, class Alloc>
     bool operator<(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-    {
-        return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
-    }
+    { return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()); }
 
     template <class T, class Alloc>
     bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-    {
-        return !(operator<(rhs, lhs));
-    }
+    { return !operator<(rhs, lhs); }
 
     template <class T, class Alloc>
     bool operator>(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-    {
-        return operator<(rhs, lhs);
-    }
+    { return operator<(rhs, lhs); }
 
     template <class T, class Alloc>
     bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
-    {
-        return !(operator<(lhs, rhs));
-    }
+    { return !operator<(lhs, rhs); }
 
     template <class T, class Alloc>
     void swap(vector<T,Alloc>& x, vector<T,Alloc>& y)
-    {
-        x.swap(y);
-    }
+    { x.swap(y); }
 };  // NAMESPACE FT;
 
 #endif

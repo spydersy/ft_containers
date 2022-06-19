@@ -192,11 +192,11 @@ namespace ft
                     return (this->_ptr[index]);
                 }
 
-                // User Defined Conversion Function
-                operator random_access_iterator<const Type>()
-                {
-                    return (random_access_iterator< const Type>(*_ptr));
-                }
+                // // User Defined Conversion Function
+                // operator random_access_iterator<const Type>()
+                // {
+                //     return (random_access_iterator< const Type>(*_ptr));
+                // }
         private:
             value_type    *_ptr;
     };
