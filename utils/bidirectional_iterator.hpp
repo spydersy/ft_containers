@@ -4,7 +4,7 @@
 
 # include "iterators_traits.hpp"
 # include "iterator.hpp"
-
+# include "self_balanced_binary_search_tree.hpp"
 
 namespace ft
 {
@@ -77,7 +77,7 @@ namespace ft
                 bidirectional_iterator    &operator--()
                 {
                     this->__ptr--;
-                    return (*this);
+                    return *this;
                 }
 
                 /*
@@ -88,29 +88,17 @@ namespace ft
                         bidirectional_iterator   prev = *this;
 
                         this->__ptr--;
-                        return (prev);
+                        return prev;
                 }
 
             /*
             ** Dereference Operators:
             */
-                reference   operator*( void )
-                {
-                    return (*(this->__ptr));
-                }
+                reference   operator*( void ) { return *(this->__ptr); }
+                pointer     operator->( void ) { return this->__ptr; }
 
-                pointer   operator->( void )
-                {
-                    return (this->__ptr);
-                }
-
-                // // User Defined Conversion Function
-                // operator bidirectional_iterator<const Type>()
-                // {
-                //     return (bidirectional_iterator< const Type>(*__ptr));
-                // }
         private:
-            value_type    *__ptr;
+            pointer __ptr;
     };
 }
 

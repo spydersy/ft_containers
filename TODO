@@ -2,6 +2,33 @@
 PROG ; ft_map\
 
 === CONTAINERS ==================================
+PROG ; Destructor\
+NTYT ; begin\
+NTYT ; end\
+NTYT ; rbegin\
+NTYT ; rend\
+NTYT ; operator[]\
+NTYT ; insert\
+NTYT ; erase\
+NTYT ; swap\
+NTYT ; clear\
+NTYT ; key_comp\
+NTYT ; value_comp\
+NTYT ; find\
+NTYT ; count\
+NTYT ; lower_bound\
+NTYT ; upper_bound\
+NTYT ; equal_rnage\
+NTYT ; get_allocator\
+-------------------------------------------------
+DONE ; Constructors\
+DONE ; operator=\
+DONE ; size\
+DONE ; max_size\
+DONE ; empty\
+=================================================
+
+=== CONTAINERS ==================================
 DONE ; ft_vector\
 DONE ; ft_stack\
 PROG ; ft_map\
