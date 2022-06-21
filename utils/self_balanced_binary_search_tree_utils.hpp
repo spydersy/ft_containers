@@ -1,5 +1,5 @@
-#ifndef __BALANCED_BINARY_SEARCH_TREEUTILS__
-# define __BALANCED_BINARY_SEARCH_TREEUTILS__
+#ifndef __SELF_BALANCED_BINARY_SEARCH_TREEUTILS__
+# define __SELF_BALANCED_BINARY_SEARCH_TREEUTILS__
 
 # include <iostream>
 # include "pair.hpp"

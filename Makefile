@@ -5,7 +5,7 @@ VECTOR_SRCS= ./containers_tests/vector_test.cpp
 MAP_SRCS= ./containers_tests/map_test.cpp
 STACK_SRCS= ./containers_tests/stack_test.cpp
 
-CPPFLAGS= -Wall -Werror -Wextra -std=c++98
+CPPFLAGS= -Wall -Werror -Wextra -std=c++98 -g3 -fsanitize=address
 DEFINE_FLAG= -D NAMESPACE=
 
 all:  VECTOR STACK MAP
