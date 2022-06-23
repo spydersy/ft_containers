@@ -64,5 +64,6 @@ fclean:	clean
 		rm -rf $(BINS)
 		rm -rf LOG
 		rm -rf *.out
+		rm -rf *.dSYM
 
 re : fclean all

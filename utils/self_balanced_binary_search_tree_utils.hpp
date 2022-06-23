@@ -1,89 +1,66 @@
 #ifndef __SELF_BALANCED_BINARY_SEARCH_TREEUTILS__
 # define __SELF_BALANCED_BINARY_SEARCH_TREEUTILS__
 
-# include <iostream>
-# include "pair.hpp"
+#include <iostream>
+#include "pair.hpp"
 
-# define IS_LEFT    -1
-# define IS_RIGHT   +1
-# define IS_ROOT    +0
-
-namespace tree
+namespace sbbst
 {
-    template < class Key,                                              // map::key_type
-               class T,                                                // map::mapped_type
-               class Compare = std::less<Key>,                         // map::key_compare
-               class Alloc = std::allocator<ft::pair<const Key,T> > >  // map::allocator_type
+
+    template < class Key,                                              // ft::map::key_type
+               class T,                                                // ft::map::mapped_type
+               class Compare = std::less<Key>,                         // ft::map::key_compare
+               class Alloc = std::allocator<ft::pair<const Key,T> > >  // ft::map::allocator_type
     class TreeNode
     {
+    /*
+    ** Member Types :
+    */
+    public:
+        typedef ft::pair<const Key, T>                     value_type;
+
     private:
-        Key         __key;
-        T           __value;
+        value_type  __pair;
         TreeNode*   __left;
         TreeNode*   __right;
         TreeNode*   __parent;
-
     public:
-        /*
-        ** Canonical Form :
-        */
-        TreeNode( Key key, T value ) :  __key(key),
-                                        __value(value),
-                                        __left(nullptr),
-                                        __right(nullptr),
-                                        __parent(nullptr)
+    /*
+    ** Canonical Form :
+    */
+        // Default Constructor :
+        TreeNode( void ) { return; }
+
+        // Pair Constructor :
+        TreeNode( value_type pair ) :   this->__pair(pair),
+                                        this->__left(nullptr),
+                                        this->__right(nullptr),
+                                        this->__parent(nullptr)
         { return; }
 
-        TreeNode(const TreeNode& src)
+        // Copy Constructor :
+        TreeNode( const TreeNode & src ) const
         {
             if (this != &src)
             {
-                this->__key = src.__key;
-                this->__value = src.__value;
-                this->__left = src.__left;
-                this->__right = src.__right;
-                this->__parent = src.__parent;
+                *this = src;
             }
         }
 
-        TreeNode    &operator=(const TreeNode& rhs)
+        // Operator= :
+        TreeNode&   operator=( const TreeNode & src )
         {
-            if (this != &rhs)
+            if (this != &src)
             {
-                this->__key = rhs.__key;
-                this->__value = rhs.__value;
-                this->__left = rhs.__left;
-                this->__right = rhs.__right;
-                this->__parent = rhs.__parent;
+                this->__pair = src.__pair;
             }
             return *this;
         }
 
-        ~TreeNode( void )
-        { return; }
-
-        /*
-        ** Getters :
-        */
-        Key         get_key( void ) { return this->__key; }
-        T           get_value( void ) { return this->__value; }
-        TreeNode*   get_left( void ) { return this->__left; }
-        TreeNode*   get_right( void ) { return this->__right; }
-        TreeNode*   get_parent( void ) { return this->__parent; }
-
-        /*
-        ** Setters :
-        */
-        void    set_key( const Key& key) { this->__key = key; }
-        void    set_value( const T& value) { this->__value = value; }
-        void    set_left( TreeNode* left) { this->__left = left; }
-        void    set_right( TreeNode* right) { this->__right = right; }
-        void    set_parent( TreeNode* parent) { this->__parent = parent; }
-
-    };  // Class TreeNode
-
-} // namespace tree;
+        // Destructor :
+        ~TreeNode( void ) { return; }
+    }; // class TreeNode
+} // namespace sbbst
 
 
 #endif
-
