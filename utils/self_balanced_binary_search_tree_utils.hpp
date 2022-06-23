@@ -15,6 +15,7 @@
 
 # define LEFT_NODE  -1
 # define RIGHT_NODE +1
+# define ROOT_NODE  +0
 
 namespace sbbst
 {
@@ -37,6 +38,8 @@ namespace sbbst
         TreeNode*   __right;
         TreeNode*   __parent;
         size_t      __index;
+        int         __position;
+
     public:
     /*
     ** Canonical Form :
@@ -46,15 +49,17 @@ namespace sbbst
                             __left(nullptr),
                             __right(nullptr),
                             __parent(this),
-                            __index(1)
+                            __index(1),
+                            __position(0)
         { std::cout << KGRN << "__TREE__NODE__DEFAULT__CONSTRUCTOR__CALLED__" << KNRM << std::endl; }
 
         // Pair Constructor :
-        TreeNode( value_type pair ) :   __pair(pair),
-                                        __left(nullptr),
-                                        __right(nullptr),
-                                        __parent(nullptr),
-                                        __index(1)
+        TreeNode( value_type pair, int position ) : __pair(pair),
+                                                    __left(nullptr),
+                                                    __right(nullptr),
+                                                    __parent(nullptr),
+                                                    __index(1),
+                                                    __position(position)
         { std::cout << KGRN << "__TREE__NODE__PAIR__CONSTRUCTOR__CALLED__" << KNRM << std::endl; }
 
         // Copy Constructor :
@@ -72,6 +77,12 @@ namespace sbbst
             if (this != &src)
             {
                 this->__pair = src.__pair;
+
+                this->__left = nullptr;
+                this->__right = nullptr;
+                this->__parent = nullptr;
+                this->__index = 1;
+                this->__position = 0;
             }
             return *this;
         }

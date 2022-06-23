@@ -45,7 +45,29 @@ namespace sbbst
     /*
     ** Methods :
     */
-        void insert(value_type pair)
+        node*    append_node(node** node_it, node** parent_it, int node_position, value_type pair)
+        {
+            *node_it = new node(pair, node_position);
+            (*node_it)->__parent = *parent_it;
+
+            if (node_position == LEFT_NODE)
+                return (*parent_it)->__left = *node_it;
+            else
+                return (*parent_it)->__right = *node_it;
+        }
+
+        void    balance_tree( node* inserted_node )
+        {
+            std::cerr << KRED << "BALANCE_TREE_INPUT : **********************************" << KNRM << std::endl;
+            std::cerr << "PARENT   : [" << inserted_node->__parent << "]" << std::endl;
+            std::cerr << "LEFT     : [" << inserted_node->__left << "]" << std::endl;
+            std::cerr << "RIGHTT   : [" << inserted_node->__right << "]" << std::endl;
+            std::cerr << "PAIR     : [" << inserted_node->__pair.first << " | " << inserted_node->__pair.second << "]" << std::endl;
+            std::cerr << "POSITION : [" << inserted_node->__position << "]" << std::endl;
+            std::cerr << KRED << "*******************************************************" << KNRM << std::endl;
+        }
+
+        void insert( value_type pair )
         {
             node*   node_it = __root;
             node*   parent_it = __root;
@@ -53,7 +75,8 @@ namespace sbbst
 
             if (__root == NULL)
             {
-                __root = new node(pair);
+                __root = new node(pair, ROOT_NODE);
+                __root->__parent = __root;
                 return ;
             }
             else
@@ -80,11 +103,7 @@ namespace sbbst
                         node_position = RIGHT_NODE;
                     }
                 }
-                node_it = new node(pair);
-                if (node_position == LEFT_NODE)
-                    parent_it->__left = node_it;
-                else if (node_position == RIGHT_NODE)
-                    parent_it->__right = node_it;
+                this->balance_tree(append_node(&node_it, &parent_it, node_position, pair));
             }
         }
     }; // class sbbst
