@@ -1,9 +1,9 @@
 
 BINS=	ft_map.out std_map.out ft_vector.out std_vector.out std_stack.out ft_stack.out
 
-VECTOR_SRCS= ./containers_tests/vector_test.cpp
-MAP_SRCS= ./containers_tests/map_test.cpp
-STACK_SRCS= ./containers_tests/stack_test.cpp
+VECTOR_SRCS= ./TESTS/containers_tests/vector_test.cpp
+MAP_SRCS= ./TESTS/containers_tests/map_test.cpp
+STACK_SRCS= ./TESTS/containers_tests/stack_test.cpp
 
 CPPFLAGS= -Wall -Werror -Wextra -std=c++98 -g3 -fsanitize=address
 DEFINE_FLAG= -D NAMESPACE=
