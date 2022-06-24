@@ -56,14 +56,46 @@ namespace sbbst
                 return (*parent_it)->__right = *node_it;
         }
 
+        bool    compare_childs(node* node1)
+        {
+            int     diff = 0;
+            node*   node2 = nullptr;
+
+            if (node1->__index == LEFT_NODE)
+                node2 = node1->__parent->get_right();
+            else if (node1->__index == RIGHT_NODE)
+                node2 = node1->__parent->get_left();
+
+            if (node2 != nullptr)
+                diff = node1->__index - node2->__index;
+            else
+                diff = node1->__index;
+            return (-1 <= diff && diff <= 1)
+        }
+
         void    balance_tree( node* inserted_node )
         {
+            node*   node_it = inserted_node;
+            while (node_it != node_it->__parent)
+            {
+                if (node_it != inserted_node)
+                    node_it->__index++;
+                if (compare_childs(node_it) == false)
+                {
+
+                }
+
+                std::cout << "NODE_INDEX ************************************ : " << node_it->__index << std::endl;;
+                node_it = node_it->__parent;
+            }
             std::cerr << KRED << "BALANCE_TREE_INPUT : **********************************" << KNRM << std::endl;
             std::cerr << "PARENT   : [" << inserted_node->__parent << "]" << std::endl;
             std::cerr << "LEFT     : [" << inserted_node->__left << "]" << std::endl;
             std::cerr << "RIGHTT   : [" << inserted_node->__right << "]" << std::endl;
             std::cerr << "PAIR     : [" << inserted_node->__pair.first << " | " << inserted_node->__pair.second << "]" << std::endl;
             std::cerr << "POSITION : [" << inserted_node->__position << "]" << std::endl;
+            std::cerr << "INDEX    : [" << inserted_node->__index << "]" << std::endl;
+            std::cerr << "THIS     : [" << inserted_node << "]" << std::endl;
             std::cerr << KRED << "*******************************************************" << KNRM << std::endl;
         }
 
@@ -77,6 +109,7 @@ namespace sbbst
             {
                 __root = new node(pair, ROOT_NODE);
                 __root->__parent = __root;
+                balance_tree(__root);
                 return ;
             }
             else

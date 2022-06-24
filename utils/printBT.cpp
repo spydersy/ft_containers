@@ -26,16 +26,24 @@ void printBT(const BT* node)
 
 int main()
 {
+    std::string str;
     sbbst::sbbst<int, std::string> mp;
 
-    mp.insert(ft::make_pair(1, "10"));
-    mp.insert(ft::make_pair(2, "20"));
-    mp.insert(ft::make_pair(3, "30"));
-    mp.insert(ft::make_pair(4, "40"));
-    mp.insert(ft::make_pair(-10, "-100"));
-    mp.insert(ft::make_pair(-20, "-100"));
-    mp.insert(ft::make_pair(-4, "40"));
+    mp.insert(ft::make_pair(1 + 20, "10"));
+    std::cin >> str;
+    mp.insert(ft::make_pair(2 + 20, "20"));
+    std::cin >> str;
+    mp.insert(ft::make_pair(3 + 20, "30"));
+    std::cin >> str;
+    mp.insert(ft::make_pair(4 + 20, "40"));
+    std::cin >> str;
+    mp.insert(ft::make_pair(-10 + 20, "-100"));
+    std::cin >> str;
+    mp.insert(ft::make_pair(-20 + 20, "-100"));
+    std::cin >> str;
+    mp.insert(ft::make_pair(-4 + 20, "40"));
 
+    std::cout << "ROOT_INDEX : " << mp.get_root()->__index << std::endl;
     printBT(mp.get_root());
 
     return 0;
