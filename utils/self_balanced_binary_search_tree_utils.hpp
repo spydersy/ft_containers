@@ -30,14 +30,14 @@ namespace sbbst
     ** Member Types :
     */
     private:
-        typedef ft::pair<const Key, T>                     value_type;
+        typedef ft::pair<const Key, T> value_type;
 
     public:
         value_type  __pair;
         TreeNode*   __left;
         TreeNode*   __right;
         TreeNode*   __parent;
-        size_t      __index;
+        int         __index;
         int         __position;
 
     public:

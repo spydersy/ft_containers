@@ -18,8 +18,8 @@ namespace sbbst
     ** Member Types :
     */
     public:
-        typedef ft::pair<const Key, T>                     value_type;
-        typedef TreeNode<Key, T, Compare, Alloc>    node;
+        typedef ft::pair<const Key, T>           value_type;
+        typedef TreeNode<Key, T, Compare, Alloc> node;
     private:
         size_t  __size;
         node*   __root;
@@ -40,11 +40,21 @@ namespace sbbst
     /*
     ** Getters :
     */
-        node*   get_root() const { return this->__root; }
+        node*   get_root( void ) const { return this->__root; }
 
     /*
     ** Methods :
     */
+        node* get_symmetrical_sutree( node* sutree )
+        {
+            if (sutree->__position == LEFT_NODE)
+                return sutree->__parent->__right;
+            else if (sutree->__position == RIGHT_NODE)
+                return sutree->__parent->__left;
+            else
+                return sutree;
+        }
+
         node*    append_node(node** node_it, node** parent_it, int node_position, value_type pair)
         {
             *node_it = new node(pair, node_position);
@@ -56,9 +66,9 @@ namespace sbbst
                 return (*parent_it)->__right = *node_it;
         }
 
-        bool    compare_childs(node* node1)
+        bool    balance_factor(node* node1)
         {
-            int     diff = 0;
+            int     diff = node1->__index;
             node*   node2 = nullptr;
 
             if (node1->__index == LEFT_NODE)
@@ -68,9 +78,15 @@ namespace sbbst
 
             if (node2 != nullptr)
                 diff = node1->__index - node2->__index;
-            else
-                diff = node1->__index;
-            return (-1 <= diff && diff <= 1)
+            return (-1 <= diff && diff <= 1);
+        }
+
+        void    do_some_magic( node* child_node )
+        {
+            // node*   parent = child_node->__parent;
+
+            // parent->
+            std::cerr << "__DO_SOME_MAGIC__ : " << child_node->__pair.first << std::endl;
         }
 
         void    balance_tree( node* inserted_node )
@@ -79,10 +95,19 @@ namespace sbbst
             while (node_it != node_it->__parent)
             {
                 if (node_it != inserted_node)
-                    node_it->__index++;
-                if (compare_childs(node_it) == false)
                 {
-
+                    node_it->__index++;
+                    if (get_symmetrical_sutree(node_it)
+                        && get_symmetrical_sutree(node_it)->__index
+                            == node_it->__index - 1)
+                    {
+                        node_it->__index--;
+                    }
+                }
+                std::cerr << KMAG << "__TREE__IS__BALANCED__ : " << (balance_factor(node_it) == true ? "__TRUE__" : "__FALSE__") << KNRM << std::endl;
+                if (balance_factor(node_it) == false)
+                {
+                    do_some_magic(node_it);
                 }
 
                 std::cout << "NODE_INDEX ************************************ : " << node_it->__index << std::endl;;
