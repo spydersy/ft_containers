@@ -45,6 +45,14 @@ namespace sbbst
     /*
     ** Methods :
     */
+        // node*   get_previous_node( node* current )  // For iterator operator--() && operator--(int)
+        // {
+        // }
+
+        // node*   get_next_node( node* current ) // For iterator operator++() && operator++(int)
+        // {
+        // }
+
         node* get_symmetrical_sutree( node* sutree )
         {
             if (sutree->__position == LEFT_NODE)
@@ -81,12 +89,41 @@ namespace sbbst
             return (-1 <= diff && diff <= 1);
         }
 
+        // node*   left_right_rotation( node* child_node )
+        // {
+        //     left_rotation(child_node);
+        //     //right_rotation(child_node);
+        // }
+
+        // node*   right_left_rotation( node* child_node )
+        // {
+        //     right_rotation(child_node);
+        //     // left_rotation(child_node);
+        // }
+
+        // node*   left_rotation( node* parent_node )
+        // {
+        // }
+
+        // node*   right_rotation( node* parent_node )
+        // {
+        // }
+
         void    do_some_magic( node* child_node )
         {
-            // node*   parent = child_node->__parent;
+            int childe_position = child_node->__position;
+            int parent_position = child_node->__parent->__position;
 
-            // parent->
-            std::cerr << "__DO_SOME_MAGIC__ : " << child_node->__pair.first << std::endl;
+            std::cerr << "__DO_SOME_MAGIC__CHECK__ : " << childe_position << " | " << parent_position << std::endl;
+
+            if (childe_position == LEFT_NODE && childe_position == parent_position)
+            {
+                std::cerr << "__DO_SOME_MAGIC__ : " << "__LEFT_ROTATION__" << std::endl;
+            }
+            else if (childe_position == RIGHT_NODE && childe_position == parent_position)
+            {
+                std::cerr << "__DO_SOME_MAGIC__ : " << "__RIGHT_ROTATION__" << std::endl;
+            }
         }
 
         void    balance_tree( node* inserted_node )
@@ -104,12 +141,11 @@ namespace sbbst
                         node_it->__index--;
                     }
                 }
-                std::cerr << KMAG << "__TREE__IS__BALANCED__ : " << (balance_factor(node_it) == true ? "__TRUE__" : "__FALSE__") << KNRM << std::endl;
+                // std::cerr << KMAG << "__TREE__IS__BALANCED__ : " << (balance_factor(node_it) == true ? "__TRUE__" : "__FALSE__") << KNRM << std::endl;
                 if (balance_factor(node_it) == false)
                 {
                     do_some_magic(node_it);
                 }
-
                 std::cout << "NODE_INDEX ************************************ : " << node_it->__index << std::endl;;
                 node_it = node_it->__parent;
             }
