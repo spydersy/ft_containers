@@ -68,7 +68,7 @@ void printTree(BT* root, Trunk *prev, bool isLeft)
     }
 
     showTrunks(trunk);
-    cout << " " << root->get_pair().first << endl;
+    cout << " [" << root->get_pair().first << " | " << root->__index << "]" << endl;
 
     if (prev) {
         prev->str = prev_str;
@@ -78,21 +78,80 @@ void printTree(BT* root, Trunk *prev, bool isLeft)
     printTree(root->get_left(), trunk, false);
 }
 
+template <typename BT>
+void    dbg(BT* root)
+{
+    while (root != nullptr)
+    {
+        std::cout << KCYN << "==========================" << KNRM << std::endl;
+        std::cout << "THIS        : [" << root << "]" << std::endl;
+        std::cout << "INDEX       : [" << root->__index << "]" << std::endl;
+        std::cout << "VALUE       : [" << root->get_pair().first << "]" << std::endl;
+        std::cout << "POSITION    : [" << root->__position << "]" << std::endl << std::endl;
+
+        std::cout << "PARENT      : [" << root->__parent << "]" << std::endl;
+        std::cout << "LEFT_CHILD  : [" << root->__left << "]" << std::endl;
+        std::cout << "RIGHT_CHILD : [" << root->__right << "]" << std::endl;
+
+        root = root->__right;
+    }
+}
+
 int main()
 {
-    {
-        std::string str;
-        sbbst::sbbst<int, std::string> mp;
+    std::string str;
+    sbbst::sbbst<int, std::string> mp;
 
-        mp.insert(ft::make_pair(1 + 20, "10"));
-        mp.insert(ft::make_pair(4 + 20, "40"));
-        mp.insert(ft::make_pair(2 + 20, "20"));
-        mp.insert(ft::make_pair(3 + 20, "30"));
-        mp.insert(ft::make_pair(-10 + 20, "-100"));
-        mp.insert(ft::make_pair(-20 + 20, "-100"));
-        mp.insert(ft::make_pair(-4 + 20, "40"));
-        printTree(mp.get_root(), nullptr, false);
-        system("leaks a.out");
-    }
+    std::cout << KRED << "DBG : ***********************************************************" << KNRM << std::endl;
+    mp.insert(ft::make_pair(1, "10"));
+    // std::cin >> str;
+    dbg(mp.get_root());
+
+    std::cout << KRED << "DBG : ***********************************************************" << KNRM << std::endl;
+    mp.insert(ft::make_pair(2, "20"));
+    // std::cin >> str;
+    dbg(mp.get_root());
+
+    std::cout << KRED << "DBG : ***********************************************************" << KNRM << std::endl;
+    mp.insert(ft::make_pair(3, "30"));
+    dbg(mp.get_root());
+
+    // std::cout << KRED << "DBG : ***********************************************************" << KNRM << std::endl;
+    // mp.insert(ft::make_pair(4, "30"));
+    // dbg(mp.get_root());
+
+    // std::cin >> str;
+
+    // mp.insert(ft::make_pair(4, "30"));
+    // std::cin >> str;
+
+    // mp.insert(ft::make_pair(5, "30"));
+    // std::cin >> str;
+
+    // mp.insert(ft::make_pair(6, "30"));
+    // std::cin >> str;
+
+
+    // mp.insert(ft::make_pair(7, "30"));
+    // std::cin >> str;
+
+    // dbg(mp.get_root());
+
+    printTree(mp.get_root(), nullptr, false);
+    exit(0);
+
+
+
+
+
+        // mp.insert(ft::make_pair(4 + 20, "40"));
+        // std::cin >> str;
+        // mp.insert(ft::make_pair(-10 + 20, "-100"));
+        // std::cin >> str;
+        // mp.insert(ft::make_pair(-20 + 20, "-100"));
+        // std::cin >> str;
+        // mp.insert(ft::make_pair(-4 + 20, "40"));
+        // std::cin >> str;
+        // printTree(mp.get_root(), nullptr, false);
     return 0;
 }
