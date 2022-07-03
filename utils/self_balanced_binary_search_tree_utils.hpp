@@ -17,7 +17,7 @@
 # define RIGHT_NODE +1
 # define ROOT_NODE  +0
 
-namespace sbbst
+namespace sbbst /* SIKS SAAAAKHIN __ONLY__FOR__AMZIL__ */
 {
 
     template < class Key,                                              // ft::map::key_type

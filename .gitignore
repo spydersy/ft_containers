@@ -2,5 +2,5 @@
 *.out
 *.log
 *.dSYM
-ERR_DBG
 *DBG*
+*dbg*
