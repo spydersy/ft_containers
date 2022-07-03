@@ -104,7 +104,6 @@ namespace sbbst
 
         node*   left_rotation( node* child_node, node* parent_node )
         {
-            std::cerr << "ROOT_BEFORE : " << this->__root << std::endl;
             if (parent_node == parent_node->__parent)
             {
                 parent_node->__index = child_node->__index - 1;
@@ -115,9 +114,6 @@ namespace sbbst
                 child_node->__parent = child_node;
                 this->__root->__left = parent_node;
 
-
-
-                std::cerr << "ROOT_AFTER  : " << this->__root << std::endl;
                 std::cout << "__LEFT__ROTTION__CONDITION__00__ : ==================================== [" << parent_node->__pair.first << "] [" << child_node->__pair.first << "]" << std::endl;
                 // set child node as root of tree;
 
@@ -136,27 +132,34 @@ namespace sbbst
                 parent_node->__right = nullptr;
                 parent_node->__index = child_node->__index - 1;
             }
-
-            // child_node->__left = parent_node;
-            // parent_node__parent = child_node;
-            // parent_node__index = child_node->__index - 1;
-            // parent_node__right = nullptr;
-
             return nullptr;
         }
 
         node*   right_rotation( node* child_node, node* parent_node )
         {
-            std::cout << "RIGHT_ROTTION : ====================================" << std::endl;
             if (parent_node == parent_node->__parent)
+            {
+                parent_node->__index = child_node->__index - 1;
+                parent_node->__left = child_node->__right;
+                parent_node->__parent = child_node;
+
+                this->__root = child_node;
                 child_node->__parent = child_node;
+                this->__root->__right = parent_node;
+
+                std::cout << "__RIGHT__ROTTION__CONDITION__00__ : ==================================== [" << parent_node->__pair.first << "] [" << child_node->__pair.first << "]" << std::endl;
+            }
             else
+            {
+                std::cout << "__RIGHT__ROTTION__CONDITION__01__ : ==================================== [" << parent_node->__pair.first << "] [" << child_node->__pair.first << "]" << std::endl;
                 child_node->__parent = parent_node->__parent;
-            child_node->__right = parent_node;
+                parent_node->__parent->__left = child_node;
+                child_node->__right = parent_node;
 
-            parent_node->__parent = child_node;
-            parent_node->__left = nullptr;
-
+                parent_node->__parent = child_node;
+                parent_node->__left = nullptr;
+                parent_node->__index = child_node->__index - 1;
+            }
             return nullptr;
         }
 
