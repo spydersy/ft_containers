@@ -55,6 +55,8 @@ namespace sbbst
 
         node* get_symmetrical_sutree( node* sutree )
         {
+            if (sutree == nullptr)
+                return nullptr;
             if (sutree->__position == LEFT_NODE)
             {
                 return sutree->__parent->__right;
@@ -81,7 +83,29 @@ namespace sbbst
                 return (*parent_it)->__right = *node_it;
         }
 
-        bool    balance_factor(node* node1)
+        node*   get_non_null_child(node* parent)
+        {
+            if (parent->__left != nullptr)
+                return parent->__left;
+            if (parent->__right != nullptr)
+                return parent->__right;
+            return nullptr;
+        }
+
+        int balance_factor_value(node* node1)
+        {
+            node*   node2 = get_symmetrical_sutree(node1);
+
+            if (node1 != nullptr && node2 == nullptr)
+                return node1->__index;
+            if (node1 == nullptr && node2 != nullptr)
+                return node2->__index;
+            if (node1 == nullptr && node2 == nullptr)
+                return 0;
+            return node1->__index - node2->__index;
+        }
+
+        bool    balance_factor_bool(node* node1)
         {
             int     diff = node1->__index;
             node*   node2 = get_symmetrical_sutree(node1);
@@ -152,12 +176,37 @@ namespace sbbst
 
         void    left_right_rotation(node* n)
         {
-            // node*   first_rotation = nullptr;
             std::cout << KRED << "__LEFT__RIGHT__ROTTION__CONDITION____ : ==================================== [" << n->__pair.first << "]" << KNRM << std::endl;
-            // exit(12);
-            // first_rotation = left_rotation(n, n->__parent);
-            // std::cerr << KRED << "__CHECK__ROTATION__RETURN__ :: " << first_rotation->__pair.first << " || " << first_rotation->__parent->__pair.first << " || " << first_rotation->__right->__pair.first << KNRM << std::endl;
-            // right_rotation(first_rotation, first_rotation->__parent);
+
+            node*   parent1 = n->__parent;
+            node*   parent2 = n->__parent->__parent;
+
+            n->__left = parent1;
+            n->__right = parent2;
+            n->__index = 2;
+            if (parent2 == parent2->__parent)
+            {
+                this->__root = n;
+                n->__parent = n;
+                n->__position = ROOT_NODE;
+            }
+            else
+            {
+                n->__parent = parent2->__parent;
+                n->__position = parent2->__position;
+            }
+            parent1->__parent = n;
+            parent2->__parent = n;
+
+            parent1->__right = nullptr;
+            parent1->__left = nullptr;
+            parent1->__position = LEFT_NODE;
+            parent1->__index = n->__index - 1;
+
+            parent2->__right = nullptr;
+            parent2->__leftt = nullptr;
+            parent2->__position = RIGHT_NODE;
+            parent2->__index = n->__index - 1;
         }
 
         void    right_left_rotation(node* n)
@@ -200,12 +249,12 @@ namespace sbbst
             int inserted_position = inserted_node->__position;
             int childe_position = child_node->__position;
 
-            std::cerr << KBLU << "__DO__SOME__MAGIC__CALLED__" << KNRM << std::endl;
-            std::cerr << KBLU << "__CHILD__POSITION__    : " << childe_position << KNRM << std::endl;
-            std::cerr << KBLU << "__INSERTED__POSITION__ : " << inserted_position << KNRM << std::endl;
-            std::cerr << KGRN << "============================================================================" << KNRM << std::endl;
-            std::cerr << KGRN << "__CHILD__VALUE__    : " << child_node->__pair.first << KNRM << std::endl;
-            std::cerr << KGRN << "__INSERTED__VALUE__ : " << inserted_node->__pair.first << KNRM << std::endl;
+            // std::cerr << KBLU << "__DO__SOME__MAGIC__CALLED__" << KNRM << std::endl;
+            // std::cerr << KBLU << "__CHILD__POSITION__    : " << childe_position << KNRM << std::endl;
+            // std::cerr << KBLU << "__INSERTED__POSITION__ : " << inserted_position << KNRM << std::endl;
+            // std::cerr << KGRN << "============================================================================" << KNRM << std::endl;
+            // std::cerr << KGRN << "__CHILD__VALUE__    : " << child_node->__pair.first << KNRM << std::endl;
+            // std::cerr << KGRN << "__INSERTED__VALUE__ : " << inserted_node->__pair.first << KNRM << std::endl;
 
             // Right rotation
             if ((childe_position == LEFT_NODE || childe_position == ROOT_NODE) && childe_position == inserted_position)
@@ -234,32 +283,24 @@ namespace sbbst
         void    balance_tree( node** inserted_node )
         {
             node*   node_it = *inserted_node;
-            bool    balanced;
 
             while (*inserted_node != (*inserted_node)->__parent) // Only root_tree verify this condition aka [inserted_node = inserted_node->__parent]
             {
-                balanced = false;
                 if (*inserted_node != node_it)
                 {
                     std::cerr << KRED << "___WAAAARNING___EXCEPTION___00 :: " << (*inserted_node)->__pair.first << KNRM << std::endl;
-                    (*inserted_node)->__index++;
-                    /*
-                        if (get_symmetrical_sutree(*inserted_node)
-                            && get_symmetrical_sutree(*inserted_node)->__index
-                                == (*inserted_node)->__index - 1)
-                        {
-                            (*inserted_node)->__index--;
-                        }
-                    */
+                    if (balance_factor_value(get_non_null_child(*inserted_node)) != 0)
+                        (*inserted_node)->__index++;
+                    else
+                        break ;
                 }
-                if (this->balance_factor(*inserted_node) == false)
+                if (this->balance_factor_bool(*inserted_node) == false)
                 {
                     this->do_some_magic(*inserted_node, node_it);
-                    balanced = true;
                 }
-                std::cout << "NODE_INDEX ************************************ : " << (*inserted_node)->__index << std::endl;;
+                // std::cout << "NODE_INDEX ************************************ : " << (*inserted_node)->__index << std::endl;;
                 *inserted_node = (*inserted_node)->__parent;
-                if (*inserted_node == (*inserted_node)->__parent && balanced == false)
+                if (*inserted_node == (*inserted_node)->__parent && balance_factor_value(get_non_null_child(*inserted_node)) != 0)
                 {
                     std::cerr << KRED << "___WAAAARNING___EXCEPTION___01 :: " << (*inserted_node)->__pair.first << KNRM << std::endl;
                     (*inserted_node)->__index++;

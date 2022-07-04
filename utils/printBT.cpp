@@ -49,6 +49,7 @@ int main()
             std::cout << std::endl << std::endl << " INSERT ELEMENT : ";
             std::cin >> str;
 
+            std::cout << std::endl << std::endl;
             mp.insert(ft::make_pair(stoi(str), "30"));
             printBT(mp.get_root());
         }
