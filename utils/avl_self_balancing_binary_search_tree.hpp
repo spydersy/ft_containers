@@ -1,8 +1,8 @@
 
-#ifndef __SELF_BALANCED_BINARY_SEARCH_TREE__
-# define __SELF_BALANCED_BINARY_SEARCH_TREE__
+#ifndef __AVL_SELF_BALANCING_BINARY_SEARCH_TREE__
+# define __AVL_SELF_BALANCING_BINARY_SEARCH_TREE__
 
-# include "self_balanced_binary_search_tree_utils.hpp"
+# include "avl_self_balancing_binary_search_tree_utils.hpp"
 
 namespace sbbst
 {
@@ -122,12 +122,18 @@ namespace sbbst
                 std::cout << "__LEFT__ROTTION__CONDITION__00__ : ==================================== [" << parent_node->__pair.first << "] [" << child_node->__pair.first << "]" << std::endl;
                 parent_node->__index = child_node->__index - 1;
                 parent_node->__right = child_node->__left;
+                if (child_node->__left)
+                    child_node->__left->__parent = parent_node;
+                if (parent_node->__right)
+                    parent_node->__right->__position = RIGHT_NODE;
                 parent_node->__parent = child_node;
 
                 this->__root = child_node;
                 child_node->__position = ROOT_NODE;
                 child_node->__parent = child_node;
                 this->__root->__left = parent_node;
+                if (this->__root->__left)
+                    this->__root->__left->__position = LEFT_NODE;
                 parent_node->__position = LEFT_NODE;
             }
             else
@@ -135,10 +141,18 @@ namespace sbbst
                 std::cout << "__LEFT__ROTTION__CONDITION__01__ : ==================================== [" << parent_node->__pair.first << "] [" << child_node->__pair.first << "]" << std::endl;
                 child_node->__parent = parent_node->__parent;
                 parent_node->__parent->__right = child_node;
+                parent_node->__right = child_node->__left; //
+                if (child_node->__left)
+                    child_node->__left->__position = RIGHT_NODE;
+                if (child_node->__left) //
+                    child_node->__left->__parent = parent_node; //
+                if (parent_node->__parent->__right)
+                    parent_node->__parent->__right->__position = RIGHT_NODE;
                 child_node->__left = parent_node;
-
+                if (child_node->__left)
+                    child_node->__left->__position = LEFT_NODE;
                 parent_node->__parent = child_node;
-                parent_node->__right = nullptr;
+                // parent_node->__right = nullptr; // last modification
                 parent_node->__index = child_node->__index - 1;
             }
             return child_node;
@@ -151,24 +165,37 @@ namespace sbbst
                 std::cout << KRED << "__RIGHT__ROTTION__CONDITION__00__ : ==================================== [" << parent_node->__pair.first << "] [" << child_node->__pair.first << "]" << KNRM << std::endl;
                 parent_node->__index = child_node->__index - 1;
                 parent_node->__left = child_node->__right;
+                if (child_node->__right)
+                    child_node->__right->__parent = parent_node;
+                if (parent_node->__left)
+                    parent_node->__left->__position = LEFT_NODE;
                 parent_node->__parent = child_node;
 
                 this->__root = child_node;
                 child_node->__position = ROOT_NODE;
                 child_node->__parent = child_node;
                 this->__root->__right = parent_node;
+                if (this->__root->__right)
+                    this->__root->__right->__position = RIGHT_NODE;
                 parent_node->__position = RIGHT_NODE;
             }
             else
             {
                 std::cout << KRED << "__RIGHT__ROTTION__CONDITION__01__ : ==================================== [" << parent_node->__pair.first << "] [" << child_node->__pair.first << "]" << KNRM << std::endl;
                 child_node->__parent = parent_node->__parent;
-                parent_node->__parent->__right = child_node;
+                parent_node->__parent->__left = child_node;
+                parent_node->__left = child_node->__right; //
+                if (child_node->__right) //
+                    child_node->__right->__position = LEFT_NODE; //
+                if (child_node->__right) //
+                    child_node->__right->__parent = parent_node; //
+                if (parent_node->__parent->__left)
+                    parent_node->__parent->__left->__position = LEFT_NODE;
                 child_node->__right = parent_node;
-                child_node->__position = RIGHT_NODE;
-
+                if (child_node->__right)
+                    child_node->__right->__position = RIGHT_NODE;
+                // child_node->__position = RIGHT_NODE;
                 parent_node->__parent = child_node;
-                parent_node->__left = nullptr;
                 parent_node->__index = child_node->__index - 1;
             }
             return child_node;
@@ -204,7 +231,7 @@ namespace sbbst
             parent1->__index = n->__index - 1;
 
             parent2->__right = nullptr;
-            parent2->__leftt = nullptr;
+            parent2->__left = nullptr;
             parent2->__position = RIGHT_NODE;
             parent2->__index = n->__index - 1;
         }
@@ -279,6 +306,16 @@ namespace sbbst
                 left_right_rotation(inserted_node);
             }
         }
+        node*   get_max_index_of_child(node* n)
+        {
+            if (n->__left == nullptr && n->__right == nullptr)
+                return nullptr;
+            if (n->__left != nullptr && n->__right == nullptr)
+                return n->__left;
+            if (n->__left == nullptr && n->__right != nullptr)
+                return n->__right;
+            return n->__left->__index <= n->__right->__index ? n->__right : n->__left;
+        }
 
         void    balance_tree( node** inserted_node )
         {
@@ -289,10 +326,13 @@ namespace sbbst
                 if (*inserted_node != node_it)
                 {
                     std::cerr << KRED << "___WAAAARNING___EXCEPTION___00 :: " << (*inserted_node)->__pair.first << KNRM << std::endl;
-                    if (balance_factor_value(get_non_null_child(*inserted_node)) != 0)
-                        (*inserted_node)->__index++;
-                    else
-                        break ;
+                    (*inserted_node)->__index++;
+                    if (get_max_index_of_child(*inserted_node)
+                    && (*inserted_node)->__index - get_max_index_of_child(*inserted_node)->__index > 1)
+                    {
+                        (*inserted_node)->__index--;
+                        std::cerr << KCYN << "___WAAAARNING___EXCEPTION___00__________________ :: " << KNRM << std::endl;
+                    }
                 }
                 if (this->balance_factor_bool(*inserted_node) == false)
                 {
@@ -304,6 +344,12 @@ namespace sbbst
                 {
                     std::cerr << KRED << "___WAAAARNING___EXCEPTION___01 :: " << (*inserted_node)->__pair.first << KNRM << std::endl;
                     (*inserted_node)->__index++;
+                    if (get_max_index_of_child(*inserted_node)
+                    && (*inserted_node)->__index - get_max_index_of_child(*inserted_node)->__index > 1)
+                    {
+                        (*inserted_node)->__index--;
+                        std::cerr << KCYN << "___WAAAARNING___EXCEPTION___01__________________ :: " << KNRM << std::endl;
+                    }
                 }
             }
             // //std::cerr << KRED << "BALANCE_TREE_INPUT : **********************************" << KNRM << std::endl;

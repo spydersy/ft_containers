@@ -1,5 +1,16 @@
-
-PROG ; ft_map\
+=== ft_map TEST_CASES ===========================
+DONE ; LEFT_ROTATION       (ROOT)
+DONE ; LEFT_ROTATION       (NON_ROOT)
+-------------------------------------------------
+NTYT ; RIGHT_ROTATION      (ROOT)
+NTYT ; RIGHT_ROTATION      (NON_ROOT)
+-------------------------------------------------
+NTYT ; LEFT_RIGHT_ROTATION (ROOT)
+NTYT ; LEFT_RIGHT_ROTATION (NON_ROOT)
+-------------------------------------------------
+NTYT ; RIGHT_LEFT_ROTATION (ROOT)
+NTYT ; RIGHT_LEFT_ROTATION (NON_ROOT)
+=================================================
 
 === CONTAINERS ==================================
 PROG ; Destructor\
