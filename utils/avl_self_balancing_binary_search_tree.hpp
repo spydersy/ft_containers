@@ -117,87 +117,65 @@ namespace sbbst
 
         node*   left_rotation( node* child_node, node* parent_node )
         {
-            if (parent_node == parent_node->__parent)
-            {
-                std::cout << "__LEFT__ROTTION__CONDITION__00__ : ==================================== [" << parent_node->__pair.first << "] [" << child_node->__pair.first << "]" << std::endl;
-                parent_node->__index = child_node->__index - 1;
-                parent_node->__right = child_node->__left;
-                if (child_node->__left)
-                    child_node->__left->__parent = parent_node;
-                if (parent_node->__right)
-                    parent_node->__right->__position = RIGHT_NODE;
-                parent_node->__parent = child_node;
+            // std::cout << "__LEFT__ROTTION__ : ==================================== [" << parent_node->__pair.first << "] [" << child_node->__pair.first << "]" << std::endl;
 
+            // PART_01 : parent_node->__left = child_node->__right;
+            parent_node->__right = child_node->__left; // TRUE
+            if (child_node->__left)
+            {
+                child_node->__left->__parent = parent_node;
+                child_node->__left->__position = RIGHT_NODE;
+            }
+
+            // PART_02 : child_node->__right = parent_node;
+            child_node->__left = parent_node; // TRUE
+            if (parent_node->__position == ROOT_NODE)
+            {
                 this->__root = child_node;
-                child_node->__position = ROOT_NODE;
                 child_node->__parent = child_node;
-                this->__root->__left = parent_node;
-                if (this->__root->__left)
-                    this->__root->__left->__position = LEFT_NODE;
-                parent_node->__position = LEFT_NODE;
+                child_node->__position = ROOT_NODE;
             }
             else
             {
-                std::cout << "__LEFT__ROTTION__CONDITION__01__ : ==================================== [" << parent_node->__pair.first << "] [" << child_node->__pair.first << "]" << std::endl;
-                child_node->__parent = parent_node->__parent;
                 parent_node->__parent->__right = child_node;
-                parent_node->__right = child_node->__left; //
-                if (child_node->__left)
-                    child_node->__left->__position = RIGHT_NODE;
-                if (child_node->__left) //
-                    child_node->__left->__parent = parent_node; //
-                if (parent_node->__parent->__right)
-                    parent_node->__parent->__right->__position = RIGHT_NODE;
-                child_node->__left = parent_node;
-                if (child_node->__left)
-                    child_node->__left->__position = LEFT_NODE;
-                parent_node->__parent = child_node;
-                // parent_node->__right = nullptr; // last modification
-                parent_node->__index = child_node->__index - 1;
+                child_node->__parent = parent_node->__parent;
+                child_node->__position = parent_node->__position;
             }
+            parent_node->__parent = child_node;
+            parent_node->__position = LEFT_NODE;
+
+            parent_node->__index = child_node->__index - 1;
             return child_node;
         }
 
         node*   right_rotation( node* child_node, node* parent_node )
         {
-            if (parent_node == parent_node->__parent)
-            {
-                std::cout << KRED << "__RIGHT__ROTTION__CONDITION__00__ : ==================================== [" << parent_node->__pair.first << "] [" << child_node->__pair.first << "]" << KNRM << std::endl;
-                parent_node->__index = child_node->__index - 1;
-                parent_node->__left = child_node->__right;
-                if (child_node->__right)
-                    child_node->__right->__parent = parent_node;
-                if (parent_node->__left)
-                    parent_node->__left->__position = LEFT_NODE;
-                parent_node->__parent = child_node;
+            std::cout << "__RIGHT__ROTTION__ : ==================================== [" << parent_node->__pair.first << "] [" << child_node->__pair.first << "]" << std::endl;
 
+            parent_node->__left = child_node->__right;
+            if (child_node->__right)
+            {
+                child_node->__right->__parent = parent_node;
+                child_node->__right->__position = LEFT_NODE;
+            }
+
+            child_node->__right = parent_node;
+            if (parent_node->__position == ROOT_NODE)
+            {
                 this->__root = child_node;
-                child_node->__position = ROOT_NODE;
                 child_node->__parent = child_node;
-                this->__root->__right = parent_node;
-                if (this->__root->__right)
-                    this->__root->__right->__position = RIGHT_NODE;
-                parent_node->__position = RIGHT_NODE;
+                child_node->__position = ROOT_NODE;
             }
             else
             {
-                std::cout << KRED << "__RIGHT__ROTTION__CONDITION__01__ : ==================================== [" << parent_node->__pair.first << "] [" << child_node->__pair.first << "]" << KNRM << std::endl;
-                child_node->__parent = parent_node->__parent;
                 parent_node->__parent->__left = child_node;
-                parent_node->__left = child_node->__right; //
-                if (child_node->__right) //
-                    child_node->__right->__position = LEFT_NODE; //
-                if (child_node->__right) //
-                    child_node->__right->__parent = parent_node; //
-                if (parent_node->__parent->__left)
-                    parent_node->__parent->__left->__position = LEFT_NODE;
-                child_node->__right = parent_node;
-                if (child_node->__right)
-                    child_node->__right->__position = RIGHT_NODE;
-                // child_node->__position = RIGHT_NODE;
-                parent_node->__parent = child_node;
-                parent_node->__index = child_node->__index - 1;
+                child_node->__parent = parent_node->__parent;
+                child_node->__position = parent_node->__position;
             }
+            parent_node->__parent = child_node;
+            parent_node->__position = RIGHT_NODE;
+
+            parent_node->__index = child_node->__index - 1;
             return child_node;
         }
 
