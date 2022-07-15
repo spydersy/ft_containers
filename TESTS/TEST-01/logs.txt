@@ -1,1 +1,9 @@
-
+In file included from ../stack_tests/empty().cpp:2:
+../stack_tests/__service.ipp:3:10: fatal error: '../../../../stack.hpp' file not found
+#include STACK
+         ^~~~~
+../stack_tests/../system/../../config.hpp:9:17: note: expanded from macro 'STACK'
+#define STACK                   "../../../../stack.hpp"
+                                ^~~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
+ed.

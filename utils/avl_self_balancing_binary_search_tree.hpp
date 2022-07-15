@@ -115,141 +115,124 @@ namespace sbbst
             return (-1 <= diff && diff <= 1);
         }
 
-        node*   left_rotation( node* child_node, node* parent_node )
+        /* ************************************************************************************ *
+         *                                                                                      *
+         *  T1, T2, T3 and T4 are subtrees.                                                     *
+         *                                                                                      *
+         *             Z                                                      Y                 *
+         *           /  \                                                   /  \                *
+         *          /    \                                                 /    \               *
+         *         /      \                                               /      \              *
+         *        T1      Y               Left Rotate (z)                Z       X              *
+         *               / \             - - - - - - - - ->             / \     / \             *
+         *              /   \                                          /   \   /   \            *
+         *            T2    X                                         T1   T2 T3   T4           *
+         *                 / \                                                                  *
+         *                /   \                                                                 *
+         *               T3   T4                                                                *
+         *                                                                                      *
+         * ************************************************************************************ */
+        node*   left_rotation( node* z)
         {
-            parent_node->__right = child_node->__left; // TRUE
-            if (child_node->__left)
-            {
-                child_node->__left->__parent = parent_node;
-                child_node->__left->__position = RIGHT_NODE;
-            }
-            child_node->__left = parent_node; // TRUE
-            if (parent_node->__position == ROOT_NODE)
-            {
-                this->__root = child_node;
-                child_node->__parent = child_node;
-                child_node->__position = ROOT_NODE;
-            }
-            else
-            {
-                parent_node->__parent->__right = child_node;
-                child_node->__parent = parent_node->__parent;
-                child_node->__position = parent_node->__position;
-            }
-            parent_node->__parent = child_node;
-            parent_node->__position = LEFT_NODE;
-
-            parent_node->__index = child_node->__index - 1;
-            return child_node;
-        }
-
-        node*   right_rotation( node* child_node, node* parent_node )
-        {
-            parent_node->__left = child_node->__right;
-            if (child_node->__right)
-            {
-                child_node->__right->__parent = parent_node;
-                child_node->__right->__position = LEFT_NODE;
-            }
-            child_node->__right = parent_node;
-            if (parent_node->__position == ROOT_NODE)
-            {
-                this->__root = child_node;
-                child_node->__parent = child_node;
-                child_node->__position = ROOT_NODE;
-            }
-            else
-            {
-                parent_node->__parent->__left = child_node;
-                child_node->__parent = parent_node->__parent;
-                child_node->__position = parent_node->__position;
-            }
-            parent_node->__parent = child_node;
-            parent_node->__position = RIGHT_NODE;
-            parent_node->__index = child_node->__index - 1;
-            return child_node;
-        }
-
-        /*
-         *                       LEFTRO                                   RIGHTRO
-         *         Z                                        Z
-         *        / \                                      / \
-         *       /   \                                    /   \
-         *      Y    T4                                  X    T4
-         *    /  \                                      / \
-         *   /   \            =============>           /   \           =============>
-         *  T1   X                                    Y    T3
-         *      / \                                  / \
-         *     /   \                                /   \
-         *    T2   T3                              T1   T2
-        */
-
-        void    left_right_rotation(node* x)
-        {
-            std::cout << KRED << "__LEFT__RIGHT__ROTTION__CONDITION____ : ==================================== [" << n->__pair.first << "]" << KNRM << std::endl;
-            std::cout << "LEFTRO : **************************************************" << std::endl;
-            // LEFTRO:
-            node*   y = x->__parent;
-            node*   z = y->__parent;
-            node*   t2 = x->__left;
+            node* y = z->__right;
+            node* t2 = y->__left;
 
             if (t2)
             {
+                t2->__parent = z;
                 t2->__position = RIGHT_NODE;
-                t2->__parent = y;
-                x->__left = nullptr;
             }
-            x->__left = y;
-            if (y->__position == ROOT_NODE)
+            if (z->__position == ROOT_NODE)
             {
-                this->__root = x;
-                x->__parent = x;
-                x->__position = ROOT_NODE;
+                this->__root = y;
+                y->__parent = y;
+                y->__position = ROOT_NODE;
             }
             else
             {
-                x->__parent = y->__parent;
-                x->__position = LEFT_NODE;
+                y->__parent = z->__parent;
+                y->__position = z->__position;
             }
-            y->__right = t2;
-            y->__parent = x;
-            y->__position =LEFT_NODE;
-            // RIGHTRO:
+            y->__left = z;
+            z->__right = t2;
+            z->__parent = y;
+            z->__position = LEFT_NODE;
+            z->__index = y->__index - 1;
+            return y;
         }
 
-        void    right_left_rotation(node* n)
+        /* ************************************************************************************ *
+         *                                                                                      *
+         *  T1, T2, T3 and T4 are subtrees.                                                     *
+         *                                                                                      *
+         *                   Z                                       Y                          *
+         *                 /  \                                    /  \                         *
+         *                /    \                                  /    \                        *
+         *               /      \                                /      \                       *
+         *              Y      T4      Right Rotate (z)         X       Z                       *
+         *            /  \            - - - - - - - - ->       / \     / \                      *
+         *           /    \                                   /   \   /   \                     *
+         *          X     T3                                 T1   T2 T3   T4                    *
+         *         / \                                                                          *
+         *        /   \                                                                         *
+         *       T1   T2                                                                        *
+         *                                                                                      *
+         * ************************************************************************************ */
+        node*   right_rotation( node* z )
         {
-            std::cout << KRED << "__RIGHT__LEFT__ROTTION__CONDITION____ : ==================================== [" << n->__pair.first << "]" << KNRM << std::endl;
+            node* y = z->__left;
+            node* t3 = y->__right;
 
-            node*   parent1 = n->__parent;
-            node*   parent2 = n->__parent->__parent;
-
-            n->__right = parent1;
-            n->__left = parent2;
-            n->__index = 2;
-            if (parent2 == parent2->__parent)
+            if (t3)
             {
-                this->__root = n;
-                n->__parent = n;
-                n->__position = ROOT_NODE;
+                t3->__parent = z;
+                t3->__position = LEFT_NODE;
+            }
+            if (z->__position == ROOT_NODE)
+            {
+                this->__root = y;
+                y->__parent = y;
+                y->__position = ROOT_NODE;
             }
             else
             {
-                n->__parent = parent2->__parent;
-                n->__position = parent2->__position;
+                y->__parent = z->__parent;
+                y->__position = z->__position;
             }
-            parent1->__parent = n;
-            parent2->__parent = n;
+            y->__right = z;
+            z->__left = t3;
+            z->__parent = y;
+            z->__position = RIGHT_NODE;
+            z->__index = y->__index - 1;
+            return y;
+        }
 
-            parent1->__left = nullptr;
-            parent1->__right = nullptr;
-            parent1->__position = RIGHT_NODE;
-            parent1->__index = n->__index - 1;
+        /* ************************************************************************************ *
+         *                                                                                      *
+         *  T1, T2, T3 and T4 are subtrees.                                                     *
+         *                                                                                      *
+         *           Z                             Z                               X            *
+         *          / \                           / \                            /   \          *
+         *         /   \                         /   \                          /     \         *
+         *        Y    T4                       X    T4                        /       \        *
+         *      /  \        Left Rotate (y)    / \       Right Rotate(z)      Y         Z       *
+         *     /   \       =============>     /   \      =============>      / \       / \      *
+         *    T1   X                         Y    T3                        /   \     /   \     *
+         *        / \                       / \                            /     \   /     \    *
+         *       /   \                     /   \                           T1   T2  T3     T4   *
+         *      T2   T3                   T1   T2                                               *
+         *                                                                                      *
+         * ************************************************************************************ */
+        void    left_right_rotation(node* y)
+        {
+            node* x = left_rotation(y);
+            right_rotation(x->__parent);
+        }
 
-            parent2->__left = nullptr;
-            parent2->__right = nullptr;
-            parent2->__position = LEFT_NODE;
-            parent2->__index = n->__index - 1;
+        void    right_left_rotation(node* y)
+        {
+            node* x = right_rotation(y);
+            left_rotation(x->__parent);
         }
 
         void    do_some_magic( node* child_node, node* inserted_node )
@@ -261,29 +244,26 @@ namespace sbbst
             if ((childe_position == LEFT_NODE || childe_position == ROOT_NODE) && childe_position == inserted_position)
             {
                 std::cerr << KGRN << "__RIGHT_ROTATION__" << KNRM << std::endl;
-                right_rotation(child_node, child_node->__parent);
+                right_rotation(child_node->__parent);
             }
             // Left rotation
             else if ((childe_position == RIGHT_NODE || childe_position == ROOT_NODE) && childe_position == inserted_position)
             {
                 std::cerr << KGRN << "__LEFT_ROTATION__" << KNRM << std::endl;
-                left_rotation(child_node, child_node->__parent);
+                left_rotation(child_node->__parent);
             }
             // Right Left Rotation
             else if (inserted_position == LEFT_NODE && childe_position == RIGHT_NODE)
             {
-                right_left_rotation(inserted_node);
-                // node* rotated_node = right_rotation(inserted_node, child_node);
-                // left_rotation(rotated_node, rotated_node->__parent);
+                right_left_rotation(child_node);
             }
             // Left Right Rotation
             else if (inserted_position == RIGHT_NODE && childe_position == LEFT_NODE)
             {
-                left_right_rotation(inserted_node);
-                // node* rotated_node = left_rotation(inserted_node, child_node);
-                // right_rotation(rotated_node, rotated_node->__parent);
+                left_right_rotation(child_node);
             }
         }
+
         node*   get_max_index_of_child(node* n)
         {
             if (n->__left == nullptr && n->__right == nullptr)
@@ -330,15 +310,6 @@ namespace sbbst
                     }
                 }
             }
-            // //std::cerr << KRED << "BALANCE_TREE_INPUT : **********************************" << KNRM << std::endl;
-            // //std::cerr << "PARENT   : [" << (*inserted_node)->__parent << "]" << std::endl;
-            // //std::cerr << "LEFT     : [" << (*inserted_node)->__left << "]" << std::endl;
-            // //std::cerr << "RIGHTT   : [" << (*inserted_node)->__right << "]" << std::endl;
-            // //std::cerr << "PAIR     : [" << (*inserted_node)->__pair.first << " | " << (*inserted_node)->__pair.second << "]" << std::endl;
-            // //std::cerr << "POSITION : [" << (*inserted_node)->__position << "]" << std::endl;
-            // //std::cerr << "INDEX    : [" << (*inserted_node)->__index << "]" << std::endl;
-            // //std::cerr << "THIS     : [" << (*inserted_node) << "]" << std::endl;
-            // //std::cerr << KRED << "*******************************************************" << KNRM << std::endl;
         }
 
         void insert( value_type pair )
@@ -353,7 +324,6 @@ namespace sbbst
             }
             if (__root == NULL)
             {
-                //std::cerr << KBLU << "__ROOT__IS__NULL__" << KNRM << std::endl;
                 __root = new node(pair, ROOT_NODE);
                 __root->__parent = __root;
                 return ;
