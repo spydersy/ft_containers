@@ -5,7 +5,7 @@ VECTOR_SRCS= ./TESTS/containers_tests/vector_test.cpp
 MAP_SRCS= ./TESTS/containers_tests/map_test.cpp
 STACK_SRCS= ./TESTS/containers_tests/stack_test.cpp
 
-CPPFLAGS= -Wall -Werror -Wextra -std=c++98 -g3 -fsanitize=address
+CPPFLAGS= -Wall -Werror -Wextra -std=c++98
 DEFINE_FLAG= -D NAMESPACE=
 
 all:  VECTOR STACK MAP
@@ -49,7 +49,7 @@ RUN_MAP:
 
 TEST00:
 		clang++ $(CPPFLAGS) ./TESTS/TEST-00/Vector_tests.cpp -o vector.out && clear && ./vector.out
-		clang++ $(CPPFLAGS) ./TESTS/TEST-00/Stack_tests.cpp  -ferror-limit=0 -o stack.out  && clear && ./stack.out
+		clang++ $(CPPFLAGS) ./TESTS/TEST-00/Stack_tests.cpp  -o stack.out  && clear && ./stack.out
 
 TEST01:
 		cd TESTS/TEST-01/ && clear && ./start.sh -st

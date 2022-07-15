@@ -4,3 +4,4 @@
 *.dSYM
 *DBG*
 *dbg*
+*test*.cpp

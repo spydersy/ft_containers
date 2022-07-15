@@ -18,7 +18,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <sys/time.h>
-#include "../../vector.hpp"
+#include "../../containers/vector.hpp"
 
 #define BLUE "\e[0;34m"
 #define RED "\e[0;31m"
@@ -2451,6 +2451,5 @@ int ft_main(void)
 int main()
 {
     ft_main();
-    system("leaks vector.out");
     return 0;
 }
