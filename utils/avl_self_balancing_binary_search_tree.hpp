@@ -123,8 +123,8 @@ namespace sbbst
          *           /  \                                                   /  \                *
          *          /    \                                                 /    \               *
          *         /      \                                               /      \              *
-         *        T1      Y               Left Rotate (z)                Z       X              *
-         *               / \             - - - - - - - - ->             / \     / \             *
+         *        T1      Y                Left Rotate (z)               Z       X              *
+         *               / \               =============>               / \     / \             *
          *              /   \                                          /   \   /   \            *
          *            T2    X                                         T1   T2 T3   T4           *
          *                 / \                                                                  *
@@ -132,7 +132,7 @@ namespace sbbst
          *               T3   T4                                                                *
          *                                                                                      *
          * ************************************************************************************ */
-        node*   left_rotation( node* z)
+        node*   left_rotation( node* z, bool CHANGE_INDEX )
         {
             node* y = z->__right;
             node* t2 = y->__left;
@@ -152,12 +152,18 @@ namespace sbbst
             {
                 y->__parent = z->__parent;
                 y->__position = z->__position;
+                if (y->__position == LEFT_NODE)
+                    z->__parent->__left = y;
+                else
+                    z->__parent->__right = y;
             }
             y->__left = z;
             z->__right = t2;
+            std::cerr << "Z->PARENT : [" << z->__parent->__pair.first << "] | Y : [" << y->__pair.first << "]" << std::endl;
             z->__parent = y;
             z->__position = LEFT_NODE;
-            z->__index = y->__index - 1;
+            if (CHANGE_INDEX)
+                z->__index = y->__index - 1;
             return y;
         }
 
@@ -169,8 +175,8 @@ namespace sbbst
          *                 /  \                                    /  \                         *
          *                /    \                                  /    \                        *
          *               /      \                                /      \                       *
-         *              Y      T4      Right Rotate (z)         X       Z                       *
-         *            /  \            - - - - - - - - ->       / \     / \                      *
+         *              Y      T4       Right Rotate (z)        X       Z                       *
+         *            /  \              =============>         / \     / \                      *
          *           /    \                                   /   \   /   \                     *
          *          X     T3                                 T1   T2 T3   T4                    *
          *         / \                                                                          *
@@ -178,7 +184,7 @@ namespace sbbst
          *       T1   T2                                                                        *
          *                                                                                      *
          * ************************************************************************************ */
-        node*   right_rotation( node* z )
+        node*   right_rotation( node* z, bool CHANGE_INDEX )
         {
             node* y = z->__left;
             node* t3 = y->__right;
@@ -198,12 +204,17 @@ namespace sbbst
             {
                 y->__parent = z->__parent;
                 y->__position = z->__position;
+                if (y->__position == LEFT_NODE)
+                    z->__parent->__left = y;
+                else
+                    z->__parent->__right = y;
             }
             y->__right = z;
             z->__left = t3;
             z->__parent = y;
             z->__position = RIGHT_NODE;
-            z->__index = y->__index - 1;
+            if (CHANGE_INDEX)
+                z->__index = y->__index - 1;
             return y;
         }
 
@@ -219,20 +230,52 @@ namespace sbbst
          *     /   \       =============>     /   \      =============>      / \       / \      *
          *    T1   X                         Y    T3                        /   \     /   \     *
          *        / \                       / \                            /     \   /     \    *
-         *       /   \                     /   \                           T1   T2  T3     T4   *
+         *       /   \                     /   \                          T1    T2  T3     T4   *
          *      T2   T3                   T1   T2                                               *
          *                                                                                      *
          * ************************************************************************************ */
         void    left_right_rotation(node* y)
         {
-            node* x = left_rotation(y);
-            right_rotation(x->__parent);
+            node* x = left_rotation(y, false);
+            node* ret = right_rotation(x->__parent, false);
+
+            int old_index = ret->__index;
+            ret->__index = get_max_index_of_child(ret)->__index;
+
+            if (ret->__left)
+                ret->__left->__index = old_index;
+            if (ret->__right)
+                ret->__right->__index = old_index;
         }
 
+        /* ************************************************************************************ *
+         *                                                                                      *
+         *  T1, T2, T3 and T4 are subtrees.                                                     *
+         *                                                                                      *
+         *       Z                              Z                                    X          *
+         *     /  \                            / \                                 /   \        *
+         *    /    \                          /   \                               /     \       *
+         *   T1     Y                       T1     X                             /       \      *
+         *         / \     Right Rotate(y)        / \      Left Rotate(z)       Z         Y     *
+         *        /  \     =============>        /   \     =============>      / \       / \    *
+         *       X   T4                         T2   Y                        /   \     /   \   *
+         *      / \                                 / \                      /     \   /     \  *
+         *     /   \                               /   \                    T1    T2  T3     T4 *
+         *    T2   T3                             T3   T4                                       *
+         *                                                                                      *
+         * ************************************************************************************ */
         void    right_left_rotation(node* y)
         {
-            node* x = right_rotation(y);
-            left_rotation(x->__parent);
+            int old_index;
+            node* x = right_rotation(y, false);
+            node* ret = left_rotation(x->__parent, false);
+
+            old_index = ret->__index;
+            ret->__index = get_max_index_of_child(ret)->__index;
+            if (ret->__left)
+                ret->__left->__index = old_index;
+            if (ret->__right)
+                ret->__right->__index = old_index;
         }
 
         void    do_some_magic( node* child_node, node* inserted_node )
@@ -243,23 +286,25 @@ namespace sbbst
             // Right rotation
             if ((childe_position == LEFT_NODE || childe_position == ROOT_NODE) && childe_position == inserted_position)
             {
-                std::cerr << KGRN << "__RIGHT_ROTATION__" << KNRM << std::endl;
-                right_rotation(child_node->__parent);
+                std::cerr << KGRN << "_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_RIGHT_-_ROTATION_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << KNRM << std::endl;
+                right_rotation(child_node->__parent, true);
             }
             // Left rotation
             else if ((childe_position == RIGHT_NODE || childe_position == ROOT_NODE) && childe_position == inserted_position)
             {
-                std::cerr << KGRN << "__LEFT_ROTATION__" << KNRM << std::endl;
-                left_rotation(child_node->__parent);
+                std::cerr << KGRN << "_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_LEFT_-_ROTATION_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << KNRM << std::endl;
+                left_rotation(child_node->__parent, true);
             }
             // Right Left Rotation
             else if (inserted_position == LEFT_NODE && childe_position == RIGHT_NODE)
             {
+                std::cerr << KGRN << "_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_RIGHT_-_LEFT_-_ROTATION_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << KNRM << std::endl;
                 right_left_rotation(child_node);
             }
             // Left Right Rotation
             else if (inserted_position == RIGHT_NODE && childe_position == LEFT_NODE)
             {
+                std::cerr << KGRN << "_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_LEFT_-_RIGHT_-_ROTATION_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << KNRM << std::endl;
                 left_right_rotation(child_node);
             }
         }
