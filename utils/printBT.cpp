@@ -63,11 +63,6 @@ int     main()
     std::string str;
     avl_sbbst::avl_sbbst<int, std::string> mp;
 
-    // std::cerr << KCYN << "__MAIN_ROOT__CHECK__00 : " << mp.get_root()->__parent->__pair.first << KNRM << std::endl;
-    // std::cerr << KCYN << "__MAIN_ROOT__CHECK__01 : " << mp.get_root()->__parent->__pair.first << KNRM << std::endl;
-    // // std::cerr << KCYN << "__MAIN_ROOT__CHECK__02 : " << mp.get_root()->__parent->__pair.first << KNRM << std::endl;
-    // // // std::cerr << "__INSERTION__04__ : =======================================================" << std::endl;
-
     while (true)
     {
         std::cout << std::endl << std::endl << " INSERT ELEMENT : ";
@@ -76,30 +71,22 @@ int     main()
         std::cout << std::endl << std::endl;
         mp.insert(ft::make_pair(stoi(str), "30"));
         print_elements_in_order(mp.get_left_most_node());
-
     }
 }
 
 // int main()
 // {
+//     std::string str;
+//     avl_sbbst::avl_sbbst<int, std::string> mp;
+
+//     while (true)
 //     {
-//         std::string str;
-//         sbbst::sbbst<int, std::string> mp;
+//         std::cout << std::endl << std::endl << " INSERT ELEMENT : ";
+//         std::cin >> str;
 
-//         // std::cerr << KCYN << "__MAIN_ROOT__CHECK__00 : " << mp.get_root()->__parent->__pair.first << KNRM << std::endl;
-//         // std::cerr << KCYN << "__MAIN_ROOT__CHECK__01 : " << mp.get_root()->__parent->__pair.first << KNRM << std::endl;
-//         // // std::cerr << KCYN << "__MAIN_ROOT__CHECK__02 : " << mp.get_root()->__parent->__pair.first << KNRM << std::endl;
-//         // // // std::cerr << "__INSERTION__04__ : =======================================================" << std::endl;
-
-//         while (true)
-//         {
-//             std::cout << std::endl << std::endl << " INSERT ELEMENT : ";
-//             std::cin >> str;
-
-//             std::cout << std::endl << std::endl;
-//             mp.insert(ft::make_pair(stoi(str), "30"));
-//             printBT(mp.get_root());
-//         }
+//         std::cout << std::endl << std::endl;
+//         mp.insert(ft::make_pair(stoi(str), "30"));
+//         printBT(mp.get_root());
 //     }
 //     return 0;
 // }

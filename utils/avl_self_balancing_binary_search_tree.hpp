@@ -8,10 +8,9 @@ namespace avl_sbbst
 {
     // class TreeNode;
 
-    template < class Key,                                              // ft::map::key_type
-               class T,                                                // ft::map::mapped_type
-               class Compare = std::less<Key>,                         // ft::map::key_compare
-               class Alloc = std::allocator<ft::pair<const Key,T> > >  // ft::map::allocator_type
+    template < class Key,                                                  // ft::map::key_type
+               class T,                                                    // ft::map::mapped_type
+               class Compare = std::less<Key> >                            // ft::map::key_compare
     class avl_sbbst
     {
     /*
@@ -19,23 +18,25 @@ namespace avl_sbbst
     */
     public:
         typedef ft::pair<const Key, T>           value_type;
-        typedef TreeNode<Key, T, Compare, Alloc> node;
+        typedef TreeNode<Key, T, Compare>        node;
+
     private:
-        size_t  __size;
-        node*   __root;
+        size_t          __size;
+        node*           __root;
+
     public:
     /*
     ** Canonical Form :
     */
         avl_sbbst( void ) : __size(0),
-                        __root(nullptr)
-        { /*std::cout << KBLU << "__avl_SBBST__DEFAULT__CONSTRUCTOR__CALLED__" << KNRM << std::endl;*/ }
+                            __root(nullptr)
+        { return; }
 
         avl_sbbst( const avl_sbbst & src );
         avl_sbbst&  operator=( const avl_sbbst & src );
 
         ~avl_sbbst( void )
-        { /*std::cout << KBLU << "__avl_SBBST__DESTRUCTOR__CALLED__" << KNRM << std::endl; */}
+        { return; }
 
     /*
     ** Getters :
@@ -63,16 +64,82 @@ namespace avl_sbbst
             return it->__parent;
         }
 
+        node*   find(const Key& key)
+        {
+            node*   it = this->__root;
+
+            while (it != nullptr)
+            {
+                if (it->__pair.first < key)
+                    it = it->__right;
+                else if (it->__pair.first > key)
+                    it = it->__left;
+                else
+                    return it;
+            }
+            return this->get_right_most_node()->__left;
+        }
     /*
     ** Methods :
     */
-        // node*   get_previous_node( node* current )  // For iterator operator--() && operator--(int)
-        // {
-        // }
+        node*    __erase__leaf__node(node* n)
+        {
+            node*   parent = n->__parent;
 
-        // node*   get_next_node( node* current ) // For iterator operator++() && operator++(int)
-        // {
-        // }
+            if (n->__position == ROOT_NODE)
+            {
+                this->__parent = nullptr;
+                this->__root = nullptr;
+            }
+            else if (n->__position == LEFT_NODE)
+                n->__parent->__left = nullptr;
+            else
+                n->__parent->__right = nullptr;
+            delete n;
+            return parent;
+        }
+
+        node*    __erase__one__subtree(node* n, int position)
+        {
+            if (position == LEFT_NODE)
+            {
+                    // LAST MODIFICATION////////////////////////////////////////
+            }
+            else
+            {
+
+            }
+        }
+
+        node*    __erase__both__subtrees(node* n)
+        {
+        }
+
+        void    set_next_prev_deletion(node* n)
+        {
+            node* next = n->__next;
+            node* prev = n->__prev;
+
+            if (next)
+                next->__prev = n->__next;
+            if (prev)
+                prev->__next = n->__next;
+        }
+
+        void    erase( node* n)
+        {
+            node*   parent;
+            set_next_prev_deletion(n);
+            if (n->__left == nullptr && n->__right == nullptr)
+                parent = __erase__leaf__node(n);
+            else if (n->__left == nullptr && n->__right != nullptr)
+                parent = __erase__one__subtree(n, RIGHT_NODE);
+            else if (n->__left != nullptr && n->__right == nullptr)
+                parent = __erase__one__subtree(n, LEFT_NODE);
+            else if (n->__left != nullptr && n->__right != nullptr)
+                parent = __erase__both__subtrees(n);
+            this->__size--;
+        }
 
         node* get_symmetrical_sutree( node* sutree )
         {
@@ -418,10 +485,10 @@ namespace avl_sbbst
                 }
                 node*   inserted_node = append_node(&node_it, &parent_it, node_position, pair);
 
-                if (inserted_node->__pair.first == 12)
-                {
-                    std::cout << "";
-                }
+                // if (inserted_node->__pair.first == 12)
+                // {
+                //     std::cout << "";
+                // }
 
                 if (inserted_node->__position == LEFT_NODE)
                 {

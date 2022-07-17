@@ -6,13 +6,13 @@
 #    By: mamoussa <mamoussa@student.1337.ma>           +#+      +#++:      +#++:        +#+          #
 #                                                     +#+         +#+        +#+      +#+            #
 #    Created: Invalid date        by                 #+#  #+#    #+# #+#    #+#     #+#              #
-#    Updated: 2022/07/17 00:06:09 by abelarif         ###   ########.fr        #
+#    Updated: 2022/07/17 18:09:46 by abelarif         ###   ########.fr        #
 #                                                                                                    #
 # ************************************************************************************************** #
 
 COMPILER = c++
-FLAGS_DEBUG = -std=c++98 -Wall -Wextra -Werror
-FLAGS = -std=c++98 -Wall -Wextra -Werror
+FLAGS_DEBUG = -std=c++98 -Wall -Wextra -Werror -ferror-limit=0
+FLAGS = -std=c++98 -Wall -Wextra -Werror -ferror-limit=0
 
 vector_tle:
 	@$(COMPILER) $(FLAGS_DEBUG)	vector_tests_tle.cpp -o vector.out 

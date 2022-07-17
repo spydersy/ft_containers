@@ -20,10 +20,9 @@
 namespace avl_sbbst
 {
 
-    template < class Key,                                              // ft::map::key_type
-               class T,                                                // ft::map::mapped_type
-               class Compare = std::less<Key>,                         // ft::map::key_compare
-               class Alloc = std::allocator<ft::pair<const Key,T> > >  // ft::map::allocator_type
+    template < class Key,                                               // ft::map::key_type
+               class T,                                                 // ft::map::mapped_type
+               class Compare = std::less<Key> >                         // ft::map::key_compare
     class TreeNode
     {
     /*

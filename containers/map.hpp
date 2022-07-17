@@ -39,7 +39,7 @@ namespace ft
 		typedef	typename ft::iterator_traits<iterator>::difference_type  difference_type;
 		typedef size_t													 size_type;
         typedef avl_sbbst::avl_sbbst<
-                key_type, mapped_type,key_compare, allocator_type>       SBBST;
+                key_type, mapped_type,key_compare>                       SBBST;
 
         /*
         ** Member Functions:
@@ -48,6 +48,7 @@ namespace ft
             SBBST          __sbbst;
             allocator_type __allocator;
             key_compare    __key_comp;
+
         public:
 
         explicit map (const key_compare& comp = key_compare(),
@@ -61,8 +62,8 @@ namespace ft
         map (InputIterator first, InputIterator last,
                 const key_compare& comp = key_compare(),
                 const allocator_type& alloc = allocator_type()) : __sbbst(SBBST()),
-                                                                  __key_comp(comp),
-                                                                  __allocator(alloc)
+                                                                  __allocator(alloc),
+                                                                  __key_comp(comp)
         { this->insert(first, last); }
 
         map (const map& x)
@@ -108,18 +109,52 @@ namespace ft
         const_iterator end() const
         { return iterator(this->__sbbst.get_right_most_node()->__left); }
 
-        const_iterator rbegin()
+        reverse_iterator rbegin()
         { return reverse_iterator(this->__sbbst.get_left_most_node()); }
 
         const_reverse_iterator rbegin() const
         { return reverse_iterator(this->__sbbst.get_left_most_node()); }
 
-        const_iterator rend()
+        reverse_iterator rend()
         { return reverse_iterator(this->__sbbst.get_right_most_node()->__left); }
 
         const_reverse_iterator rend() const
         { return reverse_iterator(this->__sbbst.get_right_most_node()->__left); }
 
+        bool empty() const { return this->__sbbst.__size == 0; }
+
+        iterator find (const key_type& k)
+        { return iterator(this->__sbbst.find(k)); }
+
+        const_iterator find (const key_type& k) const
+        { return const_iterator(this->__sbbst.find(k)); }
+
+        mapped_type& operator[] (const key_type& k)
+        {
+            iterator element = this->find(k);
+
+            if (element != this->end())
+                return element.__ptr->second;
+            return this->insert(ft::make_pair<key_type, mapped_type>(k, mapped_type())).first.__ptr->second;
+        }
+
+        void erase (iterator position)
+        { this->__sbbst.erase(position->__ptr); }
+
+        size_type erase (const key_type& k)
+        {
+            iterator element = this->find(k);
+            if (element == this->end())
+                return 0;
+            this->erase(element);
+            return 1;
+        }
+
+        void erase (iterator first, iterator last)
+        {
+            while (first++ != last)
+                this->erase(first);
+        }
     }; // Class MAP;
 
     template <class Key, class T, class Compare, class Alloc>
