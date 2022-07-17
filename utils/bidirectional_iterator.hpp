@@ -4,7 +4,7 @@
 
 # include "iterators_traits.hpp"
 # include "iterator.hpp"
-# include "self_balanced_binary_search_tree.hpp"
+# include "avl_self_balancing_binary_search_tree.hpp"
 
 namespace ft
 {
@@ -24,8 +24,10 @@ namespace ft
             typedef          size_t                                                                                      size_type;
 
 
-            bidirectional_iterator( void ) : __ptr(NULL) { return; }
-            bidirectional_iterator( bidirectional_iterator const & src ) : __ptr(src.__ptr) {return; }
+            template< class InputIterator>
+            bidirectional_iterator( InputIterator const & src ) : __ptr(src.__ptr) {return; }
+
+            bidirectional_iterator( void ) : __ptr(nullptr) { return; }
             bidirectional_iterator( pointer x ) : __ptr(x) { return; }
             bidirectional_iterator( value_type &src ) : __ptr(&src) { return; }
             ~bidirectional_iterator( void ) { return; }

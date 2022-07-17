@@ -7,7 +7,7 @@
 # include "../ft_containers.hpp"
 # include "../utils/bidirectional_iterator.hpp"
 # include "../utils/pair.hpp"
-# include "../utils/self_balanced_binary_search_tree.hpp"
+# include "../utils/avl_self_balancing_binary_search_tree.hpp"
 
 namespace ft
 {
@@ -38,7 +38,7 @@ namespace ft
         typedef ft::reverse_iterator<const_iterator>                     const_reverse_iterator;
 		typedef	typename ft::iterator_traits<iterator>::difference_type  difference_type;
 		typedef size_t													 size_type;
-        typedef tree::self_balanced_binary_search_tree<
+        typedef avl_sbbst::avl_sbbst<
                 key_type, mapped_type,key_compare, allocator_type>       SBBST;
 
         /*
@@ -46,79 +46,80 @@ namespace ft
         */
         private:
             SBBST          __sbbst;
-            size_type      __size;
             allocator_type __allocator;
             key_compare    __key_comp;
         public:
-        // Default Constructors :
+
         explicit map (const key_compare& comp = key_compare(),
-                    const allocator_type& alloc = allocator_type()) :   __sbbst(SBBST()),
-                                                                        __size(0),
+                      const allocator_type& alloc = allocator_type()) : __sbbst(SBBST()),
                                                                         __allocator(alloc),
                                                                         __key_comp(comp)
-        {
+        { return ; }
 
-        }
 
-        // Range Constructors :
         template <class InputIterator>
-        map ( InputIterator first, InputIterator last,
+        map (InputIterator first, InputIterator last,
                 const key_compare& comp = key_compare(),
-                const allocator_type& alloc = allocator_type() ) :   __sbbst(SBBST()),
-                                                                    __size(0),
-                                                                    __allocator(alloc),
-                                                                    __key_comp(comp)
+                const allocator_type& alloc = allocator_type()) : __sbbst(SBBST()),
+                                                                  __key_comp(comp),
+                                                                  __allocator(alloc)
         { this->insert(first, last); }
 
-        // Copy Constructors :
-        map ( const map& x )
+        map (const map& x)
         {
             if (this != &x)
             {
-                this->__sbbst = x.__sbbst;
-                this->__size = x.__size;
+                // DO SOMETHING . . .
             }
         }
 
-        // Operator= :
-        map& operator= ( const map& x )
+    // INSERT METHODE :
+        // single element (1)
+        pair<iterator,bool> insert (const value_type& val)
+        { this->__sbbst.insert(val); }
+
+        // with hint (2)
+        iterator insert (iterator position, const value_type& val)
         {
-            if (this != &x)
-            {
-                this->__sbbst = x.__sbbst;
-                this->__size = x.__size;
-            }
-            return *this;
+            (void)position;
+            this->insert(val);
         }
 
-        // Destructor :
-        ~map( void ) { this->__sbbst.~self_balanced_binary_search_tree(); }
-
-        // Insert (Single Element) :
-        // pair<iterator,bool> insert (const value_type& val)
-        void insert ( const value_type& val )
+        // range (3)
+        template <class InputIterator>
+        void insert (InputIterator first, InputIterator last)
         {
-            this->__sbbst.insert(val);
+            while (first++ != last)
+                this->insert(first);
         }
 
-        // Insert (With Hint) :
-        // iterator insert (iterator position, const value_type& val);
+        size_type size() const
+        { return this->__sbbst.__size; }
 
-        // Insert (Range) :
-        // template <class InputIterator>
-        // void insert (InputIterator first, InputIterator last)
-        // {
+        iterator begin()
+        { return iterator(this->__sbbst.get_left_most_node()); }
 
-        // }
+        const_iterator begin() const
+        { return iterator(this->__sbbst.get_left_most_node()); }
 
-        // Size :
-        size_type size( void ) const { return this->__sbbst.get_size(); }
+        iterator end()
+        { return iterator(this->__sbbst.get_right_most_node()->__left); }
 
-        // Max_size :
-        size_type max_size( void ) const { return this->__allocator.max_size(); }
+        const_iterator end() const
+        { return iterator(this->__sbbst.get_right_most_node()->__left); }
 
-        // Emty :
-        bool empty( void ) const { return this->__sbbst.get_size() == 0; }
+        const_iterator rbegin()
+        { return reverse_iterator(this->__sbbst.get_left_most_node()); }
+
+        const_reverse_iterator rbegin() const
+        { return reverse_iterator(this->__sbbst.get_left_most_node()); }
+
+        const_iterator rend()
+        { return reverse_iterator(this->__sbbst.get_right_most_node()->__left); }
+
+        const_reverse_iterator rend() const
+        { return reverse_iterator(this->__sbbst.get_right_most_node()->__left); }
+
     }; // Class MAP;
 
     template <class Key, class T, class Compare, class Alloc>

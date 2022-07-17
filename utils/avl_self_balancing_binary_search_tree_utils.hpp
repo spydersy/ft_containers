@@ -1,5 +1,5 @@
-#ifndef __SELF_BALANCED_BINARY_SEARCH_TREEUTILS__
-# define __SELF_BALANCED_BINARY_SEARCH_TREEUTILS__
+#ifndef __AVL_SELF_BALANCED_BINARY_SEARCH_TREEUTILS__
+# define __AVL_SELF_BALANCED_BINARY_SEARCH_TREEUTILS__
 
 #include <iostream>
 #include "pair.hpp"
@@ -17,7 +17,7 @@
 # define RIGHT_NODE +1
 # define ROOT_NODE  +0
 
-namespace sbbst /* SIKS SAAAAKHIN __ONLY__FOR__AMZIL__ */
+namespace avl_sbbst
 {
 
     template < class Key,                                              // ft::map::key_type
@@ -34,9 +34,14 @@ namespace sbbst /* SIKS SAAAAKHIN __ONLY__FOR__AMZIL__ */
 
     public:
         value_type  __pair;
+
         TreeNode*   __left;
         TreeNode*   __right;
         TreeNode*   __parent;
+
+        TreeNode*   __next;
+        TreeNode*   __prev;
+
         int         __index;
         int         __position;
 
@@ -49,8 +54,10 @@ namespace sbbst /* SIKS SAAAAKHIN __ONLY__FOR__AMZIL__ */
                             __left(nullptr),
                             __right(nullptr),
                             __parent(this),
+                            __next(nullptr),
+                            __prev(nullptr),
                             __index(1),
-                            __position(0)
+                            __position(ROOT_NODE)
         { std::cout << KGRN << "__TREE__NODE__DEFAULT__CONSTRUCTOR__CALLED__" << KNRM << std::endl; }
 
         // Pair Constructor :
@@ -58,6 +65,8 @@ namespace sbbst /* SIKS SAAAAKHIN __ONLY__FOR__AMZIL__ */
                                                     __left(nullptr),
                                                     __right(nullptr),
                                                     __parent(nullptr),
+                                                    __next(nullptr),
+                                                    __prev(nullptr),
                                                     __index(1),
                                                     __position(position)
         { /*std::cout << KGRN << "__TREE__NODE__PAIR__CONSTRUCTOR__CALLED__" << KNRM << std::endl;*/ }
@@ -81,8 +90,10 @@ namespace sbbst /* SIKS SAAAAKHIN __ONLY__FOR__AMZIL__ */
                 this->__left = nullptr;
                 this->__right = nullptr;
                 this->__parent = nullptr;
+                __next(nullptr);
+                __prev(nullptr);
                 this->__index = 1;
-                this->__position = 0;
+                this->__position = ROOT_NODE;
             }
             return *this;
         }
@@ -98,6 +109,11 @@ namespace sbbst /* SIKS SAAAAKHIN __ONLY__FOR__AMZIL__ */
         TreeNode*   get_left( void ) const { return this->__left; }
         TreeNode*   get_right( void ) const { return this->__right; }
 
+        TreeNode*   get_prev_node( void )
+        { return this->__prev; }
+
+        TreeNode*   get_next_node( void )
+        { return this->__next; }
     }; // class TreeNode
 } // namespace sbbst
 

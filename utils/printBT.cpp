@@ -33,26 +33,73 @@ void printBT(const BT* node)
     printBT("", node, false);
 }
 
-int main()
+template <typename BT>
+void    print_elements_in_order(BT* node)
 {
+    std::cout << "INORDER ELEMENTS : " << "********************************************************" << std::endl;
+    while (node != nullptr)
     {
-        std::string str;
-        sbbst::sbbst<int, std::string> mp;
+        std::cout << " [";
+        if (node->get_prev_node() == nullptr)
+            std::cout << "nullptr";
+        else
+            std::cout << node->get_prev_node()->__pair.first;
 
-        // std::cerr << KCYN << "__MAIN_ROOT__CHECK__00 : " << mp.get_root()->__parent->__pair.first << KNRM << std::endl;
-        // std::cerr << KCYN << "__MAIN_ROOT__CHECK__01 : " << mp.get_root()->__parent->__pair.first << KNRM << std::endl;
-        // // std::cerr << KCYN << "__MAIN_ROOT__CHECK__02 : " << mp.get_root()->__parent->__pair.first << KNRM << std::endl;
-        // // // std::cerr << "__INSERTION__04__ : =======================================================" << std::endl;
+        std::cout << " | " << node->get_pair().first << " | ";
 
-        while (true)
-        {
-            std::cout << std::endl << std::endl << " INSERT ELEMENT : ";
-            std::cin >> str;
+        if (node->get_next_node() == nullptr)
+            std::cout << "nullptr";
+        else
+            std::cout << node->get_next_node()->__pair.first;
 
-            std::cout << std::endl << std::endl;
-            mp.insert(ft::make_pair(stoi(str), "30"));
-            printBT(mp.get_root());
-        }
+        std::cout << "] ";
+        node = node->__next;
     }
-    return 0;
+    std::cout << std::endl << "********************************************************";
 }
+
+int     main()
+{
+    std::string str;
+    avl_sbbst::avl_sbbst<int, std::string> mp;
+
+    // std::cerr << KCYN << "__MAIN_ROOT__CHECK__00 : " << mp.get_root()->__parent->__pair.first << KNRM << std::endl;
+    // std::cerr << KCYN << "__MAIN_ROOT__CHECK__01 : " << mp.get_root()->__parent->__pair.first << KNRM << std::endl;
+    // // std::cerr << KCYN << "__MAIN_ROOT__CHECK__02 : " << mp.get_root()->__parent->__pair.first << KNRM << std::endl;
+    // // // std::cerr << "__INSERTION__04__ : =======================================================" << std::endl;
+
+    while (true)
+    {
+        std::cout << std::endl << std::endl << " INSERT ELEMENT : ";
+        std::cin >> str;
+
+        std::cout << std::endl << std::endl;
+        mp.insert(ft::make_pair(stoi(str), "30"));
+        print_elements_in_order(mp.get_left_most_node());
+
+    }
+}
+
+// int main()
+// {
+//     {
+//         std::string str;
+//         sbbst::sbbst<int, std::string> mp;
+
+//         // std::cerr << KCYN << "__MAIN_ROOT__CHECK__00 : " << mp.get_root()->__parent->__pair.first << KNRM << std::endl;
+//         // std::cerr << KCYN << "__MAIN_ROOT__CHECK__01 : " << mp.get_root()->__parent->__pair.first << KNRM << std::endl;
+//         // // std::cerr << KCYN << "__MAIN_ROOT__CHECK__02 : " << mp.get_root()->__parent->__pair.first << KNRM << std::endl;
+//         // // // std::cerr << "__INSERTION__04__ : =======================================================" << std::endl;
+
+//         while (true)
+//         {
+//             std::cout << std::endl << std::endl << " INSERT ELEMENT : ";
+//             std::cin >> str;
+
+//             std::cout << std::endl << std::endl;
+//             mp.insert(ft::make_pair(stoi(str), "30"));
+//             printBT(mp.get_root());
+//         }
+//     }
+//     return 0;
+// }

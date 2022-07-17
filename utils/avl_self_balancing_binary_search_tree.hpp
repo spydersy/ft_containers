@@ -4,7 +4,7 @@
 
 # include "avl_self_balancing_binary_search_tree_utils.hpp"
 
-namespace sbbst
+namespace avl_sbbst
 {
     // class TreeNode;
 
@@ -12,7 +12,7 @@ namespace sbbst
                class T,                                                // ft::map::mapped_type
                class Compare = std::less<Key>,                         // ft::map::key_compare
                class Alloc = std::allocator<ft::pair<const Key,T> > >  // ft::map::allocator_type
-    class sbbst
+    class avl_sbbst
     {
     /*
     ** Member Types :
@@ -27,20 +27,41 @@ namespace sbbst
     /*
     ** Canonical Form :
     */
-        sbbst( void ) : __size(0),
+        avl_sbbst( void ) : __size(0),
                         __root(nullptr)
-        { /*std::cout << KBLU << "__SBBST__DEFAULT__CONSTRUCTOR__CALLED__" << KNRM << std::endl;*/ }
+        { /*std::cout << KBLU << "__avl_SBBST__DEFAULT__CONSTRUCTOR__CALLED__" << KNRM << std::endl;*/ }
 
-        sbbst( const sbbst & src );
-        sbbst&  operator=( const sbbst & src );
+        avl_sbbst( const avl_sbbst & src );
+        avl_sbbst&  operator=( const avl_sbbst & src );
 
-        ~sbbst( void )
-        { /*std::cout << KBLU << "__SBBST__DESTRUCTOR__CALLED__" << KNRM << std::endl; */}
+        ~avl_sbbst( void )
+        { /*std::cout << KBLU << "__avl_SBBST__DESTRUCTOR__CALLED__" << KNRM << std::endl; */}
 
     /*
     ** Getters :
     */
         node*   get_root( void ) const { return this->__root; }
+
+        node*   get_left_most_node() const
+        {
+            node*   it = this->__root;
+
+           if (it == nullptr)
+                return it;
+            while (it->__left != nullptr)
+                it = it->__left;
+            return it;
+        }
+
+        node*   get_right_most_node() const
+        {
+            node*   it = this->__root;
+            if (it == nullptr)
+                return it;
+            while (it != nullptr)
+                it = it->__right;
+            return it->__parent;
+        }
 
     /*
     ** Methods :
@@ -363,14 +384,12 @@ namespace sbbst
             node*   parent_it = __root;
             int     node_position = 0;
 
-            if (pair.first == 3)
-            {
-                std::cout << "";
-            }
             if (__root == NULL)
             {
                 __root = new node(pair, ROOT_NODE);
                 __root->__parent = __root;
+                this->__root->__next = nullptr;
+                this->__root->__prev = nullptr;
                 return ;
             }
             else
@@ -398,11 +417,37 @@ namespace sbbst
                     }
                 }
                 node*   inserted_node = append_node(&node_it, &parent_it, node_position, pair);
+
+                if (inserted_node->__pair.first == 12)
+                {
+                    std::cout << "";
+                }
+
+                if (inserted_node->__position == LEFT_NODE)
+                {
+                    std::cout << KYEL << "__SET__IN__LEFT__NODE__" << KNRM << std::endl;
+                    inserted_node->__next = inserted_node->__parent;
+                    inserted_node->__prev = inserted_node->__parent->__prev;
+
+                    if (inserted_node->__prev)
+                        inserted_node->__prev->__next = inserted_node;
+                    inserted_node->__parent->__prev = inserted_node;
+                }
+                else
+                {
+                    std::cout << KGRN << "__SET__IN__RIGHT__NODE__" << KNRM << std::endl;
+                    inserted_node->__prev = inserted_node->__parent;
+                    inserted_node->__next = inserted_node->__parent->__next;
+
+                    if (inserted_node->__next)
+                        inserted_node->__next->__prev = inserted_node;
+                    inserted_node->__parent->__next = inserted_node;
+                }
                 this->balance_tree(&inserted_node);
             }
         }
-    }; // class sbbst
-} // namespace sbbst
+    }; // class avl_sbbst
+} // namespace avl_sbbst
 
 #endif
 
