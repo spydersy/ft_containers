@@ -8,22 +8,28 @@ namespace avl_sbbst
 {
     // class TreeNode;
 
-    template < class Key,                                                  // ft::map::key_type
-               class T,                                                    // ft::map::mapped_type
-               class Compare = std::less<Key> >                            // ft::map::key_compare
+    // template < class Key,                                                  // ft::map::key_type
+    //            class T,                                                    // ft::map::mapped_type
+    //            class Compare = std::less<Key> >                            // ft::map::key_compare
+
+
+
+    template < class Key,                                          // map::key_type
+               class T,                                            // map::mapped_type
+               class Compare = std::less<Key>,                     // map::key_compare
+               class Alloc = std::allocator<ft::pair<const Key,T> > >  // map::allocator_type
     class avl_sbbst
     {
     /*
     ** Member Types :
     */
     public:
-        typedef ft::pair<const Key, T>           value_type;
-        typedef TreeNode<Key, T, Compare>        node;
+        typedef ft::pair<const Key, T>              value_type;
+        typedef TreeNode<Key, T, Compare>    node;
 
     private:
-        size_t          __size;
-        node*           __root;
-
+        size_t                  __size;
+        node*                   __root;
     public:
     /*
     ** Canonical Form :
@@ -64,6 +70,8 @@ namespace avl_sbbst
             return it->__parent;
         }
 
+        size_t   get_size() const { return this->__size; }
+
         node*   find(const Key& key)
         {
             node*   it = this->__root;
@@ -82,13 +90,15 @@ namespace avl_sbbst
     /*
     ** Methods :
     */
-        node*    __erase__leaf__node(node* n)
+        node*    __erase__leaf__node(node* n, bool SET_NEXT_PREV)
         {
             node*   parent = n->__parent;
 
+            if (SET_NEXT_PREV == true)
+                set_next_prev_deletion(n);
             if (n->__position == ROOT_NODE)
             {
-                this->__parent = nullptr;
+                n->__parent = nullptr;
                 this->__root = nullptr;
             }
             else if (n->__position == LEFT_NODE)
@@ -99,20 +109,40 @@ namespace avl_sbbst
             return parent;
         }
 
-        node*    __erase__one__subtree(node* n, int position)
+        node*    __erase__one__subtree(node* n, int position, bool SET_NEXT_PREV)
         {
-            if (position == LEFT_NODE)
-            {
-                    // LAST MODIFICATION////////////////////////////////////////
-            }
-            else
-            {
+            node*   parent = n->__parent;
+            node*   subtree = n->__left;
 
+            if (SET_NEXT_PREV == true)
+                set_next_prev_deletion(n);
+            if (position == RIGHT_NODE)
+                subtree = n->__right;
+
+            if (n->__position == ROOT_NODE)
+            {
+                this->__root = subtree;
+                subtree->__parent = subtree;
+                subtree->__position = ROOT_NODE;
+                delete n;
+                return parent;
             }
+            else if (n->__position == LEFT_NODE)
+                parent->__left = subtree;
+            else
+                parent->__right = subtree;
+            subtree->__parent = parent;
+            delete n;
+            return parent;
         }
 
         node*    __erase__both__subtrees(node* n)
         {
+            // node*   left = n->__left;
+            // node*   right = n->__right;
+
+            // n.s
+            if (n) {}
         }
 
         void    set_next_prev_deletion(node* n)
@@ -129,13 +159,12 @@ namespace avl_sbbst
         void    erase( node* n)
         {
             node*   parent;
-            set_next_prev_deletion(n);
             if (n->__left == nullptr && n->__right == nullptr)
-                parent = __erase__leaf__node(n);
+                parent = __erase__leaf__node(n, true);
             else if (n->__left == nullptr && n->__right != nullptr)
-                parent = __erase__one__subtree(n, RIGHT_NODE);
+                parent = __erase__one__subtree(n, RIGHT_NODE, true);
             else if (n->__left != nullptr && n->__right == nullptr)
-                parent = __erase__one__subtree(n, LEFT_NODE);
+                parent = __erase__one__subtree(n, LEFT_NODE, true);
             else if (n->__left != nullptr && n->__right != nullptr)
                 parent = __erase__both__subtrees(n);
             this->__size--;

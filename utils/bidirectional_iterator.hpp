@@ -11,6 +11,11 @@ namespace ft
     template <typename Type>
     class   bidirectional_iterator  : public ft::iterator_traits<ft::iterator<ft::bidirectional_iterator_tag, Type> >
     {
+        private:
+            typedef typename Type::first_type                         Key;
+            typedef typename Type::second_type                        Value;
+            typedef avl_sbbst::TreeNode<Key, Value, std::less<Key> >  node;
+
         public:
 
             /*
@@ -24,12 +29,29 @@ namespace ft
             typedef          size_t                                                                                      size_type;
 
 
-            template< class InputIterator>
-            bidirectional_iterator( InputIterator const & src ) : __ptr(src.__ptr) {return; }
+            // template< class InputIterator>
+            // bidirectional_iterator( InputIterator const & src ) : __node(src.node),
+            //                                                       __ptr(src.__ptr)
+            // { return; }
 
-            bidirectional_iterator( void ) : __ptr(nullptr) { return; }
-            bidirectional_iterator( pointer x ) : __ptr(x) { return; }
-            bidirectional_iterator( value_type &src ) : __ptr(&src) { return; }
+            template< class AnotherType>
+            bidirectional_iterator( const bidirectional_iterator<AnotherType, Value, avl_sbbst::TreeNode<AnotherType, Value, std::less<AnotherType> > >& src) : __node(src.node),
+                                                                                      __ptr(src.ptr)
+            { return; }
+
+            // bidirectional_iterator( pointer x ) : __ptr(x) { return; }
+            // bidirectional_iterator( value_type &src ) : __ptr(&src) { return; }
+
+            bidirectional_iterator( node* n )
+            {
+                this->__node = n;
+                this->__ptr = n->get_pair();
+            }
+
+            bidirectional_iterator( void ) : __ptr(nullptr),
+                                             __node(nullptr)
+            { return; }
+
             ~bidirectional_iterator( void ) { return; }
 
             bidirectional_iterator    &operator=( bidirectional_iterator const & src)
@@ -97,10 +119,11 @@ namespace ft
             ** Dereference Operators:
             */
                 reference   operator*( void ) { return *(this->__ptr); }
-                pointer     operator->( void ) { return this->__ptr; }
+                Type*       operator->( void ) { return this->__node->__pair; }
 
         private:
-            pointer __ptr;
+            pointer     __ptr;
+            node*  __node;
     };
 }
 

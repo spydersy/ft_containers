@@ -19,30 +19,29 @@
 
 namespace avl_sbbst
 {
-
-    template < class Key,                                               // ft::map::key_type
-               class T,                                                 // ft::map::mapped_type
-               class Compare = std::less<Key> >                         // ft::map::key_compare
+    template < class Key,                                              // map::key_type
+               class T,                                                // map::mapped_type
+               class Compare = std::less<Key> >                        // map::key_compare
     class TreeNode
     {
     /*
     ** Member Types :
     */
     private:
-        typedef ft::pair<const Key, T> value_type;
+        typedef ft::pair<const Key, T>  value_type;
 
     public:
-        value_type  __pair;
+        value_type      __pair;
 
-        TreeNode*   __left;
-        TreeNode*   __right;
-        TreeNode*   __parent;
+        TreeNode*       __left;
+        TreeNode*       __right;
+        TreeNode*       __parent;
 
-        TreeNode*   __next;
-        TreeNode*   __prev;
+        TreeNode*       __next;
+        TreeNode*       __prev;
 
-        int         __index;
-        int         __position;
+        int             __index;
+        int             __position;
 
     public:
     /*
@@ -60,46 +59,46 @@ namespace avl_sbbst
         { std::cout << KGRN << "__TREE__NODE__DEFAULT__CONSTRUCTOR__CALLED__" << KNRM << std::endl; }
 
         // Pair Constructor :
-        TreeNode( value_type pair, int position ) : __pair(pair),
-                                                    __left(nullptr),
-                                                    __right(nullptr),
-                                                    __parent(nullptr),
-                                                    __next(nullptr),
-                                                    __prev(nullptr),
-                                                    __index(1),
-                                                    __position(position)
-        { /*std::cout << KGRN << "__TREE__NODE__PAIR__CONSTRUCTOR__CALLED__" << KNRM << std::endl;*/ }
+        TreeNode( const value_type& pair, int position ) : __pair(pair),
+                                                           __left(nullptr),
+                                                           __right(nullptr),
+                                                           __parent(nullptr),
+                                                           __next(nullptr),
+                                                           __prev(nullptr),
+                                                           __index(1),
+                                                           __position(position)
+        { return; }
 
         // Copy Constructor :
-        TreeNode( const TreeNode & src )
-        {
-            if (this != &src)
-            {
-                *this = src;
-            }
-        }
+        // TreeNode( const TreeNode & src )
+        // {
+        //     if (this != &src)
+        //     {
+        //         *this = src;
+        //     }
+        // }
 
         // Operator= :
-        TreeNode&   operator=( const TreeNode & src )
-        {
-            if (this != &src)
-            {
-                this->__pair = src.__pair;
+        // TreeNode&   operator=( const TreeNode & src )
+        // {
+        //     if (this != &src)
+        //     {
+        //         this->__pair = src.__pair;
 
-                this->__left = nullptr;
-                this->__right = nullptr;
-                this->__parent = nullptr;
-                __next(nullptr);
-                __prev(nullptr);
-                this->__index = 1;
-                this->__position = ROOT_NODE;
-            }
-            return *this;
-        }
+        //         this->__left = nullptr;
+        //         this->__right = nullptr;
+        //         this->__parent = nullptr;
+        //         __next(nullptr);
+        //         __prev(nullptr);
+        //         this->__index = 1;
+        //         this->__position = ROOT_NODE;
+        //     }
+        //     return *this;
+        // }
 
         // Destructor :
         ~TreeNode( void )
-        { std::cout << KGRN << "__TREE__NODE__DESTRUCTOR__CALLED__" << KNRM << std::endl; }
+        { std::cout << KGRN << "__TREE__NODE__DESTRUCTOR__CALLED__" << KNRM << std::endl; }          
 
     /*
     ** Getters :

@@ -95,7 +95,7 @@ namespace ft
         }
 
         size_type size() const
-        { return this->__sbbst.__size; }
+        { return this->__sbbst.get_size(); }
 
         iterator begin()
         { return iterator(this->__sbbst.get_left_most_node()); }
@@ -121,7 +121,7 @@ namespace ft
         const_reverse_iterator rend() const
         { return reverse_iterator(this->__sbbst.get_right_most_node()->__left); }
 
-        bool empty() const { return this->__sbbst.__size == 0; }
+        bool empty() const { return this->__sbbst.get_size() == 0; }
 
         iterator find (const key_type& k)
         { return iterator(this->__sbbst.find(k)); }
@@ -155,6 +155,8 @@ namespace ft
             while (first++ != last)
                 this->erase(first);
         }
+
+        size_type size() const { return this->__sbbst.get_size(); }
     }; // Class MAP;
 
     template <class Key, class T, class Compare, class Alloc>
