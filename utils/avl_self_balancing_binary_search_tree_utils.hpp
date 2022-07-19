@@ -17,8 +17,7 @@
 # define RIGHT_NODE +1
 # define ROOT_NODE  +0
 
-namespace avl_sbbst
-{
+
     template < class Key,                                              // map::key_type
                class T,                                                // map::mapped_type
                class Compare = std::less<Key> >                        // map::key_compare
@@ -113,7 +112,5 @@ namespace avl_sbbst
         TreeNode*   get_next_node( void )
         { return this->__next; }
     }; // class TreeNode
-} // namespace sbbst
-
 
 #endif

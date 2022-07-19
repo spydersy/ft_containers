@@ -4,15 +4,6 @@
 
 # include "avl_self_balancing_binary_search_tree_utils.hpp"
 
-namespace avl_sbbst
-{
-    // class TreeNode;
-
-    // template < class Key,                                                  // ft::map::key_type
-    //            class T,                                                    // ft::map::mapped_type
-    //            class Compare = std::less<Key> >                            // ft::map::key_compare
-
-
 
     template < class Key,                                          // map::key_type
                class T,                                            // map::mapped_type
@@ -34,43 +25,42 @@ namespace avl_sbbst
     /*
     ** Canonical Form :
     */
-        avl_sbbst( void ) : __size(0),
-                            __root(nullptr)
-        { return; }
+        // avl_sbbst( void ) : __size(0),
+        //                     __root(nullptr)
+        // { return; }
 
-        avl_sbbst( const avl_sbbst & src );
-        avl_sbbst&  operator=( const avl_sbbst & src );
+        // avl_sbbst( const avl_sbbst & src );
+        // avl_sbbst&  operator=( const avl_sbbst & src );
 
-        ~avl_sbbst( void )
-        { return; }
+        // ~avl_sbbst( void )
+        // { return; }
 
     /*
     ** Getters :
     */
-        node*   get_root( void ) const { return this->__root; }
+        // node*   get_root( void ) const { return this->__root; }
 
-        node*   get_left_most_node() const
-        {
-            node*   it = this->__root;
+        // node*   get_left_most_node() const
+        // {
+        //     node*   it = this->__root;
 
-           if (it == nullptr)
-                return it;
-            while (it->__left != nullptr)
-                it = it->__left;
-            return it;
-        }
+        //    if (it == nullptr)
+        //         return it;
+        //     while (it->__left != nullptr)
+        //         it = it->__left;
+        //     return it;
+        // }
 
-        node*   get_right_most_node() const
-        {
-            node*   it = this->__root;
-            if (it == nullptr)
-                return it;
-            while (it != nullptr)
-                it = it->__right;
-            return it->__parent;
-        }
+        // node*   get_right_most_node() const
+        // {
+        //     node*   it = this->__root;
+        //     if (it == nullptr)
+        //         return it;
+        //     while (it != nullptr)
+        //         it = it->__right;
+        //     return it->__parent;
+        // }
 
-        size_t   get_size() const { return this->__size; }
 
         node*   find(const Key& key)
         {
