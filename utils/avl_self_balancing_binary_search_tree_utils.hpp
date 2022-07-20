@@ -13,11 +13,6 @@
 # define KCYN       "\x1B[36m"
 # define KWHT       "\x1B[37m"
 
-# define LEFT_NODE  -1
-# define RIGHT_NODE +1
-# define ROOT_NODE  +0
-
-
     template < class Key,                                              // map::key_type
                class T,                                                // map::mapped_type
                class Compare = std::less<Key> >                        // map::key_compare
@@ -54,7 +49,7 @@
                             __next(nullptr),
                             __prev(nullptr),
                             __index(1),
-                            __position(ROOT_NODE)
+                            __position(0)
         { std::cout << KGRN << "__TREE__NODE__DEFAULT__CONSTRUCTOR__CALLED__" << KNRM << std::endl; }
 
         // Pair Constructor :
@@ -78,22 +73,21 @@
         // }
 
         // Operator= :
-        // TreeNode&   operator=( const TreeNode & src )
-        // {
-        //     if (this != &src)
-        //     {
-        //         this->__pair = src.__pair;
-
-        //         this->__left = nullptr;
-        //         this->__right = nullptr;
-        //         this->__parent = nullptr;
-        //         __next(nullptr);
-        //         __prev(nullptr);
-        //         this->__index = 1;
-        //         this->__position = ROOT_NODE;
-        //     }
-        //     return *this;
-        // }
+        TreeNode&   operator=( const TreeNode & src )
+        {
+            if (this != &src)
+            {
+                this->__pair = src.__pair;
+                this->__left = src.__left;
+                this->__right = src.__right;
+                this->__parent = src.__parent;
+                this->__next = src.__next;
+                this->__prev = src.__prev;
+                this->__index = src.__index;
+                this->__position = src.__position;
+            }
+            return *this;
+        }
 
         // Destructor :
         ~TreeNode( void )

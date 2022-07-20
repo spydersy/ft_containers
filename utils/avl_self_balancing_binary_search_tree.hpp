@@ -533,7 +533,6 @@
             }
         }
     }; // class avl_sbbst
-} // namespace avl_sbbst
 
 #endif
 

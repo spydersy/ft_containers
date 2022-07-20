@@ -61,7 +61,7 @@ void    print_elements_in_order(BT* node)
 int     main()
 {
     std::string str;
-    avl_sbbst::avl_sbbst<int, std::string> mp;
+    avl_sbbst<int, std::string> mp;
 
     while (true)
     {
@@ -77,7 +77,7 @@ int     main()
 // int main()
 // {
 //     std::string str;
-//     avl_sbbst::avl_sbbst<int, std::string> mp;
+//     avl_sbbst<int, std::string> mp;
 
 //     while (true)
 //     {
