@@ -132,7 +132,7 @@ namespace ft
             ** Dereference Operators:
             */
                 Type&        operator*( void ) { return (this->__ptr->__pair); }
-                Type*       operator->( void ) { return &this->__node->__pair; }
+                pointer       operator->( void ) { return ((this->__ptr)->__pair); }
 
         private:
             TreeNode*     __ptr;

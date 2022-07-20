@@ -2212,7 +2212,7 @@ void alarm_handler(int seg)
     kill(getpid(), SIGINT);
 }
 
-int main()
+int ftmain()
 {
 
     std::cout << RED << "________________________________________________________________________________________________________" << std::endl;
@@ -2224,7 +2224,7 @@ int main()
     TEST_CASE(iterator_tests);
     // TEST_CASE(const_iterator_tests);
     // TEST_CASE(reverse_iterator_tests);
-    std::cout << std::endl;
+    // std::cout << std::endl;
 
     // std::cout << YELLOW << "Testing Constructors;" << RESET << std::endl;
     // TEST_CASE(testConstructors);

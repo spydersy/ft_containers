@@ -13,9 +13,10 @@
 # define KCYN       "\x1B[36m"
 # define KWHT       "\x1B[37m"
 
-    template < class Key,                                              // map::key_type
-               class T,                                                // map::mapped_type
-               class Compare = std::less<Key> >                        // map::key_compare
+    template < class Key,                                          // map::key_type
+               class T,                                            // map::mapped_type
+               class Compare = std::less<Key>,                     // map::key_compare
+               class Alloc = std::allocator<ft::pair<const Key,T> > >  // map::allocator_type
     class TreeNode
     {
     /*
@@ -25,43 +26,49 @@
         typedef ft::pair<const Key, T>  value_type;
 
     public:
-        value_type      __pair;
+        int             __index;
+        int             __position;
 
         TreeNode*       __left;
         TreeNode*       __right;
         TreeNode*       __parent;
-
         TreeNode*       __next;
         TreeNode*       __prev;
-
-        int             __index;
-        int             __position;
+        Alloc           __allocator;
+        value_type*     __pair;
 
     public:
     /*
     ** Canonical Form :
     */
         // Default Constructor :
-        TreeNode( void ) :  __pair(value_type()),
-                            __left(nullptr),
-                            __right(nullptr),
-                            __parent(this),
-                            __next(nullptr),
-                            __prev(nullptr),
-                            __index(1),
-                            __position(0)
-        { std::cout << KGRN << "__TREE__NODE__DEFAULT__CONSTRUCTOR__CALLED__" << KNRM << std::endl; }
+        // TreeNode( void ) :  
+        //                     __index(1),
+        //                     __position(0),
+        //                     __left(nullptr),
+        //                     __right(nullptr),
+        //                     __parent(this),
+        //                     __next(nullptr),
+        //                     __prev(nullptr),
+        //                     __pair(nullptr)
+        // {
+        //     this->__pair = this->__allocator.allcate(1);
+        // }
 
         // Pair Constructor :
-        TreeNode( const value_type& pair, int position ) : __pair(pair),
+        template <typename VALUE_TYPE>
+        TreeNode( VALUE_TYPE& pair, int position ) : __index(1),
+                                                           __position(position),
                                                            __left(nullptr),
                                                            __right(nullptr),
-                                                           __parent(nullptr),
+                                                           __parent(this),
                                                            __next(nullptr),
                                                            __prev(nullptr),
-                                                           __index(1),
-                                                           __position(position)
-        { return; }
+                                                           __pair(nullptr)
+        {
+            this->__pair = this->__allocator.allocate(1);
+            this->__allocator.construct(&(this->__pair[0]), pair);
+        }
 
         // Copy Constructor :
         // TreeNode( const TreeNode & src )
@@ -96,7 +103,7 @@
     /*
     ** Getters :
     */
-        value_type  get_pair( void ) const { return this->__pair; }
+        value_type* get_pair( void ) const { return this->__pair; }
         TreeNode*   get_left( void ) const { return this->__left; }
         TreeNode*   get_right( void ) const { return this->__right; }
 
