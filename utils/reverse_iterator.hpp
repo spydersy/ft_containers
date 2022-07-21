@@ -3,6 +3,7 @@
 # define __REVERSE_ITERATOR_HPP__
 
 # include "random_access_iterator.hpp"
+# include "enable_if.hpp"
 
 namespace ft
 {
@@ -68,14 +69,36 @@ namespace ft
                 iterator_type ret(__it);
                 return *--ret;
             }
-            // Operator -> :
-            pointer operator->() const
-            {
-                iterator_type it(this->base()--);
-                this->base()++;
-                return (it).operator->();
-            }
 
+            // Operator -> :
+            // template <typename X = ft::random_access_iterator_tag >
+            //pointer operator->() const
+            // typename ft::enable_if<typeid(iterator_category) == typeid(ft::random_access_iterator_tag), pointer>::type
+            pointer operator->() const
+            { return &(this->operator*()); }
+
+            // // typename ft::enable_if<typeid(iterator_category) == typeid(ft::bidirectional_iterator_tag), pointer>::type
+            // pointer operator->() const
+            // {
+            //     pointer p = nullptr;
+
+            //     this->base()--;
+            //     p = this->base().operator->();
+            //     this->base()++;
+            //     return p; 
+            // }
+
+            // Operator -> :
+            // pointer operator->() const
+            // {
+                // pointer p = nullptr;
+
+                // this->base()--;
+                // p = this->base().operator->();
+                // this->base()++;
+                // return p; 
+            // }
+            
         /*
          * Element by Index Accessor ==============================================================
         */
