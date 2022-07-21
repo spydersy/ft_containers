@@ -103,7 +103,7 @@ namespace ft
                 */
                 bidirectional_iterator    &operator++()
                 {
-                    // std::cout << "00 : ---------------------" << std::endl;
+                    std::cout << "00 : ---------------------" << std::endl;
                     this->__ptr = this->__ptr->__next;
                     return (*this);
                 }
@@ -113,7 +113,7 @@ namespace ft
                 */
                 bidirectional_iterator    operator++( int )
                 {
-                    // std::cout << "01 : ---------------------" << std::endl;
+                    std::cout << "01 : ---------------------" << std::endl;
                         bidirectional_iterator   prev = *this;
 
                         this->__ptr = this->__ptr->__next;

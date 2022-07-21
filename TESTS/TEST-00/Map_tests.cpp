@@ -28,7 +28,7 @@
 #define RESET "\e[0m"
 
 #define EQUAL(x) ((x) ? (std::cout << "\033[1;32mAC\033[0m\n") : (std::cout << "\033[1;31mWA\033[0m\n"))
-#define TIME_FAC 1004 // the ft::map methods can be slower up to std::map methods * TIME_FAC (MAX 20)
+#define TIME_FAC 20 // the ft::map methods can be slower up to std::map methods * TIME_FAC (MAX 20)
 
 typedef std::pair<std::map<int, std::string>::iterator, std::map<int, std::string>::iterator> iter_def;
 typedef ft::pair<ft::map<int, std::string>::iterator, ft::map<int, std::string>::iterator> ft_iter_def;
@@ -57,8 +57,13 @@ template <typename Iter1, typename Iter2>
 bool compareMaps(Iter1 first1, Iter1 last1, Iter2 first2, Iter2 last2)
 {
     for (; (first1 != last1) && (first2 != last2); ++first1, ++first2)
+    {
+        std::cerr << "SYS: [" << first1->first << " | " <<   first1->second << "]" << std::endl;
+        std::cerr << "USR: [" << first2->first << " | " <<   first2->second << "]" << std::endl;
+        std::cerr << "********************************" << std::endl;
         if (first1->first != first2->first || first1->second != first2->second)
             return false;
+    }
     return true;
 }
 
@@ -82,12 +87,16 @@ bool testMapConstructors()
     {
         first[i - 97] = i;
         m_first[i - 97] = i;
+        //std::cerr << "DBG_LOOP_SYS : " << first.size() << std::endl;
+        //std::cerr << "DBG_LOOP_USR : " << m_first.size() << std::endl;
     }
 
     std::map<char, int> copy(first);
     ft::map<char, int> m_copy(m_first);
 
     cond = first.size() == m_first.size() && compareMaps(first.begin(), first.end(), m_first.begin(), m_first.end());
+    
+    //std::cerr << first.size() << " | " << m_first.size() << std::endl;
 
     std::map<char, int> second(first.begin(), first.end());
     ft::map<char, int> m_second(m_first.begin(), m_first.end());
@@ -101,6 +110,8 @@ bool testMapConstructors()
     std::map<char, int, classcomp> fourth;  // class as Compare
     ft::map<char, int, classcomp> m_fourth; // class as Compare
 
+    //std::cerr << fourth.size() << " | " << m_fourth.size() << std::endl;
+    //std::cerr << (fourth.size() == m_fourth.size()) << cond << compareMaps(fourth.begin(), fourth.end(), m_fourth.begin(), m_fourth.end()) << std::endl;
     cond = fourth.size() == m_fourth.size() && cond && compareMaps(fourth.begin(), fourth.end(), m_fourth.begin(), m_fourth.end());
 
     bool (*fn_pt)(char, char) = fncomp;
@@ -224,9 +235,9 @@ void iterator_tests(void)
             for (size_t i = 0; i < 5; ++i)
                 m.insert(ft::make_pair(myints[i], i));
             ft::map<int, int>::iterator it = m.begin(), eit = --m.end();
-            // std::cerr << "00 WEEWWEEWWEWEWEWEWEWEWEWEWEWE" << std::endl;
+            // //std::cerr << "00 WEEWWEEWWEWEWEWEWEWEWEWEWEWE" << std::endl;
             tmp = eit->first;
-            // std::cerr << "01 WEEWWEEWWEWEWEWEWEWEWEWEWEWE" << std::endl;
+            // //std::cerr << "01 WEEWWEEWWEWEWEWEWEWEWEWEWEWE" << std::endl;
             m.erase(eit);
             for (; it != m.end(); ++it)
                 res += it->first;
@@ -475,9 +486,15 @@ void testConstructors()
         std::string res, my_res;
         /*---------------------------------------------------------*/
         for (std::map<int, std::string>::iterator it = m.begin(); it != m.end(); ++it) // fill res from std::map
+        {
             res += it->second;
+            // //std::cerr << "SYS : [" << it->first << " | " << it->second << "]" << std::endl;
+        }
         for (ft::map<int, std::string>::iterator it = my_m.begin(); it != my_m.end(); ++it) // fill res from std::map
+        {
             my_res += it->second;
+            // //std::cerr << "USR : [" << it->first << " | " << it->second << "]" << std::endl;
+        }
         EQUAL(res == my_res);
     }
     std::cout << "\t\033[1;37m[-------------------- [" << std::setw(40) << std::left << " range constructor "
@@ -523,21 +540,27 @@ void testConstructors()
         /*--------------------------------------------------------*/
         for (std::map<int, std::string>::iterator it = m.begin(); it != m.end(); ++it)
         { // fill res from std::map
+            // //std::cerr << "res : [" << it->first << " | " << it->second << "]" << std::endl;
             res += it->second;
             sum += it->first;
         }
+        // //std::cerr << "res_sum : [" << sum << "]" << std::endl;
 
         for (ft::map<int, std::string>::iterator it = my_m.begin(); it != my_m.end(); ++it)
         { // fill my_res from ft::map
+            // //std::cerr << "res : [" << it->first << " | " << it->second << "]" << std::endl;
             my_res += it->second;
             my_sum += it->first;
         }
+        // //std::cerr << "my_sum : [" << my_sum << "]" << std::endl;
 
         for (ft::map<int, std::string>::iterator it = my_m1.begin(); it != my_m1.end(); ++it)
         { // fill my_res1 from ft::map
+            // //std::cerr << "my_res1 : [" << it->first << " | " << it->second << "]" << std::endl;
             my_res1 += it->second;
             my_sum1 += it->first;
         }
+        // //std::cerr << "my_sum1 : [" << my_sum1 << "]" << std::endl;
         EQUAL(res == my_res && my_res == my_res1);
     }
     std::cout << "\t\033[1;37m[-------------------- [" << std::setw(40) << std::left << " copy constructor "
@@ -1820,6 +1843,15 @@ void testOperations()
         it2 = m.find('b');
         ft_it2 = ft_m.find('b');
 
+        // std::cerr << "FIND_01 : " << cond << (it2->first == ft_it2->first) << (it2->second == ft_it2->second) << std::endl;
+        for (std::map<char, int>::iterator it = m.begin(); it != m.end(); ++it)
+        {
+            std::cerr << "SYYYYYS : [" << it->first << " | " << it->second << std::endl;
+        }
+        for (ft::map<char, int>::iterator it = ft_m.begin(); it != ft_m.end(); ++it)
+        {
+            std::cerr << "UUUUUSR : [" << it->first << " | " << it->second << std::endl;
+        }
         cond = cond && it2->first == ft_it2->first && it2->second == ft_it2->second;
 
         if (it2 != m.end())
@@ -1827,7 +1859,10 @@ void testOperations()
         if (ft_it2 != ft_m.end())
             ft_m.erase(ft_it2);
 
+        std::cerr << "FIND_00 : " << cond << compareMaps(m.begin(), m.end(), ft_m.begin(), ft_m.end()) << std::endl;
         cond = cond && compareMaps(m.begin(), m.end(), ft_m.begin(), ft_m.end());
+        std::cerr << vec.size() << " | " << ft_vec.size() << std::endl;
+        std::cerr << "FIND_0X : " << cond << (vec == ft_vec) << std::endl;
 
         EQUAL(cond && vec == ft_vec);
     }
@@ -2226,35 +2261,35 @@ int main()
     std::cout << RED << "--------------------------------------------------------------------------------------------------------" << RESET << std::endl;
     signal(SIGALRM, alarm_handler);
 
-    std::cout << YELLOW << "Testing Iterators;" << RESET << std::endl;
-    TEST_CASE(iterator_tests);
-    TEST_CASE(const_iterator_tests);
-    TEST_CASE(reverse_iterator_tests);
-    std::cout << std::endl;
+    // std::cout << YELLOW << "Testing Iterators;" << RESET << std::endl;
+    // TEST_CASE(iterator_tests);
+    // TEST_CASE(const_iterator_tests);
+    // TEST_CASE(reverse_iterator_tests);
+    // std::cout << std::endl;
 
-    std::cout << YELLOW << "Testing Constructors;" << RESET << std::endl;
-    TEST_CASE(testConstructors);
-    std::cout << std::endl;
+    // std::cout << YELLOW << "Testing Constructors;" << RESET << std::endl;
+    // TEST_CASE(testConstructors);
+    // std::cout << std::endl;
 
-    std::cout << YELLOW << "Testing Iterator Methods;" << RESET << std::endl;
-    TEST_CASE(testIterators);
-    std::cout << std::endl;
+    // std::cout << YELLOW << "Testing Iterator Methods;" << RESET << std::endl;
+    // TEST_CASE(testIterators);
+    // std::cout << std::endl;
 
-    std::cout << YELLOW << "Testing Capacity Methods;" << RESET << std::endl;
-    TEST_CASE(testCapacityMethods)
-    std::cout << std::endl;
+    // std::cout << YELLOW << "Testing Capacity Methods;" << RESET << std::endl;
+    // TEST_CASE(testCapacityMethods)
+    // std::cout << std::endl;
 
-    std::cout << YELLOW << "Testing Access Element Methods; " << RESET << std::endl;
-    TEST_CASE(testElementAccess);
-    std::cout << std::endl;
+    // std::cout << YELLOW << "Testing Access Element Methods; " << RESET << std::endl;
+    // TEST_CASE(testElementAccess);
+    // std::cout << std::endl;
 
-    std::cout << YELLOW << "Testing Modifiers Methods;" << RESET << std::endl;
-    TEST_CASE(testModifiers)
-    std::cout << std::endl;
+    // std::cout << YELLOW << "Testing Modifiers Methods;" << RESET << std::endl;
+    // TEST_CASE(testModifiers)
+    // std::cout << std::endl;
 
-    std::cout << YELLOW << "Testing Observers Methods;" << RESET << std::endl;
-    TEST_CASE(testObservers)
-    std::cout << std::endl;
+    // std::cout << YELLOW << "Testing Observers Methods;" << RESET << std::endl;
+    // TEST_CASE(testObservers)
+    // std::cout << std::endl;
 
     std::cout << YELLOW << "Testing Operations Methods;" << RESET << std::endl;
     TEST_CASE(testOperations)

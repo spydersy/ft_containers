@@ -9,10 +9,11 @@
 # include "../utils/pair.hpp"
 # include "../utils/avl_self_balancing_binary_search_tree_utils.hpp"
 
-# define LEFT_NODE  -1
-# define ROOT_NODE  +0
-# define RIGHT_NODE +1
-# define END_NODE   INT_MAX
+# define LEFT_NODE    -1
+# define ROOT_NODE    +0
+# define RIGHT_NODE   +1
+# define END_NODE     INT_MAX
+# define BEGIN_NODE   INT_MIN
 
 namespace ft
 {
@@ -59,6 +60,7 @@ private:
             allocator_type __allocator;
             key_compare    __key_comp;
             node*          __root;
+            node*          __begin;
             node*          __end;
             size_type      __size;
 
@@ -82,6 +84,11 @@ public:
             this->__end = this->__node_allocator.allocate(1);
             this->__node_allocator.construct(&(this->__end[0]), end_node);
 
+            value_type begin_val = ft::make_pair<key_type, mapped_type>(key_type(), mapped_type()); 
+            node begin_node( begin_val, BEGIN_NODE);
+            this->__begin = this->__node_allocator.allocate(1);
+            this->__node_allocator.construct(&(this->__begin[0]), begin_node);
+
             this->__size = 0;
         }
         
@@ -90,7 +97,6 @@ public:
                const key_compare& comp = key_compare(),
                const allocator_type& alloc = allocator_type())
         {
-            this->__key_comp = comp;
             this->__key_comp = comp;
             this->__allocator = alloc;
             this->__root = nullptr;
@@ -101,11 +107,19 @@ public:
             this->__end = this->__node_allocator.allocate(1);
             this->__node_allocator.construct(&(this->__end[0]), end_node);
 
+
+            value_type begin_val = ft::make_pair<key_type, mapped_type>(key_type(), mapped_type()); 
+            node begin_node( begin_val, BEGIN_NODE);
+            this->__begin = this->__node_allocator.allocate(1);
+            this->__node_allocator.construct(&(this->__begin[0]), begin_node);
+
             this->insert(first, last);
         }
         
         map (const map& x)
         {
+            this->__root = nullptr;
+            this->__size = 0;
             if (this != &x)
                 this->operator=(x);
         }
@@ -124,7 +138,8 @@ public:
         {
             if (this != &x)
             {
-                this->clear();
+                if (this->__size)
+                    this->clear();
                 this->__key_comp = x.__key_comp;
                 this->__node_allocator = x.__node_allocator;
                 this->__allocator = x.__allocator;
@@ -136,6 +151,12 @@ public:
                 node end_node( end_val, END_NODE);
                 this->__end = this->__node_allocator.allocate(1);
                 this->__node_allocator.construct(&(this->__end[0]), end_node);
+
+
+                value_type begin_val = ft::make_pair<key_type, mapped_type>(key_type(), mapped_type()); 
+                node begin_node( begin_val, BEGIN_NODE);
+                this->__begin = this->__node_allocator.allocate(1);
+                this->__node_allocator.construct(&(this->__begin[0]), begin_node);
 
                 if (x.__root == nullptr)
                     return *this;
@@ -161,7 +182,8 @@ public:
             node* most_right = this->get_right_most_node();
 
             most_right->__next = this->__end;
-            this->__end = most_right;
+            // this->__end = most_right;
+            most_right->__next->__prev = most_right;
             return iterator(this->__end);
         }
 
@@ -179,16 +201,16 @@ public:
         }
         
         reverse_iterator rbegin()
-        { return reverse_iterator(iterator(this->get_right_most_node())); }
+        { return reverse_iterator(this->end()); }
         
         const_reverse_iterator rbegin() const
-        { return const_reverse_iterator(const_iterator(this->get_right_most_node())); }
+        { return const_reverse_iterator(this->end()); }
         
         reverse_iterator rend()
-        { return reverse_iterator(iterator(nullptr)); }
+        { return reverse_iterator(this->begin()); }
         
         const_reverse_iterator rend() const
-        { return const_reverse_iterator(const_iterator(nullptr)); }
+        { return const_reverse_iterator(this->begin()); }
 
     /*
     ** Capacity: **************************************************************************************
@@ -221,6 +243,7 @@ public:
                 __root->__parent = __root;
                 this->__root->__next = nullptr;
                 this->__root->__prev = nullptr;
+                this->__size++;
                 return __root->__pair->second;
             }
             else
@@ -234,14 +257,14 @@ public:
                     }
                     else if (this->__key_comp(k, node_it->get_pair()->first))
                     {
-                        std::cout << KYEL << "<< TO_LEFT" << KNRM << std::endl;
+                        // std::cout << KYEL << "<< TO_LEFT" << KNRM << std::endl;
                         parent_it = node_it;
                         node_it = node_it->get_left();
                         node_position = LEFT_NODE;
                     }
                     else if (this->__key_comp(node_it->get_pair()->first, k))
                     {
-                        std::cout << KYEL << ">> TO_RIGHT" << KNRM << std::endl;
+                        // std::cout << KYEL << ">> TO_RIGHT" << KNRM << std::endl;
                         parent_it = node_it;
                         node_it = node_it->get_right();
                         node_position = RIGHT_NODE;
@@ -289,6 +312,7 @@ public:
                 this->__root = this->__node_allocator.allocate(1);
                 this->__node_allocator.construct(&this->__root[0], node_val);
                 __root->__parent = __root;
+                this->__size++;
                 this->__root->__next = nullptr;
                 this->__root->__prev = nullptr;
                 return ft::make_pair<iterator, bool>(iterator(this->__root), true);
@@ -349,16 +373,26 @@ public:
         }
 
         template <class InputIterator>
-          void insert (InputIterator first, InputIterator last)
-          {
-            while (first++ != last)
+        void insert (InputIterator first, InputIterator last)
+        {
+            while (first != last)
+            {
                 this->insert(*first);
-          }
+                first++;
+            }
+        }
 
         void erase (iterator position)
         {
-            (void)position;
-            // Do Something . . .
+            node*   parent;
+            if (position->__left == nullptr && position->__right == nullptr)
+                parent = __erase__leaf__node(n, true);
+            else if (position->__left == nullptr && position->__right != nullptr)
+                parent = __erase__one__subtree(n, RIGHT_NODE, true);
+            else if (position->__left != nullptr && position->__right == nullptr)
+                parent = __erase__one__subtree(n, LEFT_NODE, true);
+            else if (position->__left != nullptr && position->__right != nullptr)
+                parent = __erase__both__subtrees(n);
         }
 
         size_type erase (const key_type& k)
@@ -418,8 +452,8 @@ public:
                 next = node_begin->__next;
                 this->__node_allocator.destroy(node_begin);
                 this->__node_allocator.deallocate(node_begin, 1);
-                this->__size--;
                 node_begin = next;
+                this->__size--;
             }
             this->__root = nullptr;
         }
@@ -453,7 +487,7 @@ public:
                 else
                     return iterator(it);
             }
-            return iterator(this->get_right_most_node()->__left);
+            return this->end();
         }
 
         const_iterator find (const key_type& k) const
@@ -605,6 +639,8 @@ private:
                 return it;
             while (it->__left != nullptr)
                 it = it->__left;
+            if (it->__position == BEGIN_NODE)
+                return it->__next;
             return it;
         }
 
@@ -615,6 +651,8 @@ private:
                 return it;
             while (it->__right != nullptr)
                 it = it->__right;
+            // if (it->__position == END_NODE)
+            //     return it->__prev;
             return it;
         }
 
@@ -626,7 +664,6 @@ private:
 
             *node_it = n;
             (*node_it)->__parent = *parent_it;
-
             this->__size++;
             if (node_position == LEFT_NODE)
                 return (*parent_it)->__left = *node_it;
@@ -691,6 +728,24 @@ private:
             return (-1 <= diff && diff <= 1);
         }
 
+        node*    __erase__leaf__node(node* n, bool SET_NEXT_PREV)
+        {
+            node*   parent = n->__parent;
+
+            if (SET_NEXT_PREV == true)
+                set_next_prev_deletion(n);
+            if (n->__position == ROOT_NODE)
+            {
+                n->__parent = nullptr;
+                this->__root = nullptr;
+            }
+            else if (n->__position == LEFT_NODE)
+                n->__parent->__left = nullptr;
+            else
+                n->__parent->__right = nullptr;
+            delete n;
+            return parent;
+        }
 
         void    do_some_magic( node* child_node, node* inserted_node )
         {
