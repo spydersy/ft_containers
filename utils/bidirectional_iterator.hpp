@@ -45,11 +45,17 @@ namespace ft
             //                                                       __ptr(src.__ptr)
             // { return; }
 
-            template < class AnotherNodeType, class AnotherType>
-            bidirectional_iterator( const bidirectional_iterator<AnotherNodeType, AnotherType>& src)
+            // template < class AnotherNodeType, class AnotherType>
+            bidirectional_iterator( const bidirectional_iterator& src)
             {
-                this->operator=(src);
+                // this->operator=(src);
+                this->__ptr = src.__ptr;
             }
+
+            // bidirectional_iterator( const bidirectional_iterator& x )
+            // {
+            //     this->operator=(x);
+            // }
 
             bidirectional_iterator( TreeNode* x )
             {
@@ -69,7 +75,11 @@ namespace ft
             bidirectional_iterator    &operator=( bidirectional_iterator const & src)
             {
                 if (this != &src)
+                {
+                std::cout << "__DBG00__" << std::endl;
                     this->__ptr = src.__ptr;
+                std::cout << "__DBG01__" << std::endl;
+                }
                 return ( *this );
             }
 
@@ -82,7 +92,7 @@ namespace ft
                 template< class AnotherNodeType, class AnotherType>
                 bool    operator!=( bidirectional_iterator<AnotherNodeType, AnotherType> const & src )
                 {
-                    return (this->__ptr->__pair != src.__ptr->__pair);
+                    return (this->__ptr != src.__ptr);
                 }
 
             /*
@@ -93,7 +103,7 @@ namespace ft
                 */
                 bidirectional_iterator    &operator++()
                 {
-                    this->__ptr++;
+                    this->__ptr = this->__ptr->__next;
                     return (*this);
                 }
 
@@ -102,6 +112,7 @@ namespace ft
                 */
                 bidirectional_iterator    operator++( int )
                 {
+                    std::cout << "01 : ---------------------" << std::endl;
                         bidirectional_iterator   prev = *this;
 
                         this->__ptr++;
@@ -113,7 +124,7 @@ namespace ft
                 */
                 bidirectional_iterator    &operator--()
                 {
-                    this->__ptr--;
+                    this->__ptr = this->__ptr->get_prev_node();
                     return *this;
                 }
 
@@ -124,16 +135,22 @@ namespace ft
                 {
                         bidirectional_iterator   prev = *this;
 
-                        this->__ptr--;
+                        this->__ptr = this->__ptr->get_prev_node();
                         return prev;
                 }
 
             /*
             ** Dereference Operators:
             */
-                Type&        operator*( void ) { return (this->__ptr->__pair); }
-                pointer       operator->( void ) { return ((this->__ptr)->__pair); }
+                reference     operator*( void ) { return *this->__ptr->__pair; }
+                pointer       operator->( void ) { return this->__ptr->__pair; }
+                const pointer       operator->( void ) const { return this->__ptr->__pair; }
 
+                // User Defined Conversion Function
+                operator bidirectional_iterator<TreeNode,const Type>()
+                {
+                    return (bidirectional_iterator< TreeNode, const Type>(__ptr));
+                }
         private:
             TreeNode*     __ptr;
     };

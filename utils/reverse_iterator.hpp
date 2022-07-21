@@ -71,8 +71,11 @@ namespace ft
             // Operator -> :
             pointer operator->() const
             {
-                return (this->base() - 1).operator->();
+                iterator_type it(this->base()--);
+                this->base()++;
+                return (it).operator->();
             }
+
         /*
          * Element by Index Accessor ==============================================================
         */

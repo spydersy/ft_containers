@@ -1,5 +1,5 @@
-#ifndef __AVL_SELF_BALANCED_BINARY_SEARCH_TREEUTILS__
-# define __AVL_SELF_BALANCED_BINARY_SEARCH_TREEUTILS__
+#ifndef __AVL_SELF_BALANCED_BINARY_SEARCH_TREE_UTILS__
+# define __AVL_SELF_BALANCED_BINARY_SEARCH_TREE_UTILS__
 
 #include <iostream>
 #include "pair.hpp"
@@ -70,14 +70,19 @@
             this->__allocator.construct(&(this->__pair[0]), pair);
         }
 
-        // Copy Constructor :
-        // TreeNode( const TreeNode & src )
-        // {
-        //     if (this != &src)
-        //     {
-        //         *this = src;
-        //     }
-        // }
+        template <typename VALUE_TYPE>
+        TreeNode( const VALUE_TYPE & src )
+        {
+            this->__index = src.__index;
+            this->__position = src.__position;
+            this->__left = src.__left;
+            this->__right = src.__right;
+            this->__parent = src.__parent;
+            this->__next = src.__next;
+            this->__prev = src.__prev;
+            this->__allocator = src.__allocator;
+            this->__pair = src.__pair;
+        }
 
         // Operator= :
         TreeNode&   operator=( const TreeNode & src )
@@ -98,7 +103,7 @@
 
         // Destructor :
         ~TreeNode( void )
-        { std::cout << KGRN << "__TREE__NODE__DESTRUCTOR__CALLED__" << KNRM << std::endl; }          
+        { /*std::cout << KGRN << "__TREE__NODE__DESTRUCTOR__CALLED__" << KNRM << std::endl;*/ }          
 
     /*
     ** Getters :

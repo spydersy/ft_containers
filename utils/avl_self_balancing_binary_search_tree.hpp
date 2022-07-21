@@ -21,6 +21,8 @@
     private:
         size_t                  __size;
         node*                   __root;
+        node                    __begin;
+        node                    __end;
     public:
     /*
     ** Canonical Form :
@@ -266,7 +268,7 @@
             }
             y->__left = z;
             z->__right = t2;
-            std::cerr << "Z->PARENT : [" << z->__parent->__pair.first << "] | Y : [" << y->__pair.first << "]" << std::endl;
+            // std::cerr << "Z->PARENT : [" << z->__parent->__pair.first << "] | Y : [" << y->__pair.first << "]" << std::endl;
             z->__parent = y;
             z->__position = LEFT_NODE;
             if (CHANGE_INDEX)
@@ -452,13 +454,13 @@
                 *inserted_node = (*inserted_node)->__parent;
                 if (*inserted_node == (*inserted_node)->__parent && balance_factor_value(get_non_null_child(*inserted_node)) != 0)
                 {
-                    std::cerr << KRED << "___WAAAARNING___EXCEPTION___01 :: " << (*inserted_node)->__pair.first << KNRM << std::endl;
+                    // std::cerr << KRED << "___WAAAARNING___EXCEPTION___01 :: " << (*inserted_node)->__pair.first << KNRM << std::endl;
                     (*inserted_node)->__index++;
                     if (get_max_index_of_child(*inserted_node)
                     && (*inserted_node)->__index - get_max_index_of_child(*inserted_node)->__index > 1)
                     {
                         (*inserted_node)->__index--;
-                        std::cerr << KCYN << "___WAAAARNING___EXCEPTION___01__________________ :: " << KNRM << std::endl;
+                        // std::cerr << KCYN << "___WAAAARNING___EXCEPTION___01__________________ :: " << KNRM << std::endl;
                     }
                 }
             }
@@ -489,14 +491,14 @@
                     }
                     else if (pair.first < node_it->get_pair().first)
                     {
-                        std::cout << KYEL << "<< TO_LEFT" << KNRM << std::endl;
+                        // std::cout << KYEL << "<< TO_LEFT" << KNRM << std::endl;
                         parent_it = node_it;
                         node_it = node_it->get_left();
                         node_position = LEFT_NODE;
                     }
                     else if (pair.first > node_it->get_pair().first)
                     {
-                        std::cout << KYEL << ">> TO_RIGHT" << KNRM << std::endl;
+                        // std::cout << KYEL << ">> TO_RIGHT" << KNRM << std::endl;
                         parent_it = node_it;
                         node_it = node_it->get_right();
                         node_position = RIGHT_NODE;
@@ -521,7 +523,7 @@
                 }
                 else
                 {
-                    std::cout << KGRN << "__SET__IN__RIGHT__NODE__" << KNRM << std::endl;
+                    // std::cout << KGRN << "__SET__IN__RIGHT__NODE__" << KNRM << std::endl;
                     inserted_node->__prev = inserted_node->__parent;
                     inserted_node->__next = inserted_node->__parent->__next;
 

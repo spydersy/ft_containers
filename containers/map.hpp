@@ -12,7 +12,7 @@
 # define LEFT_NODE  -1
 # define ROOT_NODE  +0
 # define RIGHT_NODE +1
-
+# define END_NODE   INT_MAX
 
 namespace ft
 {
@@ -59,6 +59,7 @@ private:
             allocator_type __allocator;
             key_compare    __key_comp;
             node*          __root;
+            node*          __end;
             size_type      __size;
 
 /*
@@ -72,8 +73,16 @@ public:
                       const allocator_type& alloc = allocator_type())
         {
             this->__key_comp = comp;
+            this->__key_comp = comp;
             this->__allocator = alloc;
             this->__root = nullptr;
+
+            value_type end_val = ft::make_pair<key_type, mapped_type>(key_type(), mapped_type()); 
+            node end_node( end_val, END_NODE);
+            this->__end = this->__node_allocator.allocate(1);
+            this->__node_allocator.construct(&(this->__end[0]), end_node);
+            this->__end->__prev = this->get_right_most_node();
+
             this->__size = 0;
         }
         
@@ -83,9 +92,17 @@ public:
                const allocator_type& alloc = allocator_type())
         {
             this->__key_comp = comp;
+            this->__key_comp = comp;
             this->__allocator = alloc;
             this->__root = nullptr;
             this->__size = 0;
+
+            value_type end_val = ft::make_pair<key_type, mapped_type>(key_type(), mapped_type()); 
+            node end_node( end_val, END_NODE);
+            this->__end = this->__node_allocator.allocate(1);
+            this->__node_allocator.construct(&(this->__end[0]), end_node);
+            this->__end->__prev = this->get_right_most_node();
+
             this->insert(first, last);
         }
         
@@ -99,7 +116,7 @@ public:
     ** Destructors: ***********************************************************************************
     */
         ~map()
-        { this->clear(); }
+        { }
 
 
     /*
@@ -110,11 +127,19 @@ public:
             if (this != &x)
             {
                 this->clear();
+                this->__key_comp = x.__key_comp;
                 this->__node_allocator = x.__node_allocator;
                 this->__allocator = x.__allocator;
                 this->__key_comp = x.__key_comp;
                 this->__size = 0;
                 this->__root = nullptr;
+
+                value_type end_val = ft::make_pair<key_type, mapped_type>(key_type(), mapped_type()); 
+                node end_node( end_val, END_NODE);
+                this->__end = this->__node_allocator.allocate(1);
+                this->__node_allocator.construct(&(this->__end[0]), end_node);
+                this->__end->__prev = this->get_right_most_node();
+
                 if (x.__root == nullptr)
                     return *this;
                 this->insert(x.begin(), x.end());
@@ -133,10 +158,10 @@ public:
         { return const_iterator(this->get_left_most_node()); }
 
         iterator end()
-        { return iterator(this->get_right_most_node()->__left); }
+        { return iterator(this->__end); }
 
         const_iterator end() const
-        { return const_iterator(this->get_right_most_node()->__left); }
+        { return const_iterator(this->__end); }
         
         reverse_iterator rbegin()
         { return reverse_iterator(iterator(this->get_right_most_node())); }
@@ -145,10 +170,10 @@ public:
         { return const_reverse_iterator(const_iterator(this->get_right_most_node())); }
         
         reverse_iterator rend()
-        { return reverse_iterator(const_iterator(this->get_left_most_node()->__prev)); }
+        { return reverse_iterator(iterator(nullptr)); }
         
         const_reverse_iterator rend() const
-        { return const_reverse_iterator(const_iterator(this->get_left_most_node()->__prev)); }
+        { return const_reverse_iterator(const_iterator(nullptr)); }
 
     /*
     ** Capacity: **************************************************************************************
@@ -179,7 +204,7 @@ public:
                 this->__root = this->__node_allocator.allocate(1);
                 this->__node_allocator.construct(&(this->__root[0]), node_val);
                 __root->__parent = __root;
-                this->__root->__next = nullptr;
+                this->__root->__next = __end;
                 this->__root->__prev = nullptr;
                 return __root->__pair->second;
             }
@@ -222,7 +247,7 @@ public:
                 }
                 else
                 {
-                    std::cout << KGRN << "__SET__IN__RIGHT__NODE__" << KNRM << std::endl;
+                    // std::cout << KGRN << "__SET__IN__RIGHT__NODE__" << KNRM << std::endl;
                     inserted_node->__prev = inserted_node->__parent;
                     inserted_node->__next = inserted_node->__parent->__next;
                     if (inserted_node->__next)
@@ -251,7 +276,7 @@ public:
                 __root->__parent = __root;
                 this->__root->__next = nullptr;
                 this->__root->__prev = nullptr;
-                return ;
+                return ft::make_pair<iterator, bool>(iterator(this->__root), true);
             }
             else
             {
@@ -264,14 +289,14 @@ public:
                     }
                     else if (this->__key_comp(val.first, node_it->get_pair()->first))
                     {
-                        std::cout << KYEL << "<< TO_LEFT" << KNRM << std::endl;
+                        // std::cout << KYEL << "<< TO_LEFT" << KNRM << std::endl;
                         parent_it = node_it;
                         node_it = node_it->get_left();
                         node_position = LEFT_NODE;
                     }
                     else if (this->__key_comp(node_it->get_pair()->first, val.first))
                     {
-                        std::cout << KYEL << ">> TO_RIGHT" << KNRM << std::endl;
+                        // std::cout << KYEL << ">> TO_RIGHT" << KNRM << std::endl;
                         parent_it = node_it;
                         node_it = node_it->get_right();
                         node_position = RIGHT_NODE;
@@ -290,7 +315,7 @@ public:
                 }
                 else
                 {
-                    std::cout << KGRN << "__SET__IN__RIGHT__NODE__" << KNRM << std::endl;
+                    // std::cout << KGRN << "__SET__IN__RIGHT__NODE__" << KNRM << std::endl;
                     inserted_node->__prev = inserted_node->__parent;
                     inserted_node->__next = inserted_node->__parent->__next;
                     if (inserted_node->__next)
@@ -387,10 +412,8 @@ public:
     /*
     ** Observers: *************************************************************************************
     */
-        // key_compare key_comp() const
-        // {
-        //     // Do Something . . .
-        // }
+        key_compare key_comp() const
+        { return this->__key_comp; }
 
         // value_compare value_comp() const
         // {
@@ -435,43 +458,88 @@ public:
         }
 
 
-        // size_type count (const key_type& k) const
-        // {
-        //     // Do Something . . .
-        // }
+        size_type count (const key_type& k) const
+        {
+            const_iterator it = this->find(k);
+
+            if (it == this->end())
+                return 0;
+            return 1;
+        }
+
+        iterator lower_bound (const key_type& k)
+        {
+            iterator it = this->begin();
+            iterator end_it = this->end();
+            
+            while (it != end_it)
+            {
+                if (this->__key_comp(k, it->first))
+                    break ;
+            }
+            return it;
+        }
+
+        const_iterator lower_bound (const key_type& k) const
+        {
+            const_iterator it = this->begin();
+            const_iterator end_it = this->end();
+            
+            while (it != end_it)
+            {
+                if (it->first == k)
+                    return it;
+                else if (this->__key_comp(it->first, k))
+                    break ;
+                it++;
+            }
+            return it;
+        }
 
 
-        // iterator lower_bound (const key_type& k)
-        // {
-        //     // Do Something . . .
-        // }
+        iterator upper_bound (const key_type& k)
+        {
+            iterator it = this->begin();
+            iterator end_it = this->end();
+            
+            while (it != end_it)
+            {
+                if (it->first == k)
+                    return it;
+                else if (this->__key_comp(it->first, k))
+                    break ;
+                it++;
+            }
+            return it;
+        }
 
-        // const_iterator lower_bound (const key_type& k) const
-        // {
-        //     // Do Something . . .
-        // }
+        const_iterator upper_bound (const key_type& k) const
+        {
+            const_iterator it = this->begin();
+            const_iterator end_it = this->end();
+            
+            while (it != end_it)
+            {
+                if (it->first == k)
+                    return it;
+                else if (this->__key_comp(it->first, k))
+                    break ;
+                it++;
+            }
+            return it;        }
 
 
-        // iterator upper_bound (const key_type& k)
-        // {
-        //     // Do Something . . .
-        // }
+        pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+        {
+            if (k == k) {}
+            return ft::make_pair<const_iterator,const_iterator>(this->begin(), this->begin());
+        }
 
-        // const_iterator upper_bound (const key_type& k) const
-        // {
-        //     // Do Something . . .
-        // }
-
-
-        // pair<const_iterator,const_iterator> equal_range (const key_type& k) const
-        // {
-        //     // Do Something . . .
-        // }
-
-        // pair<iterator,iterator>             equal_range (const key_type& k)
-        // {
-        //     // Do Something . . .
-        // }
+        pair<iterator,iterator>             equal_range (const key_type& k)
+        {
+            if (k == k) {}
+            return ft::make_pair<iterator, iterator>(this->begin(), this->begin());
+        }
     /*
     ** Allocator: *************************************************************************************
     */
@@ -575,13 +643,13 @@ private:
                 *inserted_node = (*inserted_node)->__parent;
                 if (*inserted_node == (*inserted_node)->__parent && balance_factor_value(get_non_null_child(*inserted_node)) != 0)
                 {
-                    std::cerr << KRED << "___WAAAARNING___EXCEPTION___01 :: " << (*inserted_node)->__pair->first << KNRM << std::endl;
+                    // std::cerr << KRED << "___WAAAARNING___EXCEPTION___01 :: " << (*inserted_node)->__pair->first << KNRM << std::endl;
                     (*inserted_node)->__index++;
                     if (get_max_index_of_child(*inserted_node)
                     && (*inserted_node)->__index - get_max_index_of_child(*inserted_node)->__index > 1)
                     {
                         (*inserted_node)->__index--;
-                        std::cerr << KCYN << "___WAAAARNING___EXCEPTION___01__________________ :: " << KNRM << std::endl;
+                        // std::cerr << KCYN << "___WAAAARNING___EXCEPTION___01__________________ :: " << KNRM << std::endl;
                     }
                 }
             }
@@ -617,25 +685,25 @@ private:
             // Right rotation
             if ((childe_position == LEFT_NODE || childe_position == ROOT_NODE) && childe_position == inserted_position)
             {
-                std::cerr << KGRN << "_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_RIGHT_-_ROTATION_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << KNRM << std::endl;
+                // std::cerr << KGRN << "_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_RIGHT_-_ROTATION_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << KNRM << std::endl;
                 right_rotation(child_node->__parent, true);
             }
             // Left rotation
             else if ((childe_position == RIGHT_NODE || childe_position == ROOT_NODE) && childe_position == inserted_position)
             {
-                std::cerr << KGRN << "_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_LEFT_-_ROTATION_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << KNRM << std::endl;
+                // std::cerr << KGRN << "_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_LEFT_-_ROTATION_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << KNRM << std::endl;
                 left_rotation(child_node->__parent, true);
             }
             // Right Left Rotation
             else if (inserted_position == LEFT_NODE && childe_position == RIGHT_NODE)
             {
-                std::cerr << KGRN << "_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_RIGHT_-_LEFT_-_ROTATION_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << KNRM << std::endl;
+                // std::cerr << KGRN << "_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_RIGHT_-_LEFT_-_ROTATION_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << KNRM << std::endl;
                 right_left_rotation(child_node);
             }
             // Left Right Rotation
             else if (inserted_position == RIGHT_NODE && childe_position == LEFT_NODE)
             {
-                std::cerr << KGRN << "_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_LEFT_-_RIGHT_-_ROTATION_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << KNRM << std::endl;
+                // std::cerr << KGRN << "_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_LEFT_-_RIGHT_-_ROTATION_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << KNRM << std::endl;
                 left_right_rotation(child_node);
             }
         }
@@ -725,7 +793,7 @@ private:
             }
             y->__left = z;
             z->__right = t2;
-            std::cerr << "Z->PARENT : [" << z->__parent->__pair->first << "] | Y : [" << y->__pair->first << "]" << std::endl;
+            // std::cerr << "Z->PARENT : [" << z->__parent->__pair->first << "] | Y : [" << y->__pair->first << "]" << std::endl;
             z->__parent = y;
             z->__position = LEFT_NODE;
             if (CHANGE_INDEX)
