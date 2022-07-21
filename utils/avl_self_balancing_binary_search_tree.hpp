@@ -513,7 +513,7 @@
 
                 if (inserted_node->__position == LEFT_NODE)
                 {
-                    std::cout << KYEL << "__SET__IN__LEFT__NODE__" << KNRM << std::endl;
+                    // std::cout << KYEL << "__SET__IN__LEFT__NODE__" << KNRM << std::endl;
                     inserted_node->__next = inserted_node->__parent;
                     inserted_node->__prev = inserted_node->__parent->__prev;
 

@@ -146,15 +146,10 @@ void iterator_tests(void)
     std::cout << "\t\033[1;37m[-------------------- [" << std::setw(40) << std::left << " iterator to const_iterator "
               << "] --------------------]\t\t\033[0m";
     {
-        std::cout << "00 : ***************************************************" << std::endl;
         ft::map<int, char>::const_iterator c_it;
-        std::cout << "000 : ***************************************************" << std::endl;
         ft::map<int, char>::const_iterator c_ob(my_it);
-        std::cout << "01 : ***************************************************" << std::endl;
         c_it = my_it;
-        std::cout << "02 : ***************************************************" << std::endl;
         EQUAL(&(*my_it) == &(*c_it) && (&(*my_it) == &(*c_ob)));
-        std::cout << "03 : ***************************************************" << std::endl;
     }
     std::cout << "\t\033[1;37m[-------------------- [" << std::setw(40) << std::left << " == operator "
               << "] --------------------]\t\t\033[0m";
@@ -205,10 +200,10 @@ void iterator_tests(void)
             diff = (diff) ? (diff * TIME_FAC) : TIME_FAC;
 
             ualarm(diff * 1e3, 0);
-            std::cout << "00 ------------------------------ 09090909090909" << std::endl;
+            // std::cout << "00 ------------------------------ 09090909090909" << std::endl;
             for (ft::map<int, std::string>::iterator it = ft_m.begin(); it != ft_m.end(); ++it)
                 ;
-            std::cout << "01 ------------------------------ 09090909090909" << std::endl;
+            // std::cout << "01 ------------------------------ 09090909090909" << std::endl;
             ualarm(0, 0);
         }
         bool cond(false);
@@ -229,9 +224,9 @@ void iterator_tests(void)
             for (size_t i = 0; i < 5; ++i)
                 m.insert(ft::make_pair(myints[i], i));
             ft::map<int, int>::iterator it = m.begin(), eit = --m.end();
-            std::cerr << "00 WEEWWEEWWEWEWEWEWEWEWEWEWEWE" << std::endl;
+            // std::cerr << "00 WEEWWEEWWEWEWEWEWEWEWEWEWEWE" << std::endl;
             tmp = eit->first;
-            std::cerr << "01 WEEWWEEWWEWEWEWEWEWEWEWEWEWE" << std::endl;
+            // std::cerr << "01 WEEWWEEWWEWEWEWEWEWEWEWEWEWE" << std::endl;
             m.erase(eit);
             for (; it != m.end(); ++it)
                 res += it->first;

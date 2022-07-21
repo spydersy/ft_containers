@@ -76,9 +76,9 @@ namespace ft
             {
                 if (this != &src)
                 {
-                std::cout << "__DBG00__" << std::endl;
+                // std::cout << "__DBG00__" << std::endl;
                     this->__ptr = src.__ptr;
-                std::cout << "__DBG01__" << std::endl;
+                // std::cout << "__DBG01__" << std::endl;
                 }
                 return ( *this );
             }
@@ -103,6 +103,7 @@ namespace ft
                 */
                 bidirectional_iterator    &operator++()
                 {
+                    // std::cout << "00 : ---------------------" << std::endl;
                     this->__ptr = this->__ptr->__next;
                     return (*this);
                 }
@@ -112,10 +113,10 @@ namespace ft
                 */
                 bidirectional_iterator    operator++( int )
                 {
-                    std::cout << "01 : ---------------------" << std::endl;
+                    // std::cout << "01 : ---------------------" << std::endl;
                         bidirectional_iterator   prev = *this;
 
-                        this->__ptr++;
+                        this->__ptr = this->__ptr->__next;
                         return (prev);
                 }
 

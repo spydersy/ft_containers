@@ -81,7 +81,6 @@ public:
             node end_node( end_val, END_NODE);
             this->__end = this->__node_allocator.allocate(1);
             this->__node_allocator.construct(&(this->__end[0]), end_node);
-            this->__end->__prev = this->get_right_most_node();
 
             this->__size = 0;
         }
@@ -101,7 +100,6 @@ public:
             node end_node( end_val, END_NODE);
             this->__end = this->__node_allocator.allocate(1);
             this->__node_allocator.construct(&(this->__end[0]), end_node);
-            this->__end->__prev = this->get_right_most_node();
 
             this->insert(first, last);
         }
@@ -138,7 +136,6 @@ public:
                 node end_node( end_val, END_NODE);
                 this->__end = this->__node_allocator.allocate(1);
                 this->__node_allocator.construct(&(this->__end[0]), end_node);
-                this->__end->__prev = this->get_right_most_node();
 
                 if (x.__root == nullptr)
                     return *this;
@@ -158,10 +155,28 @@ public:
         { return const_iterator(this->get_left_most_node()); }
 
         iterator end()
-        { return iterator(this->__end); }
+        {
+            if (this->__size == 0)
+                return iterator(nullptr);
+            node* most_right = this->get_right_most_node();
+
+            most_right->__next = this->__end;
+            this->__end = most_right;
+            return iterator(this->__end);
+        }
 
         const_iterator end() const
-        { return const_iterator(this->__end); }
+        {
+            if (this->__size == 0)
+                return const_iterator(nullptr);
+            node* most_right = this->get_right_most_node();
+
+            most_right->__next = this->__end;
+            most_right->__next->__prev = most_right;
+
+            // this->__end = most_right;
+            return const_iterator(this->__end);
+        }
         
         reverse_iterator rbegin()
         { return reverse_iterator(iterator(this->get_right_most_node())); }
@@ -204,7 +219,7 @@ public:
                 this->__root = this->__node_allocator.allocate(1);
                 this->__node_allocator.construct(&(this->__root[0]), node_val);
                 __root->__parent = __root;
-                this->__root->__next = __end;
+                this->__root->__next = nullptr;
                 this->__root->__prev = nullptr;
                 return __root->__pair->second;
             }
@@ -214,7 +229,7 @@ public:
                 {
                     if (k == node_it->get_pair()->first)
                     {
-                        std::cout << "Duplicated Element" << std::endl;
+                        // std::cout << "Duplicated Element" << std::endl;
                         return node_it->get_pair()->second;
                     }
                     else if (this->__key_comp(k, node_it->get_pair()->first))
@@ -238,7 +253,7 @@ public:
                 node*   tmp_inserted_node = inserted_node;
                 if (inserted_node->__position == LEFT_NODE)
                 {
-                    std::cout << KYEL << "__SET__IN__LEFT__NODE__" << KNRM << std::endl;
+                    // std::cout << KYEL << "__SET__IN__LEFT__NODE__" << KNRM << std::endl;
                     inserted_node->__next = inserted_node->__parent;
                     inserted_node->__prev = inserted_node->__parent->__prev;
                     if (inserted_node->__prev)
@@ -284,7 +299,7 @@ public:
                 {
                     if (val.first == node_it->get_pair()->first)
                     {
-                        std::cout << "Duplicated Element" << std::endl;
+                        // std::cout << "Duplicated Element" << std::endl;
                         return ft::make_pair<iterator, bool>(iterator(node_it), false);
                     }
                     else if (this->__key_comp(val.first, node_it->get_pair()->first))
@@ -306,7 +321,7 @@ public:
                 node*   tmp_inserted_node = inserted_node;
                 if (inserted_node->__position == LEFT_NODE)
                 {
-                    std::cout << KYEL << "__SET__IN__LEFT__NODE__" << KNRM << std::endl;
+                    // std::cout << KYEL << "__SET__IN__LEFT__NODE__" << KNRM << std::endl;
                     inserted_node->__next = inserted_node->__parent;
                     inserted_node->__prev = inserted_node->__parent->__prev;
                     if (inserted_node->__prev)
@@ -598,9 +613,9 @@ private:
             node*   it = this->__root;
             if (it == nullptr)
                 return it;
-            while (it != nullptr)
+            while (it->__right != nullptr)
                 it = it->__right;
-            return it->__parent;
+            return it;
         }
 
         node*    append_node(node** node_it, node** parent_it, int node_position, value_type pair)
