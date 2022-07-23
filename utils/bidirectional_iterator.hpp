@@ -8,6 +8,8 @@
 # include "../containers/map.hpp"
 # include "avl_self_balancing_binary_search_tree_utils.hpp"
 
+
+
 namespace ft
 {
     template < typename TreeNode, class Type>
@@ -22,7 +24,7 @@ namespace ft
 
             // typedef typename TreeNode::key_comapre                       key_comapre;
             // typedef TreeNode<Key, Value, key_compare>                    node;
-            
+
 
             // node*   get_node() { return this->__ptr; }
         //  class bidirectional_iterator;
@@ -47,10 +49,7 @@ namespace ft
 
             // template < class AnotherNodeType, class AnotherType>
             bidirectional_iterator( const bidirectional_iterator& src)
-            {
-                // this->operator=(src);
-                this->__ptr = src.__ptr;
-            }
+            { this->__ptr = src.__ptr; }
 
             // bidirectional_iterator( const bidirectional_iterator& x )
             // {
@@ -103,7 +102,7 @@ namespace ft
                 */
                 bidirectional_iterator    &operator++()
                 {
-                    std::cout << "00 : ---------------------" << std::endl;
+                    // std::cout << "00 : ---------------------" << std::endl;
                     this->__ptr = this->__ptr->__next;
                     return (*this);
                 }
@@ -113,7 +112,7 @@ namespace ft
                 */
                 bidirectional_iterator    operator++( int )
                 {
-                    std::cout << "01 : ---------------------" << std::endl;
+                    // std::cout << "01 : ---------------------" << std::endl;
                         bidirectional_iterator   prev = *this;
 
                         this->__ptr = this->__ptr->__next;
@@ -152,7 +151,9 @@ namespace ft
                 {
                     return (bidirectional_iterator< TreeNode, const Type>(__ptr));
                 }
-        private:
+        // private:
+            TreeNode* get_tree_node( void ) { return this->__ptr; }
+        public:
             TreeNode*     __ptr;
     };
 }

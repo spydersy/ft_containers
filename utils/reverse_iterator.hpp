@@ -72,7 +72,7 @@ namespace ft
 
             // Operator -> :
             // template <typename X = ft::random_access_iterator_tag >
-            //pointer operator->() const
+            // pointer operator->() const
             // typename ft::enable_if<typeid(iterator_category) == typeid(ft::random_access_iterator_tag), pointer>::type
             pointer operator->() const
             { return &(this->operator*()); }
@@ -116,12 +116,14 @@ namespace ft
                 this->__it--;
                 return *this;
             }
+
             // Pre-increment Operator --rit :
             reverse_iterator& operator--()
             {
                 this->__it++;
                 return *this;
             }
+            
             // Post-increment Operator rit++ :
             reverse_iterator operator++( int )
             {

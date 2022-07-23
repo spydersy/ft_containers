@@ -32,8 +32,10 @@
         TreeNode*       __left;
         TreeNode*       __right;
         TreeNode*       __parent;
+
         TreeNode*       __next;
         TreeNode*       __prev;
+
         Alloc           __allocator;
         value_type*     __pair;
 
@@ -42,7 +44,7 @@
     ** Canonical Form :
     */
         // Default Constructor :
-        // TreeNode( void ) :  
+        // TreeNode( void ) :
         //                     __index(1),
         //                     __position(0),
         //                     __left(nullptr),
@@ -103,7 +105,7 @@
 
         // Destructor :
         ~TreeNode( void )
-        { /*std::cout << KGRN << "__TREE__NODE__DESTRUCTOR__CALLED__" << KNRM << std::endl;*/ }          
+        { /*std::cout << KGRN << "__TREE__NODE__DESTRUCTOR__CALLED__" << KNRM << std::endl;*/ }
 
     /*
     ** Getters :
