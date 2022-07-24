@@ -18,14 +18,11 @@ namespace ft
                class Alloc = std::allocator<ft::pair<const Key,T> > >  // map::allocator_type
     class map
     {
-
-
-
 private:
 /*
 ** Private Member Types: **************************************************************************
 */
-    typedef TreeNode<Key, T, Compare>   node;
+    typedef TreeNode<Key, T, Compare, Alloc>   node;
 
 public:
 /*

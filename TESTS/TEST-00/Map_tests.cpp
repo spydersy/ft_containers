@@ -58,9 +58,6 @@ bool compareMaps(Iter1 first1, Iter1 last1, Iter2 first2, Iter2 last2)
 {
     for (; (first1 != last1) && (first2 != last2); ++first1, ++first2)
     {
-        std::cerr << "SYS: [" << first1->first << " | " <<   first1->second << "]" << std::endl;
-        std::cerr << "USR: [" << first2->first << " | " <<   first2->second << "]" << std::endl;
-        std::cerr << "********************************" << std::endl;
         if (first1->first != first2->first || first1->second != first2->second)
             return false;
     }
@@ -1430,11 +1427,17 @@ void testModifiers()
         std::mt19937 generator(randDev());
         std::uniform_int_distribution<int> distr(0, 1e8);
 
-        for (size_t i = 0; i < 1e6; i++)
+        std::cout << "THIS_LOOP__00 : ===========================================================" << std::endl;
+        for (int i = 0; i < 1e6; i++)
         {
-            m3.insert(std::make_pair(i, "string1"));
+            std::cout << "LOOP__00 : " << i << std::endl;
+            // m3.insert(std::make_pair(i, "string1")); // Do Something . . .
             ft_m3.insert(ft::make_pair(i, "string1"));
+            std::cout << "LOOP__01 : " << i << std::endl;
+            // std::cout << "LOOP__02 : " << i << std::endl << std::endl;
         }
+
+        std::cout << "THIS_LOOP__01 : ===========================================================" << std::endl;
 
         for (size_t i = 0; i < 1e6; ++i)
         {
@@ -1448,6 +1451,7 @@ void testModifiers()
                 break;
             }
         }
+        std::cout << "THIS_LOOP__02 : ===========================================================" << std::endl;
 
         if (!m3.empty())
         {

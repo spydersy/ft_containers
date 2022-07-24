@@ -57,7 +57,6 @@
         //     this->__pair = this->__allocator.allcate(1);
         // }
 
-        // Pair Constructor :
         template <typename VALUE_TYPE>
         TreeNode( VALUE_TYPE& pair, int position ) : __index(1),
                                                            __position(position),
@@ -72,8 +71,8 @@
             this->__allocator.construct(&(this->__pair[0]), pair);
         }
 
-        template <typename VALUE_TYPE>
-        TreeNode( const VALUE_TYPE & src )
+        template <typename TREE_NODE>
+        TreeNode( const TREE_NODE & src )
         {
             this->__index = src.__index;
             this->__position = src.__position;
@@ -105,7 +104,10 @@
 
         // Destructor :
         ~TreeNode( void )
-        { /*std::cout << KGRN << "__TREE__NODE__DESTRUCTOR__CALLED__" << KNRM << std::endl;*/ }
+        {
+            // this->__allocator.destroy(&__pair[0]);
+            // this->__allocator.deallocate(__pair, 1);
+        }
 
     /*
     ** Getters :

@@ -11,9 +11,9 @@
 # define END_NODE     INT_MAX
 # define BEGIN_NODE   INT_MIN
 
-template < class Key,                                          // map::key_type
-               class T,                                            // map::mapped_type
-               class Compare = std::less<Key>,                     // map::key_compare
+template < class Key,                                                  // map::key_type
+               class T,                                                // map::mapped_type
+               class Compare = std::less<Key>,                         // map::key_compare
                class Alloc = std::allocator<ft::pair<const Key,T> > >  // map::allocator_type
     class avl_sbbst
     {
@@ -21,8 +21,8 @@ private:
 /*
 ** Private Member Types: **************************************************************************
 */
-            typedef TreeNode<Key, T, Compare>   node;
-            typedef std::allocator<node>        node_allocator;
+        typedef TreeNode<Key, T, Compare, Alloc>   node;
+        typedef std::allocator<node>               node_allocator;
 public:
 /*
 ** Public Member Types: ***************************************************************************
@@ -76,12 +76,12 @@ public:
             value_type end_val = ft::make_pair<key_type, mapped_type>(key_type(), mapped_type());
             node end_node( end_val, END_NODE);
             this->__end = this->__node_allocator.allocate(1);
-            this->__node_allocator.construct(&(this->__end[0]), end_node);
+            this->__node_allocator.construct(this->__end + 0, end_node);
 
             value_type begin_val = ft::make_pair<key_type, mapped_type>(key_type(), mapped_type());
             node begin_node( begin_val, BEGIN_NODE);
             this->__begin = this->__node_allocator.allocate(1);
-            this->__node_allocator.construct(&(this->__begin[0]), begin_node);
+            this->__node_allocator.construct(this->__begin + 0, begin_node);
 
             this->__size = 0;
         }
@@ -99,13 +99,13 @@ public:
             value_type end_val = ft::make_pair<key_type, mapped_type>(key_type(), mapped_type());
             node end_node( end_val, END_NODE);
             this->__end = this->__node_allocator.allocate(1);
-            this->__node_allocator.construct(&(this->__end[0]), end_node);
+            this->__node_allocator.construct(this->__end + 0, end_node);
 
 
             value_type begin_val = ft::make_pair<key_type, mapped_type>(key_type(), mapped_type());
             node begin_node( begin_val, BEGIN_NODE);
             this->__begin = this->__node_allocator.allocate(1);
-            this->__node_allocator.construct(&(this->__begin[0]), begin_node);
+            this->__node_allocator.construct(this->__begin + 0, begin_node);
 
             this->insert(first, last);
         }
@@ -122,7 +122,7 @@ public:
     ** Destructors: ***********************************************************************************
     */
         ~avl_sbbst()
-        { }
+        { this->clear(); }
 
 
     /*
@@ -144,13 +144,13 @@ public:
                 value_type end_val = ft::make_pair<key_type, mapped_type>(key_type(), mapped_type());
                 node end_node( end_val, END_NODE);
                 this->__end = this->__node_allocator.allocate(1);
-                this->__node_allocator.construct(&(this->__end[0]), end_node);
+                this->__node_allocator.construct(this->__end + 0, end_node);
 
 
                 value_type begin_val = ft::make_pair<key_type, mapped_type>(key_type(), mapped_type());
                 node begin_node( begin_val, BEGIN_NODE);
                 this->__begin = this->__node_allocator.allocate(1);
-                this->__node_allocator.construct(&(this->__begin[0]), begin_node);
+                this->__node_allocator.construct(this->__begin + 0, begin_node);
 
                 if (x.__root == nullptr)
                     return *this;
@@ -401,8 +401,11 @@ public:
 
         void erase (iterator first, iterator last)
         {
-            while (first++ != last)
+            while (first != last)
+            {
                 this->erase(first);
+                first++;
+            }
         }
 
         void swap (avl_sbbst& x)
@@ -431,25 +434,40 @@ public:
 
         void clear()
         {
-            node*   node_begin;
-            node*   node_end;
-            node*   next;
+            node*   node_begin = get_left_most_node();
+            node*   tmp_node = node_begin;
+            node*   node_end = get_right_most_node();
 
-            if (this->size() == 0)
-                return;
-            node_begin = get_left_most_node();
-            node_end   = get_right_most_node();
-            next = node_begin->__next;
+            this->__node_allocator.destroy(__begin + 0);
+            this->__node_allocator.deallocate(__begin, 1);
+            this->__node_allocator.destroy(&__end[0]);
+            this->__node_allocator.deallocate(__end, 1);
 
-            while (node_begin != node_end)
+            if (this->__size == 0)
+                return ;
+            if (this->__size == 1)
             {
-                next = node_begin->__next;
-                this->__node_allocator.destroy(node_begin);
-                this->__node_allocator.deallocate(node_begin, 1);
-                node_begin = next;
-                this->__size--;
+                this->__node_allocator.destroy(this->__root);
+                this->__node_allocator.deallocate(&__root[0], 1);
+                return ;
             }
-            this->__root = nullptr;
+            while (tmp_node != node_end)
+            {
+                std::cout << "CLEANING__LOOP : " << this->__size << " | " << this->__root->__pair->first << " | " << this->__root->__pair->second << std::endl;
+                tmp_node = node_begin->__next;
+                if (node_begin != nullptr)
+                {
+                    std::cout << "CLEANING__00" << std::endl;
+                    this->__node_allocator.destroy(node_begin);
+                    this->__node_allocator.deallocate(&node_begin[0], 1);
+                }
+            }
+            if (tmp_node != nullptr)
+            {
+                std::cout << "CLEANING__01" << std::endl;
+                this->__node_allocator.destroy(tmp_node);
+                this->__node_allocator.deallocate(&tmp_node[0], 1);
+            }
         }
 
     /*
@@ -645,8 +663,8 @@ private:
                 return it;
             while (it->__left != nullptr)
                 it = it->__left;
-            if (it->__position == BEGIN_NODE)
-                return it->__next;
+            // if (it->__position == BEGIN_NODE)
+            //     return it->__next;
             return it;
         }
 
@@ -664,7 +682,8 @@ private:
 
         node*    append_node(node** node_it, node** parent_it, int node_position, value_type pair)
         {
-            node* n = this->__node_allocator.allocate(1);
+            node_allocator tmpallooooc;
+            node* n = tmpallooooc.allocate(1);
             node  val(pair, node_position);
             this->__node_allocator.construct(&n[0], val);
 
