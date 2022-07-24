@@ -13,8 +13,8 @@
 
 template < class Key,                                                  // map::key_type
                class T,                                                // map::mapped_type
-               class Compare = std::less<Key>,                         // map::key_compare
-               class Alloc = std::allocator<ft::pair<const Key,T> > >  // map::allocator_type
+               class Compare,                         // map::key_compare
+               class Alloc>  // map::allocator_type
     class avl_sbbst
     {
 private:
@@ -434,40 +434,42 @@ public:
 
         void clear()
         {
-            node*   node_begin = get_left_most_node();
-            node*   tmp_node = node_begin;
-            node*   node_end = get_right_most_node();
+            // node*   node_begin = get_left_most_node();
+            // node*   tmp_node = node_begin;
+            // node*   node_end = get_right_most_node();
 
-            this->__node_allocator.destroy(__begin + 0);
-            this->__node_allocator.deallocate(__begin, 1);
-            this->__node_allocator.destroy(&__end[0]);
-            this->__node_allocator.deallocate(__end, 1);
-
-            if (this->__size == 0)
-                return ;
+            // this->__node_allocator.destroy(__begin + 0);
+            // this->__node_allocator.deallocate(__begin, 1);
+            // this->__node_allocator.destroy(&__end[0]);
+            // this->__node_allocator.deallocate(__end, 1);
+            std::cout << "SIZE : " << this->__size << std::endl;
+            std::cout << "ROOT : " << this->__root->__pair->first << " | " << this->__root->__pair->second << std::endl;
+            // if (this->__size == 0)
+            //     return ;
             if (this->__size == 1)
             {
-                this->__node_allocator.destroy(this->__root);
-                this->__node_allocator.deallocate(&__root[0], 1);
+                std::cout << "AAAAAAAAAAAAAA" << std::endl;
+                // this->__node_allocator.destroy(this->__root);
+                this->__node_allocator.deallocate(__root, 1);
                 return ;
             }
-            while (tmp_node != node_end)
-            {
-                std::cout << "CLEANING__LOOP : " << this->__size << " | " << this->__root->__pair->first << " | " << this->__root->__pair->second << std::endl;
-                tmp_node = node_begin->__next;
-                if (node_begin != nullptr)
-                {
-                    std::cout << "CLEANING__00" << std::endl;
-                    this->__node_allocator.destroy(node_begin);
-                    this->__node_allocator.deallocate(&node_begin[0], 1);
-                }
-            }
-            if (tmp_node != nullptr)
-            {
-                std::cout << "CLEANING__01" << std::endl;
-                this->__node_allocator.destroy(tmp_node);
-                this->__node_allocator.deallocate(&tmp_node[0], 1);
-            }
+            // while (tmp_node != node_end)
+            // {
+            //     std::cout << "CLEANING__LOOP : " << this->__size << " | " << this->__root->__pair->first << " | " << this->__root->__pair->second << std::endl;
+            //     tmp_node = node_begin->__next;
+            //     if (node_begin != nullptr)
+            //     {
+            //         std::cout << "CLEANING__00" << std::endl;
+            //         this->__node_allocator.destroy(node_begin);
+            //         this->__node_allocator.deallocate(&node_begin[0], 1);
+            //     }
+            // }
+            // if (tmp_node != nullptr)
+            // {
+            //     std::cout << "CLEANING__01" << std::endl;
+            //     this->__node_allocator.destroy(tmp_node);
+            //     this->__node_allocator.deallocate(&tmp_node[0], 1);
+            // }
         }
 
     /*

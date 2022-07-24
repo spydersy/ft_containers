@@ -23,7 +23,7 @@ private:
 ** Private Member Types: **************************************************************************
 */
     typedef TreeNode<Key, T, Compare, Alloc>   node;
-
+    typedef typename Alloc::template rebind<node>::other         node_allocator;
 public:
 /*
 ** Public Member Types: ***************************************************************************
@@ -51,7 +51,7 @@ private:
 ** Private Member Types: **************************************************************************
 */
         typedef avl_sbbst<key_type, mapped_type, key_compare, allocator_type>   avl_tree;
-        typedef std::allocator<node>        node_allocator;
+        // typedef std::allocator<node>        node_allocator;
 /*
 ** Private Attributes: ****************************************************************************
 */
