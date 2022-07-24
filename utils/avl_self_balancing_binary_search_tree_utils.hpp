@@ -15,8 +15,8 @@
 
     template < class Key,                                          // map::key_type
                class T,                                            // map::mapped_type
-               class Compare,                     // map::key_compare
-               class Alloc>  // map::allocator_type
+               class Compare,                                      // map::key_compare
+               class Alloc>                                        // map::allocator_type
     class TreeNode
     {
     /*
@@ -105,8 +105,11 @@
         // Destructor :
         ~TreeNode( void )
         {
+            // std::cout << "__TREE__NODE__DESTRUCTOR__CALLED__00__" << std::endl;
             // this->__allocator.destroy(&__pair[0]);
+            // std::cout << "__TREE__NODE__DESTRUCTOR__CALLED__01__" << std::endl;
             // this->__allocator.deallocate(__pair, 1);
+            // std::cout << "__TREE__NODE__DESTRUCTOR__CALLED__02__" << std::endl;
         }
 
     /*

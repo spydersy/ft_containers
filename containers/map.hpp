@@ -22,7 +22,7 @@ private:
 /*
 ** Private Member Types: **************************************************************************
 */
-    typedef TreeNode<Key, T, Compare, Alloc>   node;
+    typedef TreeNode<Key, T, Compare, Alloc>                     node;
     typedef typename Alloc::template rebind<node>::other         node_allocator;
 public:
 /*
@@ -50,8 +50,8 @@ private:
 /*
 ** Private Member Types: **************************************************************************
 */
-        typedef avl_sbbst<key_type, mapped_type, key_compare, allocator_type>   avl_tree;
-        // typedef std::allocator<node>        node_allocator;
+        typedef avl_sbbst<key_type, mapped_type, key_compare, allocator_type, node_allocator>   avl_tree;
+
 /*
 ** Private Attributes: ****************************************************************************
 */
@@ -85,7 +85,9 @@ public:
     ** Destructors: ***********************************************************************************
     */
         ~map()
-        { this->__sbbst.~avl_sbbst(); }
+        {
+            // std::cout << "__MAP__DESTRUCTOR__CALLED__" << std::endl;
+        }
 
 
     /*

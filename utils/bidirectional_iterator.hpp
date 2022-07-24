@@ -152,7 +152,6 @@ namespace ft
                     return (bidirectional_iterator< TreeNode, const Type>(__ptr));
                 }
         // private:
-            TreeNode* get_tree_node( void ) { return this->__ptr; }
         public:
             TreeNode*     __ptr;
     };
