@@ -380,6 +380,38 @@ public:
             }
         }
 
+        int calc_balance_factor(node* n)
+        {
+            if (n->__left == nullptr && n->__right == nullptr)
+                return 1;
+            else if (n->__left == nullptr && n->__right != nullptr)
+                return n->__right->__index + 1;
+            else if (n->__left != nullptr && n->__right == nullptr)
+                return n->__left->__index + 1;
+            else
+                return get_max_index_of_child(n)->__index + 1;
+        }
+
+        void    balance_tree_after_erase(node** n)
+        {
+            if (*n == nullptr)
+                return ;
+            while (*n != (*n)->__parent) // Only root_tree verify this condition aka [n = n->__parent]
+            {
+                (*n)->__index = calc_balance_factor(*n);
+                if (this->balance_factor_bool(*n) == false)
+                {
+                    if ((*n)->__right)
+                        this->do_some_magic(*n, (*n)->__right);
+                    else
+                        this->do_some_magic(*n, (*n)->__left);
+
+                }
+                // std::cout << "NODE_INDEX ************************************ : " << (*n)->__index << std::endl;;
+                *n = (*n)->__parent;
+            }
+        }
+
         void erase (iterator position)
         {
             node*   parent;
@@ -389,8 +421,9 @@ public:
                 parent = __erase__one__subtree(position.__ptr, RIGHT_NODE, true);
             else if (position.__ptr->__left != nullptr && position.__ptr->__right == nullptr)
                 parent = __erase__one__subtree(position.__ptr, LEFT_NODE, true);
-            // else if (position.__ptr->__left != nullptr && position.__ptr->__right != nullptr)
-            //     parent = __erase__both__subtrees(position);
+            else if (position.__ptr->__left != nullptr && position.__ptr->__right != nullptr)
+                parent = __erase__both__subtrees(position.__ptr);
+            balance_tree_after_erase(&parent);
         }
 
         size_type erase (const key_type& k)
@@ -440,7 +473,7 @@ public:
         {
             node*   node_begin = get_left_most_node();
             node*   node_end = get_right_most_node();
-            node*   next_node = __begin;
+            node*   next_node = node_begin;
 
             if (this->__size)
             {
@@ -449,29 +482,14 @@ public:
                     // std::cout << "__CLEAR__LOOP__ : " << this->__size << std::endl;
                     next_node = node_begin->__next;
 
-                    this->__allocator.destroy(&(node_begin->__pair[0]));
-                    this->__allocator.deallocate(node_begin->__pair, 1);
-
-                    this->__node_allocator.destroy(&node_begin[0]);
-                    this->__node_allocator.deallocate(node_begin, 1);
+                    deallocate_node(node_begin);
                     node_begin = next_node;
                     this->__size--;
                 }
-                this->__allocator.destroy(&(node_begin->__pair[0]));
-                this->__allocator.deallocate(node_begin->__pair, 1);
-
-                this->__node_allocator.destroy(&node_begin[0]);
-                this->__node_allocator.deallocate(node_begin, 1);
+                deallocate_node(node_begin);
             }
-            this->__allocator.destroy(&(__begin->__pair[0]));
-            this->__allocator.deallocate(__begin->__pair, 1);
-            this->__node_allocator.destroy(&__begin[0]);
-            this->__node_allocator.deallocate(__begin, 1);
-
-            this->__allocator.destroy(&(__end->__pair[0]));
-            this->__allocator.deallocate(__end->__pair, 1);
-            this->__node_allocator.destroy(&__end[0]);
-            this->__node_allocator.deallocate(__end, 1);
+            deallocate_node(__begin);
+            deallocate_node(__end);
         }
 
     /*
@@ -633,6 +651,7 @@ public:
 
 
 
+        node*   get_root( void ) const { return this->__root; }
 
 
 
@@ -657,7 +676,6 @@ private:
                 prev->__next = n->__next;
         }
 
-        node*   get_root( void ) const { return this->__root; }
 
         node*   get_left_most_node() const
         {
@@ -682,6 +700,19 @@ private:
             // if (it->__position == END_NODE)
             //     return it->__prev;
             return it;
+        }
+
+        void    deallocate_pair(value_type* p)
+        {
+            this->__allocator.destroy(&p[0]);
+            this->__allocator.deallocate(p, 1);
+        }
+
+        void    deallocate_node(node* n)
+        {
+            deallocate_pair(n->__pair);
+            this->__node_allocator.destroy(&n[0]);
+            this->__node_allocator.deallocate(n, 1);
         }
 
         node*    append_node(node** node_it, node** parent_it, int node_position, value_type pair)
@@ -771,8 +802,8 @@ private:
                 n->__parent->__left = nullptr;
             else
                 n->__parent->__right = nullptr;
-            this->__node_allocator.destroy(n);
-            this->__node_allocator.deallocate(&n[0], 1);
+            deallocate_node(n);
+            this->__size--;
             return parent;
         }
 
@@ -781,32 +812,34 @@ private:
             int inserted_position = inserted_node->__position;
             int childe_position = child_node->__position;
 
+            // std::cout << "__DO__SOME__MAGIC__DBG__ : inserted_node : [" << inserted_node->__pair->first<< "]" << std::endl;
+            // std::cout << "__DO__SOME__MAGIC__DBG__ : child_node    : [" << child_node->__pair->first<< "]" << std::endl;
+
             // Right rotation
             if ((childe_position == LEFT_NODE || childe_position == ROOT_NODE) && childe_position == inserted_position)
-            {
-                // std::cerr << KGRN << "_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_RIGHT_-_ROTATION_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << KNRM << std::endl;
                 right_rotation(child_node->__parent, true);
-            }
             // Left rotation
             else if ((childe_position == RIGHT_NODE || childe_position == ROOT_NODE) && childe_position == inserted_position)
-            {
-                // std::cerr << KGRN << "_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_LEFT_-_ROTATION_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << KNRM << std::endl;
                 left_rotation(child_node->__parent, true);
-            }
             // Right Left Rotation
             else if (inserted_position == LEFT_NODE && childe_position == RIGHT_NODE)
-            {
-                // std::cerr << KGRN << "_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_RIGHT_-_LEFT_-_ROTATION_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << KNRM << std::endl;
                 right_left_rotation(child_node);
-            }
             // Left Right Rotation
             else if (inserted_position == RIGHT_NODE && childe_position == LEFT_NODE)
-            {
-                // std::cerr << KGRN << "_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_LEFT_-_RIGHT_-_ROTATION_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_" << KNRM << std::endl;
                 left_right_rotation(child_node);
-            }
         }
 
+        node*   __erase__both__subtrees(node* n)
+        {
+            node*       prev = n->__prev;
+            value_type  val(ft::make_pair<key_type, mapped_type>(prev->__pair->first, prev->__pair->second));
+
+            set_next_prev_deletion(n);
+            deallocate_pair(n->__pair);
+            n->__pair = this->__allocator.allocate(1);
+            this->__allocator.construct(&(n->__pair[0]), val);
+            return this->__erase__leaf__node(prev, false);
+        }
 
         node*    __erase__one__subtree(node* n, int position, bool SET_NEXT_PREV)
         {
@@ -823,8 +856,7 @@ private:
                 this->__root = subtree;
                 subtree->__parent = subtree;
                 subtree->__position = ROOT_NODE;
-                this->__node_allocator.destroy(n);
-                this->__node_allocator.deallocate(&n[0], 1);
+                deallocate_node(n);
                 return parent;
             }
             else if (n->__position == LEFT_NODE)
@@ -833,10 +865,7 @@ private:
                 parent->__right = subtree;
             subtree->__parent = parent;
 
-            this->__node_allocator.destroy(n);
-            this->__node_allocator.deallocate(&n[0], 1);
-
-
+            deallocate_node(n);
             return parent;
         }
 
@@ -901,8 +930,10 @@ private:
         node*   left_rotation( node* z, bool CHANGE_INDEX )
         {
             node* y = z->__right;
-            node* t2 = y->__left;
+            node* t2;
 
+            if (y)
+                t2 = y->__left;
             if (t2)
             {
                 t2->__parent = z;
@@ -925,7 +956,6 @@ private:
             }
             y->__left = z;
             z->__right = t2;
-            // std::cerr << "Z->PARENT : [" << z->__parent->__pair->first << "] | Y : [" << y->__pair->first << "]" << std::endl;
             z->__parent = y;
             z->__position = LEFT_NODE;
             if (CHANGE_INDEX)
@@ -953,8 +983,9 @@ private:
         node*   right_rotation( node* z, bool CHANGE_INDEX )
         {
             node* y = z->__left;
-            node* t3 = y->__right;
-
+            node* t3;
+            if (y)
+                t3 = y->__right;
             if (t3)
             {
                 t3->__parent = z;

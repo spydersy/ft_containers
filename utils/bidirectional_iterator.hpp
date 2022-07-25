@@ -142,9 +142,9 @@ namespace ft
             /*
             ** Dereference Operators:
             */
-                reference     operator*( void ) { return *this->__ptr->__pair; }
-                pointer       operator->( void ) { return this->__ptr->__pair; }
-                const pointer       operator->( void ) const { return this->__ptr->__pair; }
+                reference       operator*( void ) { return *this->__ptr->__pair; }
+                pointer         operator->( void ) { return this->__ptr->__pair; }
+                const pointer   operator->( void ) const { return this->__ptr->__pair; }
 
                 // User Defined Conversion Function
                 operator bidirectional_iterator<TreeNode,const Type>()

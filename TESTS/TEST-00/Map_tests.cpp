@@ -134,11 +134,15 @@ void iterator_tests(void)
     ft::map<int, char> my_m;
     ft::map<int, char>::iterator my_it, my_it1, tmp;
 
+    int leaks = 1;
+
+
     for (int i = 0; i < 10; ++i)
     {
         my_m.insert(ft::make_pair(i, static_cast<char>(i + 97)));
         m.insert(std::make_pair(i, static_cast<char>(i + 97)));
     }
+
 
     it = m.begin();
     it1 = ++(m.begin());
@@ -161,6 +165,8 @@ void iterator_tests(void)
     }
     std::cout << "\t\033[1;37m[-------------------- [" << std::setw(40) << std::left << " == operator "
               << "] --------------------]\t\t\033[0m";
+
+
     EQUAL((it == it1) == (my_it == my_it1));
     std::cout << "\t\033[1;37m[-------------------- [" << std::setw(40) << std::left << " != operator "
               << "] --------------------]\t\t\033[0m";
@@ -175,6 +181,7 @@ void iterator_tests(void)
         std::map<int, std::string> m;
         ft::map<int, std::string> my_m;
 
+
         for (int i = 0; i < 5; ++i)
         {
             m.insert(std::make_pair(13, "HELLO"));
@@ -183,7 +190,6 @@ void iterator_tests(void)
 
         ft::map<int, std::string>::iterator my_it = my_m.begin();
         std::map<int, std::string>::iterator it = m.begin();
-        /*---------------------------------------------- */
         EQUAL(it->second.length() == my_it->second.length());
     }
     std::cout << "\t\033[1;37m[-------------------- [" << std::setw(40) << std::left << " ++it operator "
@@ -219,7 +225,7 @@ void iterator_tests(void)
             int res(0);
             int myints[] = {12, 82, 37, 64, 15};
             ft::map<int, int> m;
-            for (size_t i = 0; i < 5; ++i)
+    for (size_t i = 0; i < 5; ++i)
                 m.insert(ft::make_pair(myints[i], i));
             for (ft::map<int, int>::iterator it = m.begin(); it != m.end(); ++it)
                 res += it->first;
@@ -232,15 +238,13 @@ void iterator_tests(void)
             for (size_t i = 0; i < 5; ++i)
                 m.insert(ft::make_pair(myints[i], i));
             ft::map<int, int>::iterator it = m.begin(), eit = --m.end();
-            // //std::cerr << "00 WEEWWEEWWEWEWEWEWEWEWEWEWEWE" << std::endl;
             tmp = eit->first;
-            // //std::cerr << "01 WEEWWEEWWEWEWEWEWEWEWEWEWEWE" << std::endl;
             m.erase(eit);
             for (; it != m.end(); ++it)
                 res += it->first;
             cond = cond && (res == (210 - tmp));
         }
-        ++my_it; // I incremented here to make sure that the object changes
+    ++my_it; // I incremented here to make sure that the object changes
         EQUAL(*my_it == *my_it1);
     }
     std::cout << "\t\033[1;37m[-------------------- [" << std::setw(40) << std::left << " --it operator "
@@ -264,7 +268,6 @@ void iterator_tests(void)
             end = get_time();
             diff = end - start;
             diff = (diff) ? (diff * TIME_FAC) : TIME_FAC;
-
             ualarm(diff * 1e3, 0);
             ft::map<int, std::string>::iterator ft_it = --ft_m.end();
             for (; ft_it != ft_m.begin(); --ft_it)
@@ -2259,33 +2262,34 @@ void alarm_handler(int seg)
 
 int main()
 {
-
+    int leaks = 1;
     std::cout << RED << "________________________________________________________________________________________________________" << std::endl;
     std::cout << RED << "**** The test is taking so much time to test the all cases and the time complexity of each method ****" << std::endl;
     std::cout << RED << "--------------------------------------------------------------------------------------------------------" << RESET << std::endl;
     signal(SIGALRM, alarm_handler);
 
-    std::cout << YELLOW << "Testing Iterators;" << RESET << std::endl;
-    TEST_CASE(iterator_tests);
-    TEST_CASE(const_iterator_tests);
-    TEST_CASE(reverse_iterator_tests);
-    std::cout << std::endl;
+    // std::cout << YELLOW << "Testing Iterators;" << RESET << std::endl;
+    // TEST_CASE(iterator_tests);
 
-    std::cout << YELLOW << "Testing Constructors;" << RESET << std::endl;
-    TEST_CASE(testConstructors);
-    std::cout << std::endl;
+    // TEST_CASE(const_iterator_tests);
+    // TEST_CASE(reverse_iterator_tests);
+    // std::cout << std::endl;
 
-    std::cout << YELLOW << "Testing Iterator Methods;" << RESET << std::endl;
-    TEST_CASE(testIterators);
-    std::cout << std::endl;
+    // std::cout << YELLOW << "Testing Constructors;" << RESET << std::endl;
+    // TEST_CASE(testConstructors);
+    // std::cout << std::endl;
 
-    std::cout << YELLOW << "Testing Capacity Methods;" << RESET << std::endl;
-    TEST_CASE(testCapacityMethods)
-    std::cout << std::endl;
+    // std::cout << YELLOW << "Testing Iterator Methods;" << RESET << std::endl;
+    // TEST_CASE(testIterators);
+    // std::cout << std::endl;
 
-    std::cout << YELLOW << "Testing Access Element Methods; " << RESET << std::endl;
-    TEST_CASE(testElementAccess);
-    std::cout << std::endl;
+    // std::cout << YELLOW << "Testing Capacity Methods;" << RESET << std::endl;
+    // TEST_CASE(testCapacityMethods)
+    // std::cout << std::endl;
+
+    // std::cout << YELLOW << "Testing Access Element Methods; " << RESET << std::endl;
+    // TEST_CASE(testElementAccess);
+    // std::cout << std::endl;
 
     std::cout << YELLOW << "Testing Modifiers Methods;" << RESET << std::endl;
     TEST_CASE(testModifiers)

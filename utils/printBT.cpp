@@ -1,5 +1,5 @@
 
-# include "avl_self_balancing_binary_search_tree.hpp"
+# include "../containers/map.hpp"
 # include "make_pair.hpp"
 
 template <typename BT>
@@ -11,14 +11,14 @@ void printBT(const std::string& prefix, const BT* node, bool isLeft)
 
         std::cout << prefix;
         std::cout << (isLeft ? "├──\x1B[32m(LEFT)\x1B[0m" : "└──\x1B[35m(RIGHT)\x1B[0m" );
-        std::cout << "[" << node->get_pair().first << " | " << node->__index;
+        std::cout << "[" << node->get_pair()->first << " | " << node->__index;
         if (node->__position == ROOT_NODE)
             position = std::string(KCYN) + std::string("IS_ROOT") + std::string(KNRM);
         else if (node->__position == LEFT_NODE)
             position = std::string("\x1B[32mIS_LEFT") + std::string(KNRM);
         else if (node->__position == RIGHT_NODE)
             position = std::string("\x1B[35mIS_RIGHT") + std::string(KNRM);
-        std::cout << " |" << position << "|" << node->__parent->__pair.first << "] " << std::endl;
+        std::cout << " |" << position << "|" << node->__parent->__pair->first << "] " << std::endl;
 
         printBT( prefix + (isLeft ? "│   " : "    "), node->get_left(), true);
         printBT( prefix + (isLeft ? "│   " : "    "), node->get_right(), false);
@@ -45,7 +45,7 @@ void    print_elements_in_order(BT* node)
         else
             std::cout << node->get_prev_node()->__pair.first;
 
-        std::cout << " | " << node->get_pair().first << " | ";
+        std::cout << " | " << node->get_pair()->first << " | ";
 
         if (node->get_next_node() == nullptr)
             std::cout << "nullptr";
@@ -58,26 +58,10 @@ void    print_elements_in_order(BT* node)
     std::cout << std::endl << "********************************************************";
 }
 
-int     main()
-{
-    std::string str;
-    avl_sbbst<int, std::string> mp;
-
-    while (true)
-    {
-        std::cout << std::endl << std::endl << " INSERT ELEMENT : ";
-        std::cin >> str;
-
-        std::cout << std::endl << std::endl;
-        mp.insert(ft::make_pair(stoi(str), "30"));
-        print_elements_in_order(mp.get_left_most_node());
-    }
-}
-
-// int main()
+// int     main()
 // {
 //     std::string str;
-//     avl_sbbst<int, std::string> mp;
+//     ft::map<int, std::string> mp;
 
 //     while (true)
 //     {
@@ -88,5 +72,38 @@ int     main()
 //         mp.insert(ft::make_pair(stoi(str), "30"));
 //         printBT(mp.get_root());
 //     }
-//     return 0;
 // }
+
+int main()
+{
+    std::string str;
+    ft::map<int, std::string> mp;
+
+    while (true)
+    {
+        std::cout << std::endl << std::endl << " COMMAND : ";
+        std::cin >> str;
+
+        if (str == "i")
+        {
+            std::cout << " INSERT ELEMENT : ";
+            std::cin >> str;
+            std::cout << std::endl << std::endl;
+
+            mp.insert(ft::make_pair(stoi(str), "30"));
+            printBT(mp.get_root());
+        }
+        if (str == "d")
+        {
+            std::cout << " DELETE ELEMENT : ";
+            std::cin >> str;
+            std::cout << std::endl << std::endl;
+
+            mp.erase(stoi(str));
+            printBT(mp.get_root());
+        }
+
+
+    }
+    return 0;
+}

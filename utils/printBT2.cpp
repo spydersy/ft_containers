@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-# include "self_balanced_binary_search_tree.hpp"
+# include "../containers/map.hpp"
 # include "make_pair.hpp"
 
 using namespace std;
@@ -68,7 +68,7 @@ void printTree(BT* root, Trunk *prev, bool isLeft)
     }
 
     showTrunks(trunk);
-    cout << " [" << root->get_pair().first << " | " << root->__index << "]" << endl;
+    cout << " [" << root->get_pair()->first << " | " << root->__index << "]" << endl;
 
     if (prev) {
         prev->str = prev_str;
@@ -86,7 +86,7 @@ void    dbg(BT* root)
         std::cout << KCYN << "==========================" << KNRM << std::endl;
         std::cout << "THIS        : [" << root << "]" << std::endl;
         std::cout << "INDEX       : [" << root->__index << "]" << std::endl;
-        std::cout << "VALUE       : [" << root->get_pair().first << "]" << std::endl;
+        std::cout << "VALUE       : [" << root->get_pair()->first << "]" << std::endl;
         std::cout << "POSITION    : [" << root->__position << "]" << std::endl << std::endl;
 
         std::cout << "PARENT      : [" << root->__parent << "]" << std::endl;
@@ -100,7 +100,8 @@ void    dbg(BT* root)
 int main()
 {
     std::string str;
-    sbbst::sbbst<int, std::string> mp;
+
+    ft::map<int, std::string> mp;
 
     std::cout << KRED << "DBG : ***********************************************************" << KNRM << std::endl;
     mp.insert(ft::make_pair(1, "10"));

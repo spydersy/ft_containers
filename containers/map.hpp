@@ -179,6 +179,9 @@ public:
         void clear()
         {   this->__sbbst.clear(); }
 
+        node* get_root() const
+        { return this->__sbbst.get_root(); }
+
     /*
     ** Observers: *************************************************************************************
     */
