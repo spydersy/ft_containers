@@ -134,9 +134,6 @@ void iterator_tests(void)
     ft::map<int, char> my_m;
     ft::map<int, char>::iterator my_it, my_it1, tmp;
 
-    int leaks = 1;
-
-
     for (int i = 0; i < 10; ++i)
     {
         my_m.insert(ft::make_pair(i, static_cast<char>(i + 97)));
@@ -2262,7 +2259,6 @@ void alarm_handler(int seg)
 
 int main()
 {
-    int leaks = 1;
     std::cout << RED << "________________________________________________________________________________________________________" << std::endl;
     std::cout << RED << "**** The test is taking so much time to test the all cases and the time complexity of each method ****" << std::endl;
     std::cout << RED << "--------------------------------------------------------------------------------------------------------" << RESET << std::endl;

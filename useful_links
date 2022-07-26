@@ -3,3 +3,6 @@
 - Iterators :
 https://docs.w3cub.com/cpp/iterator/iterator_traits
 https://stackoverflow.com/questions/6742008/what-are-the-typical-use-cases-of-an-iterator-trait
+
+- Balance AVL Tree after erase() methode :
+http://www.cs.emory.edu/~cheung/Courses/253/Syllabus/Trees/AVL-delete.html#case3

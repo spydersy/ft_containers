@@ -79,29 +79,32 @@ int main()
     std::string str;
     ft::map<int, std::string> mp;
 
+    for (int i = 0; i <= 10; i++)
+        mp.insert(ft::make_pair<int, std::string>(i, "Yoooo"));
+
     while (true)
     {
-        std::cout << std::endl << std::endl << " COMMAND : ";
-        std::cin >> str;
+        // std::cout << std::endl << std::endl << " COMMAND : ";
+        // std::cin >> str;
 
-        if (str == "i")
-        {
-            std::cout << " INSERT ELEMENT : ";
-            std::cin >> str;
-            std::cout << std::endl << std::endl;
+        // if (str == "i")
+        // {
+        //     std::cout << " INSERT ELEMENT : ";
+        //     std::cin >> str;
+        //     std::cout << std::endl << std::endl;
 
-            mp.insert(ft::make_pair(stoi(str), "30"));
-            printBT(mp.get_root());
-        }
-        if (str == "d")
-        {
+        //     mp.insert(ft::make_pair(stoi(str), "30"));
+        //     printBT(mp.get_root());
+        // }
+        // if (str == "d")
+        // {
             std::cout << " DELETE ELEMENT : ";
             std::cin >> str;
             std::cout << std::endl << std::endl;
 
             mp.erase(stoi(str));
             printBT(mp.get_root());
-        }
+        // }
 
 
     }
