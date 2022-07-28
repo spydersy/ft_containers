@@ -26,7 +26,7 @@
         typedef ft::pair<const Key, T>  value_type;
 
     public:
-        int             __index;
+        int             __height;
         int             __position;
 
         TreeNode*       __left;
@@ -45,7 +45,7 @@
     */
         // Default Constructor :
         // TreeNode( void ) :
-        //                     __index(1),
+        //                     __height(1),
         //                     __position(0),
         //                     __left(nullptr),
         //                     __right(nullptr),
@@ -58,7 +58,7 @@
         // }
 
         template <typename VALUE_TYPE>
-        TreeNode( VALUE_TYPE& pair, int position ) : __index(1),
+        TreeNode( VALUE_TYPE& pair, int position ) : __height(1),
                                                            __position(position),
                                                            __left(nullptr),
                                                            __right(nullptr),
@@ -74,7 +74,7 @@
         template <typename TREE_NODE>
         TreeNode( const TREE_NODE & src )
         {
-            this->__index = src.__index;
+            this->__height = src.__height;
             this->__position = src.__position;
             this->__left = src.__left;
             this->__right = src.__right;
@@ -96,7 +96,7 @@
                 this->__parent = src.__parent;
                 this->__next = src.__next;
                 this->__prev = src.__prev;
-                this->__index = src.__index;
+                this->__height = src.__height;
                 this->__position = src.__position;
             }
             return *this;
