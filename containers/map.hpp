@@ -182,6 +182,9 @@ public:
         node* get_root() const
         { return this->__sbbst.get_root(); }
 
+        node*   get_left_most_node() const
+        { return this->__sbbst.get_left_most_node(); }
+
     /*
     ** Observers: *************************************************************************************
     */

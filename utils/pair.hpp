@@ -39,6 +39,8 @@ namespace ft
                 }
                 return *this;
             }
+
+            ~pair() { return; }
         };
 
         template <class T1, class T2>

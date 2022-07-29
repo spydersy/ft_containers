@@ -28,7 +28,7 @@
 #define RESET "\e[0m"
 
 #define EQUAL(x) ((x) ? (std::cout << "\033[1;32mAC\033[0m\n") : (std::cout << "\033[1;31mWA\033[0m\n"))
-#define TIME_FAC 20 // the ft::map methods can be slower up to std::map methods * TIME_FAC (MAX 20)
+#define TIME_FAC -200 // the ft::map methods can be slower up to std::map methods * TIME_FAC (MAX 20)
 
 typedef std::pair<std::map<int, std::string>::iterator, std::map<int, std::string>::iterator> iter_def;
 typedef ft::pair<ft::map<int, std::string>::iterator, ft::map<int, std::string>::iterator> ft_iter_def;
@@ -1322,7 +1322,6 @@ void testModifiers()
 
     std::cout << "\t\033[1;37m[-------------------- [" << std::setw(40) << std::left << " erase method "
               << "] --------------------]\t\t\033[0m";
-
     {
         bool cond(false);
         // erasing all the elements in the map;
@@ -1430,17 +1429,17 @@ void testModifiers()
         std::cout << "THIS_LOOP__00 : ===========================================================" << std::endl;
         for (int i = 0; i < 1e6; i++)
         {
-            std::cout << "LOOP__00 : " << i << std::endl;
-            // m3.insert(std::make_pair(i, "string1")); // Do Something . . .
+            // std::cout << "LOOP__00 : " << i << std::endl;
+            m3.insert(std::make_pair(i, "string1")); // Do Something . . .
             ft_m3.insert(ft::make_pair(i, "string1"));
-            std::cout << "LOOP__01 : " << i << std::endl;
-            // std::cout << "LOOP__02 : " << i << std::endl << std::endl;
+            // std::cout << "LOOP__01 : " << i << std::endl;
         }
 
         std::cout << "THIS_LOOP__01 : ===========================================================" << std::endl;
 
         for (size_t i = 0; i < 1e6; ++i)
         {
+            std::cout << "WEWE_CHECK" << std::endl;
             int n = distr(generator);
             int ret1 = m3.erase(n);
             int ret2 = ft_m3.erase(n);
@@ -1455,13 +1454,28 @@ void testModifiers()
 
         if (!m3.empty())
         {
+            std::cout << "__EMPTY__CHECK__ : " << m3.size() << std::endl;
+            std::cout << "__m3__is__not__empty__" << std::endl;
+            sleep(10);
             m3.erase(m3.begin(), m3.end());
             m3.erase(m3.begin(), m3.end());
         }
+        else
+        {
+            std::cout << "__m3__is__empty__" << std::endl;
+            sleep(10);
+        }
         if (!ft_m3.empty())
         {
+            std::cout << "__ft__m3__is__not__empty__" << std::endl;
+            sleep(10);
             ft_m3.erase(ft_m3.begin(), ft_m3.end());
             ft_m3.erase(ft_m3.begin(), ft_m3.end());
+        }
+        else
+        {
+            std::cout << "__ft__m3__is__empty__" << std::endl;
+            sleep(10);
         }
         cond = cond && (m3.size() == ft_m3.size() && compareMaps(m3.begin(), m3.end(), ft_m3.begin(), ft_m3.end()));
 
@@ -2271,21 +2285,21 @@ int main()
     TEST_CASE(reverse_iterator_tests);
     std::cout << std::endl;
 
-    std::cout << YELLOW << "Testing Constructors;" << RESET << std::endl;
-    TEST_CASE(testConstructors);
-    std::cout << std::endl;
+    // std::cout << YELLOW << "Testing Constructors;" << RESET << std::endl;
+    // TEST_CASE(testConstructors);
+    // std::cout << std::endl;
 
-    std::cout << YELLOW << "Testing Iterator Methods;" << RESET << std::endl;
-    TEST_CASE(testIterators);
-    std::cout << std::endl;
+    // std::cout << YELLOW << "Testing Iterator Methods;" << RESET << std::endl;
+    // TEST_CASE(testIterators);
+    // std::cout << std::endl;
 
-    std::cout << YELLOW << "Testing Capacity Methods;" << RESET << std::endl;
-    TEST_CASE(testCapacityMethods)
-    std::cout << std::endl;
+    // std::cout << YELLOW << "Testing Capacity Methods;" << RESET << std::endl;
+    // TEST_CASE(testCapacityMethods)
+    // std::cout << std::endl;
 
-    std::cout << YELLOW << "Testing Access Element Methods; " << RESET << std::endl;
-    TEST_CASE(testElementAccess);
-    std::cout << std::endl;
+    // std::cout << YELLOW << "Testing Access Element Methods; " << RESET << std::endl;
+    // TEST_CASE(testElementAccess);
+    // std::cout << std::endl;
 
     std::cout << YELLOW << "Testing Modifiers Methods;" << RESET << std::endl;
     TEST_CASE(testModifiers)
