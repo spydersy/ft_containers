@@ -40,23 +40,7 @@
         value_type*     __pair;
 
     public:
-    /*
-    ** Canonical Form :
-    */
-        // Default Constructor :
-        // TreeNode( void ) :
-        //                     __height(1),
-        //                     __position(0),
-        //                     __left(nullptr),
-        //                     __right(nullptr),
-        //                     __parent(this),
-        //                     __next(nullptr),
-        //                     __prev(nullptr),
-        //                     __pair(nullptr)
-        // {
-        //     this->__pair = this->__allocator.allcate(1);
-        // }
-
+        // Constructor :
         template <typename VALUE_TYPE>
         TreeNode( VALUE_TYPE& pair, int position ) : __height(1),
                                                            __position(position),
@@ -71,46 +55,9 @@
             this->__allocator.construct(&(this->__pair[0]), pair);
         }
 
-        // template <typename TREE_NODE>
-        // TreeNode( const TREE_NODE & src )
-        // {
-        //     this->__height = src.__height;
-        //     this->__position = src.__position;
-        //     this->__left = src.__left;
-        //     this->__right = src.__right;
-        //     this->__parent = src.__parent;
-        //     this->__next = src.__next;
-        //     this->__prev = src.__prev;
-        //     this->__allocator = src.__allocator;
-        //     this->__pair = src.__pair;
-        // }
-
-        // Operator= :
-        // TreeNode&   operator=( const TreeNode & src )
-        // {
-        //     if (this != &src)
-        //     {
-        //         this->__pair = src.__pair;
-        //         this->__left = src.__left;
-        //         this->__right = src.__right;
-        //         this->__parent = src.__parent;
-        //         this->__next = src.__next;
-        //         this->__prev = src.__prev;
-        //         this->__height = src.__height;
-        //         this->__position = src.__position;
-        //     }
-        //     return *this;
-        // }
-
         // Destructor :
         ~TreeNode( void )
-        {
-            // std::cout << "__TREE__NODE__DESTRUCTOR__CALLED__00__" << std::endl;
-            // this->__allocator.destroy(&__pair[0]);
-            // std::cout << "__TREE__NODE__DESTRUCTOR__CALLED__01__" << std::endl;
-            // this->__allocator.deallocate(__pair, 1);
-            // std::cout << "__TREE__NODE__DESTRUCTOR__CALLED__02__" << std::endl;
-        }
+        { return; }
 
     /*
     ** Getters :
