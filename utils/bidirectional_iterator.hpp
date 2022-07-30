@@ -115,7 +115,9 @@ namespace ft
                     // std::cout << "01 : ---------------------" << std::endl;
                     bidirectional_iterator   prev = *this;
                     if (this->__ptr != nullptr)
+                    {
                         this->__ptr = this->__ptr->__next;
+                    }
                     return (prev);
                 }
 

@@ -2,6 +2,10 @@
 # include "../containers/map.hpp"
 # include "make_pair.hpp"
 
+#include <iostream>
+# include <map>
+# include <random>
+
 template <typename BT>
 void printBT(const std::string& prefix, const BT* node, bool isLeft)
 {
@@ -36,7 +40,7 @@ void printBT(const BT* node)
 template <typename BT>
 void    print_elements_in_order(BT* node)
 {
-    std::cout << "INORDER ELEMENTS : " << "********************************************************" << std::endl;
+    std::cout << "********************************************************" << " INORDER ELEMENTS : " << "********************************************************" << std::endl;
     while (node != nullptr)
     {
         std::cout << " [";
@@ -55,8 +59,33 @@ void    print_elements_in_order(BT* node)
         std::cout << "] ";
         node = node->__next;
     }
-    std::cout << std::endl << "********************************************************";
+    std::cout << std::endl;
 }
+
+// int main()
+// {
+//     ft::map<int, int> m;
+
+//     for (int i = 1 ; i <= 10; i++)
+//     {
+//         m.insert(ft::make_pair<int, int>(i, 42));
+//         std::cout << "size while insertion : " << m.size() << std::endl;
+//         print_elements_in_order(m.get_left_most_node());
+//     }
+//     std::cout << "=================================" << std::endl;
+//     for (int i = 1 ; i <= 10; i++)
+//     {
+//         if (i % 2 == 0)
+//             m.erase(i);
+//         print_elements_in_order(m.get_left_most_node());
+//         std::cout << "size while deletion : " << m.size() << std::endl;
+//     }
+//     std::cout << "final size__00__ : " << m.size() << std::endl;
+//     m.erase(m.begin(), m.end());
+//     std::cout << "final size__01__ : " << m.size() << std::endl;
+//     return 0;
+// }
+
 
 // int     main()
 // {
@@ -177,22 +206,78 @@ void    print_elements_in_order(BT* node)
 //     std::cout << "ft_ret : " << ft_ret << std::endl;
 // }
 
+// int main()
+// {
+//     ft::map<int, int> m;
+
+//     for (int i = 1; i <= 20; i++)
+//     {
+//         m.insert(ft::make_pair<int, int>(i, 42));
+//     }
+//     printBT(m.get_root());
+//     print_elements_in_order(m.get_left_most_node());
+
+//     m.erase(19);
+//     std::cout << "===========================================" << std::endl;
+
+//     printBT(m.get_root());
+//     print_elements_in_order(m.get_left_most_node());
+
+//     return 0;
+// }
+
+
 int main()
 {
-    ft::map<int, int> m;
+        std::map<int, std::string> m3;
+        ft::map<int, std::string> ft_m3;
 
-    for (int i = 1; i <= 20; i++)
-    {
-        m.insert(ft::make_pair<int, int>(i, 42));
-    }
-    printBT(m.get_root());
-    print_elements_in_order(m.get_left_most_node());
+        std::random_device randDev;
+        std::mt19937 generator(randDev());
+        std::uniform_int_distribution<int> distr(0, 1e8);
 
-    m.erase(19);
-    std::cout << "===========================================" << std::endl;
+        bool cond = true;
 
-    printBT(m.get_root());
-    print_elements_in_order(m.get_left_most_node());
+        std::cout << "THIS_LOOP__00 : ===========================================================" << std::endl;
+        for (int i = 0; i < 1e6; i++)
+        {
+            // std::cout << "LOOP__00 : " << i << std::endl;
+            m3.insert(std::make_pair(i, "string1")); // Do Something . . .
+            ft_m3.insert(ft::make_pair(i, "string1"));
+            // std::cout << "LOOP__01 : " << i << std::endl;
+        }
+
+        std::cout << "THIS_LOOP__01 : ===========================================================" << std::endl;
+
+        for (size_t i = 0; i < 1e6; ++i)
+        {
+            int n = distr(generator);
+            // std::cout << "WEWE_CHECK : " << n << std::endl;
+            int ret1 = m3.erase(n);
+            int ret2 = ft_m3.erase(n);
+
+            if (ret1 != ret2)
+            {
+                cond = false;
+                break;
+            }
+        }
+        std::cout << "THIS_LOOP__02 : ===========================================================" << std::endl;
+
+        if (!m3.empty())
+        {
+            std::cout << "__m3__is__not__empty__ : " << m3.size() << std::endl;
+            // sleep(10);
+            m3.erase(m3.begin(), m3.end());
+            m3.erase(m3.begin(), m3.end());
+        }
+        if (!ft_m3.empty())
+        {
+            std::cout << "__ft__m3__is__not__empty__ : " << ft_m3.size() << std::endl;
+            // sleep(10);
+            ft_m3.erase(ft_m3.begin(), ft_m3.end());
+            ft_m3.erase(ft_m3.begin(), ft_m3.end());
+        }
 
     return 0;
 }

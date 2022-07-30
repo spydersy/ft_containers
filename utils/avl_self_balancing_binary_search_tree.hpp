@@ -74,6 +74,8 @@ public:
         node end_node( end_val, END_NODE);
         this->__end = this->__node_allocator.allocate(1);
         this->__node_allocator.construct(this->__end + 0, end_node);
+        this->__end->__prev = nullptr;
+        this->__end->__next = nullptr;
 
         value_type begin_val = ft::make_pair<key_type, mapped_type>(key_type(), mapped_type());
         node begin_node( begin_val, BEGIN_NODE);
@@ -97,7 +99,8 @@ public:
         node end_node( end_val, END_NODE);
         this->__end = this->__node_allocator.allocate(1);
         this->__node_allocator.construct(this->__end + 0, end_node);
-
+        this->__end->__prev = nullptr;
+        this->__end->__next = nullptr;
 
         value_type begin_val = ft::make_pair<key_type, mapped_type>(key_type(), mapped_type());
         node begin_node( begin_val, BEGIN_NODE);
@@ -155,31 +158,44 @@ public:
 ** Iterators: *************************************************************************************
 */
     iterator begin()
-    { return iterator(this->get_left_most_node()); }
+    {
+        if (this->__size == 0)
+            return this->end();
+        return iterator(this->get_left_most_node());
+    }
 
     const_iterator begin() const
-    { return const_iterator(this->get_left_most_node()); }
+    {
+        if (this->__size == 0)
+            return this->end();
+        return const_iterator(this->get_left_most_node());
+    }
 
     iterator end()
     {
-        if (this->__size == 0)
-            return iterator(nullptr);
         node* most_right = this->get_right_most_node();
 
-        most_right->__next = this->__end;
-        most_right->__next->__prev = most_right;
+        if (most_right != nullptr)
+        {
+            most_right->__next = this->__end;
+            this->__end->__prev = most_right;
+        }
+        else
+            this->__end->__prev = nullptr;
         return iterator(this->__end);
     }
 
     const_iterator end() const
     {
-        if (this->__size == 0)
-            return const_iterator(nullptr);
         node* most_right = this->get_right_most_node();
 
-        most_right->__next = this->__end;
-        most_right->__next->__prev = most_right;
-
+        if (most_right != nullptr)
+        {
+            most_right->__next = this->__end;
+            this->__end->__prev = most_right;
+        }
+        else
+            this->__end->__prev = nullptr;
         return const_iterator(this->__end);
     }
 
@@ -354,21 +370,44 @@ public:
 
         if (SET == true)
             set_next_prev_deletion(&n);
-        if (n->__position == LEFT_NODE)
+
+        if (n->__position == ROOT_NODE)
         {
+            this->__root = nullptr;
+            //__DEALLOCATE__NODE__02__1__ : [" << n << "]" << std::endl;
+            deallocate_node(n);
+            return nullptr;
+        }
+        else if (n->__position == LEFT_NODE)
+        {
+            // std::cout << "WEWEWEWEWEWEWEWEWEWEWEWEWEWE" << std::endl;
+            // std::cout << n << ", " << n->__parent << ", " << n->__parent->__left << std::endl;
+            // if (n == nullptr){
+            //     std::cout << "N: NNUUUUUUUULLLLL" << std::endl;
+            //     exit(1);
+            // }
+            // else if (n->__parent == nullptr) {
+            //     std::cout << "n-parent: NUUUUUUUULLLLL" << std::endl;
+            //     exit(2);
+            // }
+            // else if (n->__parent->__left == nullptr) {
+            //     std::cout << "n-parent-left: NUUUUUUUULLLLL" << std::endl;
+            //     exit(3);
+            // }
+            // else {
+            //     std::cout << n << ", " << n->__parent << ", " << n->__parent->__left << std::endl;
+            // }
+            // std::cout << "WAWAWAWAWAWAWAWAWAWAWAWAWAWA" << std::endl;
             n->__parent->__left = nullptr;
         }
         else if (n->__position == RIGHT_NODE)
         {
             n->__parent->__right = nullptr;
         }
-        else if (n->__position == ROOT_NODE)
-        {
-            this->__root = nullptr;
-            deallocate_node(n);
-            return nullptr;
-        }
+
+        //__DEALLOCATE__NODE__02__2__ : [" << n << "]" << std::endl;
         deallocate_node(n);
+        n = nullptr;
         return parent;
     }
 
@@ -377,11 +416,15 @@ public:
         node*   parent = n->__parent;
         node*   child = nullptr;
 
+        // std::cout << "_ERASE_ONE_CHILD_NODE_ : parent [" << parent->__pair->first << "] | height : [" << parent->__height << "]" << std::endl;
+
         set_next_prev_deletion(&n);
         if (child_position == LEFT_NODE)
             child = n->__left;
         else
             child = n->__right;
+
+        // std::cout << "_ERASE_ONE_CHILD_NODE_ : child [" << child->__pair->first << "] | height : [" << child->__height << "]" << std::endl;
 
         if (n->__position == LEFT_NODE)
         {
@@ -401,85 +444,134 @@ public:
             child->__position = ROOT_NODE;
             child->__parent = child;
         }
+        //__DEALLOCATE__NODE__02__3__ : [" << n << "]" << std::endl;
         deallocate_node(n);
+        n = nullptr;
         return parent;
     }
 
     node*   _erase_two_childs_node(node* n)
     {
-        node*       prev = n->__prev;
-        value_type  val(prev->__pair->first, prev->__pair->second);
+        node*       prev1 = n->__prev;
+        node*       prev2 = prev1->__prev;
 
+        value_type  val(prev1->__pair->first, prev1->__pair->second);
         deallocate_pair(n->__pair);
         n->__pair = this->__allocator.allocate(1);
         this->__allocator.construct(&(n->__pair)[0], val);
 
-        n->__prev = n->__prev->__prev;
-        n->__next = prev->__next;
+        if (prev2)
+            prev2->__next = n;
+        n->__prev = prev2;
+        // n->__prev = n->__prev->__prev;
+        // n->__next = prev1->__next;
 
-        if (prev->__prev)
-            prev->__prev->__next = n;
-        if (prev->__next)
-            prev->__next->__prev = n;
+        // if (prev1->__prev)
+        //     prev1->__prev->__next = n;
+        // if (prev1->__next)
+        //     prev1->__next->__prev = n;
 
-        return _erase_leaf_node(prev, false);
+        return _erase_leaf_node(prev1, false);
     }
 
     void erase (iterator position)
     {
         node*   ptr = position.__ptr;
         node*   action_node = nullptr;
+        // node*   next_node = ptr->__next;
 
-        std::cout << "[";
-        if (ptr->__prev == nullptr)
-            std::cout << "nullptr";
-        else
-            std::cout << ptr->__prev->__pair->first;
-        std::cout << " | ";
-        if (ptr == nullptr)
-            std::cout << "nullptr";
-        else
-            std::cout << ptr->__pair->first << " | ";
-        if (ptr->__next == nullptr)
-            std::cout << "nullptr";
-        else
-            std::cout << ptr->__next->__pair->first;
-        std::cout << "]" << std::endl;
+        // if (ptr == this->__end)
+        //     return ;
+        // std::cout << "[";
+        // if (ptr->__prev == nullptr)
+        //     std::cout << "nullptr";
+        // else
+        //     std::cout << ptr->__prev->__pair->first;
+        // std::cout << " | ";
+        // if (ptr == nullptr)
+        //     std::cout << "nullptr";
+        // else
+        //     std::cout << ptr->__pair->first << " | ";
+        // if (ptr->__next == nullptr)
+        //     std::cout << "nullptr";
+        // else
+        //     std::cout << ptr->__next->__pair->first;
+        // std::cout << "]" << std::endl;
 
 
+        // std::cout << "__BEFORE__ERASE__CHECK__NEXT__NODE__ : ********* ";
 
-
-        if (ptr != this->__end)
+        // std::cout << "[";
+        // if (next_node->__prev == nullptr)
+        //     std::cout << "nullptr";
+        // else
+        //     std::cout << next_node->__prev->__pair->first;
+        // std::cout << " | ";
+        // if (next_node == nullptr)
+        //     std::cout << "nullptr";
+        // else
+        //     std::cout << next_node->__pair->first << " | ";
+        // if (next_node->__next == nullptr)
+        //     std::cout << "nullptr";
+        // else
+        //     std::cout << next_node->__next->__pair->first;
+        // std::cout << "]" << std::endl;
+        if (position != end())
         {
             if (ptr->__left == nullptr && ptr->__right == nullptr)
             {
-                std::cout << "__ERASE__LEAF__NODE__ : " << ptr->__pair->first << " | " << ptr->__position << std::endl;
+                // std::cout << "__ERASE__LEAF__NODE__ : val[" << ptr->__pair->first << "] | position[" << ptr->__position << "] | parent[" << ptr->__parent->__pair->first << "]" << std::endl;
                 action_node = _erase_leaf_node(ptr, true);
+                // std::cout << "__ERASE__LEAF__NODE__ : DONE" << std::endl;
             }
             else if (ptr->__left != nullptr && ptr->__right != nullptr)
             {
-                std::cout << "__ERASE__TWO__NODE__ : " << ptr->__pair->first << " | " << ptr->__position << std::endl;
+                // std::cout << "__ERASE__TWO__NODE__" << std::endl;
+                // std::cout << "__ERASE__TWO__NODE__ : val[" << ptr->__pair->first << "] | position[" << ptr->__position << "] | parent[" << ptr->__parent->__pair->first << "] | left[" << ptr->__left->__pair->first << "] | right[" << ptr->__right->__pair->first << "]" << std::endl;
                 action_node = _erase_two_childs_node(ptr);
+                // std::cout << "__ERASE__TWO__NODE__ : DONE" << std::endl;
             }
             else if (ptr->__left == nullptr && ptr->__right != nullptr)
             {
-                std::cout << "__ERASE__RIGHT__NODE__ : " << ptr->__pair->first << " | " << ptr->__position << std::endl;
+                // std::cout << "__ERASE__RIGHT__NODE__ : node[" << ptr << "] | right[" << ptr->__right << "]" << std::endl;
+                // std::cout << "__ERASE__RIGHT__NODE__ : val[" << ptr->__pair->first << "] | position[" << ptr->__position << "] | parent[" << ptr->__parent->__pair->first << "] | right[" << ptr->__right->__pair->first << "]" << std::endl;
                 action_node = _erase_one_child_node(ptr, RIGHT_NODE);
+                // std::cout << "__ERASE__RIGHT__NODE__ : DONE" << std::endl;
             }
             else if (ptr->__left != nullptr && ptr->__right == nullptr)
             {
-                std::cout << "__ERASE__LEFT__NODE__ : " << ptr->__pair->first << " | " << ptr->__position << std::endl;
+                // std::cout << "__ERASE__LEFT__NODE__ : node[" << ptr << "] | left[" << ptr->__left << "]" << std::endl;
+                // std::cout << "__ERASE__LEFT__NODE__ : val[" << ptr->__pair->first << "] | position[" << ptr->__position << "] | parent[" << ptr->__parent->__pair->first << "] | left[" << ptr->__left->__pair->first << "]" << std::endl;
                 action_node = _erase_one_child_node(ptr, LEFT_NODE);
+                // std::cout << "__ERASE__LEFT__NODE__ : DONE" << std::endl;
             }
             this->__size--;
+            // balance_tree_after_erase();
         }
+        // std::cout << "__AFTER__ERASE__CHECK__NEXT__NODE__ : ********* ";
+
+        // std::cout << "[";
+        // if (next_node->__prev == nullptr)
+        //     std::cout << "nullptr";
+        // else
+        //     std::cout << next_node->__prev->__pair->first;
+        // std::cout << " | ";
+        // if (next_node == nullptr)
+        //     std::cout << "nullptr";
+        // else
+        //     std::cout << next_node->__pair->first << " | ";
+        // if (next_node->__next == nullptr)
+        //     std::cout << "nullptr";
+        // else
+        //     std::cout << next_node->__next->__pair->first;
+        // std::cout << "]" << std::endl;
     }
 
     size_type erase (const key_type& k)
     {
         iterator it = find(k);
 
-        if (it == end())
+        if (it == this->end())
             return 0;
         this->erase(it);
         return 1;
@@ -487,11 +579,11 @@ public:
 
     void erase (iterator first, iterator last)
     {
-        iterator tmp = first;
+        iterator tmp(first);
 
         while (first != last)
         {
-            tmp++;
+            tmp = first.__ptr->__next;
             this->erase(first);
             first = tmp;
         }
@@ -532,7 +624,9 @@ public:
             while (node_begin != node_end)
             {
                 next_node = node_begin->__next;
+                //__DEALLOCATE__NODE__02__0__ : [" << node_begin << "]" << std::endl;
                 deallocate_node(node_begin);
+                node_begin = nullptr;
                 node_begin = next_node;
                 this->__size--;
             }
@@ -715,10 +809,30 @@ private:
         node* next = (*n)->__next;
         node* prev = (*n)->__prev;
 
+        // std::cout << "__REALTIME__CHECK__ : n [" << (*n)->__pair->first << "] | next [";
+        // if ((*n)->__next)
+            // std::cout << (*n)->__next->__pair->first << "]" << std::endl;
+        // else
+            // std::cout << "nullptr]" << std::endl;
+
+        // if (*n && (*n)->__next && (*n == (*n)->__next))
+        //     (*n)->__next = nullptr;
+
+        /* ************************************* */
+
         if ((*n)->__next)
             (*n)->__next->__prev = prev;
         if ((*n)->__prev)
             (*n)->__prev->__next = next;
+
+
+        if (*n && (*n)->__next && (*n == (*n)->__next))
+        {
+            // std::string str = "";
+            // std::cout << "HIIIIIIIIIIIIILLOOO I FOUND THE ANSWER :) ....";
+            // std::cout << "__REALTIME__MAP__SIZE__EXCEPTION__ : " << this->__size;
+        }
+
     }
 
     node*   get_right_most_node() const
@@ -734,10 +848,17 @@ private:
     void    deallocate_pair(value_type* p)
     {
         this->__allocator.deallocate(p, 1);
+        p = nullptr;
     }
 
-    void    deallocate_node(node* n)
+    void    deallocate_node(node*& n)
     {
+        if (n->__left != nullptr &&
+        n->__left->__parent == n)
+            n->__left->__parent = nullptr;
+        if (n->__right != nullptr &&
+        n->__right->__parent == n)
+            n->__right->__parent = nullptr;
         deallocate_pair(n->__pair);
         n->__pair = nullptr;
         this->__node_allocator.destroy(&n[0]);

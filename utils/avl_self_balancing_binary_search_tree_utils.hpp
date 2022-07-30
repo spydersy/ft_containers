@@ -71,36 +71,36 @@
             this->__allocator.construct(&(this->__pair[0]), pair);
         }
 
-        template <typename TREE_NODE>
-        TreeNode( const TREE_NODE & src )
-        {
-            this->__height = src.__height;
-            this->__position = src.__position;
-            this->__left = src.__left;
-            this->__right = src.__right;
-            this->__parent = src.__parent;
-            this->__next = src.__next;
-            this->__prev = src.__prev;
-            this->__allocator = src.__allocator;
-            this->__pair = src.__pair;
-        }
+        // template <typename TREE_NODE>
+        // TreeNode( const TREE_NODE & src )
+        // {
+        //     this->__height = src.__height;
+        //     this->__position = src.__position;
+        //     this->__left = src.__left;
+        //     this->__right = src.__right;
+        //     this->__parent = src.__parent;
+        //     this->__next = src.__next;
+        //     this->__prev = src.__prev;
+        //     this->__allocator = src.__allocator;
+        //     this->__pair = src.__pair;
+        // }
 
         // Operator= :
-        TreeNode&   operator=( const TreeNode & src )
-        {
-            if (this != &src)
-            {
-                this->__pair = src.__pair;
-                this->__left = src.__left;
-                this->__right = src.__right;
-                this->__parent = src.__parent;
-                this->__next = src.__next;
-                this->__prev = src.__prev;
-                this->__height = src.__height;
-                this->__position = src.__position;
-            }
-            return *this;
-        }
+        // TreeNode&   operator=( const TreeNode & src )
+        // {
+        //     if (this != &src)
+        //     {
+        //         this->__pair = src.__pair;
+        //         this->__left = src.__left;
+        //         this->__right = src.__right;
+        //         this->__parent = src.__parent;
+        //         this->__next = src.__next;
+        //         this->__prev = src.__prev;
+        //         this->__height = src.__height;
+        //         this->__position = src.__position;
+        //     }
+        //     return *this;
+        // }
 
         // Destructor :
         ~TreeNode( void )
