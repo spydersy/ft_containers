@@ -23,21 +23,20 @@ public:
 
     }
 
-    int calheight(struct node *p){
-
-            if(p->left && p->right){
-            if (p->left->height < p->right->height)
-                return p->right->height + 1;
-            else return  p->left->height + 1;
-            }
-            else if(p->left && p->right == NULL){
-               return p->left->height + 1;
-            }
-            else if(p->left ==NULL && p->right){
-               return p->right->height + 1;
-            }
-            return 0;
-
+    int calheight(struct node *p)
+    {
+        if(p->left && p->right){
+        if (p->left->height < p->right->height)
+            return p->right->height + 1;
+        else return  p->left->height + 1;
+        }
+        else if(p->left && p->right == NULL){
+           return p->left->height + 1;
+        }
+        else if(p->left ==NULL && p->right){
+           return p->right->height + 1;
+        }
+        return 0;
     }
 
     int bf(struct node *n){
@@ -145,7 +144,7 @@ public:
 
         return r;
 
-        }
+    }
 
     void levelorder_newline(){
         if (this->root == NULL){

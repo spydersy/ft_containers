@@ -341,18 +341,101 @@ public:
         }
     }
 
-    // node*   _erase_leaf_node(node* n, bool SET)
-    // { }
+    node*   _erase_leaf_node(node** n)
+    {
+        node*   parent = (*n)->__parent;
 
-    // node*   _erase_one_child_node(node* n, int child_position)
-    // { }
+        set_next_prev_deletion(n);
+        if ((*n)->__position == ROOT_NODE)
+        {
+            this->__root = nullptr;
+            (*n)->__parent = nullptr;
+            deallocate_node(*n);
+            return nullptr;
+        }
+        else if ((*n)->__position == LEFT_NODE)
+            parent->__left = nullptr;
+        else if ((*n)->__position == RIGHT_NODE)
+            parent->__right = nullptr;
+        deallocate_node(*n);
+        return parent;
+    }
 
-    // node*   _erase_two_childs_node(node* n)
-    // { }
+    node*   _erase_one_child_node(node** n, int child_position)
+    {
+        node*   parent = (*n)->__parent;
+        node*   child = nullptr;
+
+        set_next_prev_deletion(n);
+        if (child_position == LEFT_NODE)
+            child = (*n)->__left;
+        else
+            child = (*n)->__right;
+
+        if ((*n)->__position == ROOT_NODE)
+        {
+            this->__root = child;
+            child->__parent = child;
+            child->__position = ROOT_NODE;
+            deallocate_node(*n);
+            return child;
+        }
+        else if ((*n)->__position == RIGHT_NODE)
+        {
+            parent->__right = child;
+            child->__position = RIGHT_NODE;
+            child->__parent = parent;
+        }
+        else if ((*n)->__position == LEFT_NODE)
+        {
+            parent->__left = child;
+            child->__position = LEFT_NODE;
+            child->__parent = parent;
+        }
+        deallocate_node(*n);
+        return child;
+    }
+
+    node*   _erase_two_childs_node(node** n)
+    {
+        node*       prev = (*n)->__prev;
+        value_type* new_val = nullptr;
+        value_type  prev_val(prev->__pair->first, prev->__pair->second);
+
+        deallocate_pair((*n)->__pair);
+
+        new_val = this->__allocator.allocate(1);
+        this->__allocator.construct(&(new_val[0]), prev_val);
+        (*n)->__pair = new_val;
+        return _erase_leaf_node(&prev);
+    }
 
     void erase (iterator position)
     {
-        (void)position;
+        node*   n = position.__ptr;
+        node*   action_node = nullptr;
+
+        if (n != nullptr && n != this->__end)
+        {
+            if (n->__left == nullptr && n->__right == nullptr)
+            {   // Case A:
+                action_node = _erase_leaf_node(&n);
+            }
+            else if (n->__left != nullptr && n->__right == nullptr)
+            {   // Case B1:
+                action_node = _erase_one_child_node(&n, LEFT_NODE);
+            }
+            else if (n->__left == nullptr && n->__right != nullptr)
+            {   // Case B2:
+                action_node = _erase_one_child_node(&n, RIGHT_NODE);
+            }
+            else if (n->__left != nullptr && n->__right != nullptr)
+            {   // Case C:
+                action_node = _erase_two_childs_node(&n);
+            }
+            this->__size--;
+            balance_tree_after_erase(&action_node);
+        }
     }
 
     size_type erase (const key_type& k)
@@ -371,7 +454,7 @@ public:
 
         while (first != last)
         {
-            tmp = first.__ptr->__next;
+            tmp++;
             this->erase(first);
             first = tmp;
         }
@@ -635,10 +718,35 @@ private:
             return (*parent_it)->__right = *node_it;
     }
 
+    void    balance_tree_after_erase( node** action_node )
+    {
+        if (*action_node == nullptr)
+            return ;
+            // std::cout << "START  : ==================================================" << std::endl;
+        while (*action_node != (*action_node)->__parent)
+        {
+            // std::cout << "IN_LOOP" << std::endl;
+            (*action_node)->__height = calc_height(*action_node);
+
+            if (this->balance_factor_bool(*action_node) == false)
+            {
+                this->do_some_magic_after_erase(action_node);
+            }
+            *action_node = (*action_node)->__parent;
+        }
+        (*action_node)->__height = calc_height(*action_node);
+
+        if (this->balance_factor_bool(*action_node) == false)
+        {
+            this->do_some_magic_after_erase(action_node);
+        }
+        // std::cout << "FINISH : ==================================================" << std::endl;
+    }
+
     void    balance_tree( node** action_node )
     {
-        // node*   node_it = *action_node;
-
+        if (*action_node == nullptr)
+            return ;
         while (*action_node != (*action_node)->__parent)
         {
             (*action_node)->__height = calc_height(*action_node);
@@ -648,6 +756,11 @@ private:
                 this->do_some_magic(action_node);
             }
             *action_node = (*action_node)->__parent;
+        }
+        (*action_node)->__height = calc_height(*action_node);
+        if (this->balance_factor_bool(*action_node) == false)
+        {
+            this->do_some_magic(action_node);
         }
     }
 
@@ -704,6 +817,44 @@ private:
             else if (balance_factor_value((*unbalanced_node)->__right) == -1)
             {   //Case D:
                 // std::cout << "__UNBALANCED__NODE__ " << (*unbalanced_node)->__pair->first << " | __BALANCE__FACTOR__ : -2 | CHILD : -1" << std::endl;
+                left_rotation(*unbalanced_node, true);
+            }
+        }
+    }
+
+    void    do_some_magic_after_erase( node** unbalanced_node )
+    {
+        if (balance_factor_value(*unbalanced_node) == 2)
+        {
+            if (balance_factor_value((*unbalanced_node)->__left) == 1)
+            {   //Case A:
+                // std::cout << "__UNBALANCED__NODE__ " << (*unbalanced_node)->__pair->first << " | __BALANCE__FACTOR__ : 2 | CHILD : 1" << std::endl;
+                right_rotation(*unbalanced_node, true);
+            }
+            else if (balance_factor_value((*unbalanced_node)->__left) == -1)
+            {   //Case B:
+                // std::cout << "__UNBALANCED__NODE__ " << (*unbalanced_node)->__pair->first << " | __BALANCE__FACTOR__ : 2 | CHILD : -1" << std::endl;
+                left_right_rotation((*unbalanced_node)->__left);
+            }
+            else if (balance_factor_value((*unbalanced_node)->__left) == 0)
+            {
+                right_rotation(*unbalanced_node, true);
+            }
+        }
+        else if (balance_factor_value(*unbalanced_node) == -2)
+        {
+            if (balance_factor_value((*unbalanced_node)->__right) == 1)
+            {   //Case C:
+                // std::cout << "__UNBALANCED__NODE__ " << (*unbalanced_node)->__pair->first << " | __BALANCE__FACTOR__ : -2 | CHILD : 1" << std::endl;
+                right_left_rotation((*unbalanced_node)->__right);
+            }
+            else if (balance_factor_value((*unbalanced_node)->__right) == -1)
+            {   //Case D:
+                // std::cout << "__UNBALANCED__NODE__ " << (*unbalanced_node)->__pair->first << " | __BALANCE__FACTOR__ : -2 | CHILD : -1" << std::endl;
+                left_rotation(*unbalanced_node, true);
+            }
+            else if (balance_factor_value((*unbalanced_node)->__right) == 0)
+            {
                 left_rotation(*unbalanced_node, true);
             }
         }
@@ -801,6 +952,40 @@ private:
             z->__height = y->__height - 1;
         return y;
     }
+
+    // node* recursive_insert(node *r,int data)
+    // {
+    //     if(r == nullptr)
+    //     {
+    //         node *n;
+    //         n = new node;
+    //         n->data = data;
+    //         r = n;
+    //         r->left = r->right = nullptr;
+    //         r->height = 1;
+    //         return r;
+    //     }
+    //     else
+    //     {
+    //         if (data == r->data)
+    //             return r;
+    //             // Do Something . . .
+    //         else if(data < r->data)
+    //             r->left = recursive_insert(r->left,data);
+    //         else
+    //             r->right = recursive_insert(r->right,data);
+    //     }
+    //     r->height = calheight(r);
+    //     if(bf(r)==2 && bf(r->left)==1)
+    //         r = llrotation(r);
+    //     else if(bf(r)==-2 && bf(r->right)==-1)
+    //         r = rrrotation(r);
+    //     else if(bf(r)==-2 && bf(r->right)==1)
+    //         r = rlrotation(r);
+    //     else if(bf(r)==2 && bf(r->left)==-1)
+    //         r = lrrotation(r);
+    //     return r;
+    // }
 
     /* ************************************************************************************ *
      *                                                                                      *
